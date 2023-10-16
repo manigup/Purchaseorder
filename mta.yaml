@@ -1,0 +1,134 @@
+_schema-version: "3.1"
+ID: PURCHASEORDER
+description: A simple CAP project.
+version: 1.0.0
+modules:
+- name: PURCHASEORDER-srv
+  type: nodejs
+  path: gen/srv
+  requires:
+  - name: PURCHASEORDER-db
+  - name: uaa_PURCHASEORDER
+  provides:
+  - name: srv-api
+    properties:
+      srv-url: ${default-url}
+  parameters:
+    buildpack: nodejs_buildpack
+  build-parameters:
+    builder: npm
+- name: PURCHASEORDER-db-deployer
+  type: hdb
+  path: gen/db
+  requires:
+  - name: PURCHASEORDER-db
+  parameters:
+    buildpack: nodejs_buildpack
+- name: PURCHASEORDER-destination-content
+  type: com.sap.application.content
+  requires:
+  - name: PURCHASEORDER-destination-service
+    parameters:
+      content-target: true
+  - name: PURCHASEORDER_html_repo_host
+    parameters:
+      service-key:
+        name: PURCHASEORDER_html_repo_host-key
+  - name: uaa_PURCHASEORDER
+    parameters:
+      service-key:
+        name: uaa_PURCHASEORDER-key
+  parameters:
+    content:
+      instance:
+        destinations:
+        - Name: PO_PURCHASEORDER_html_repo_host
+          ServiceInstanceName: PURCHASEORDER-html5-app-host-service
+          ServiceKeyName: PURCHASEORDER_html_repo_host-key
+          sap.cloud.service: PO
+        - Authentication: OAuth2UserTokenExchange
+          Name: PO_uaa_PURCHASEORDER
+          ServiceInstanceName: PURCHASEORDER-xsuaa-service
+          ServiceKeyName: uaa_PURCHASEORDER-key
+          sap.cloud.service: PO
+        existing_destinations_policy: ignore
+  build-parameters:
+    no-source: true
+- name: PURCHASEORDER-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: PURCHASEORDER_html_repo_host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - spfioripurchaseorder.zip
+      name: spfioripurchaseorder
+      target-path: resources/
+- name: spfioripurchaseorder
+  type: html5
+  path: app/purchaseorder
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+resources:
+- name: PURCHASEORDER-db
+  type: com.sap.xs.hdi-container
+  parameters:
+    service: hana
+    service-plan: hdi-shared
+- name: PURCHASEORDER-destination-service
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      HTML5Runtime_enabled: true
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          - Authentication: NoAuthentication
+            HTML5.DynamicDestination: true
+            HTML5.ForwardAuthToken: true
+            Name: PURCHASEORDER-srv-api
+            ProxyType: Internet
+            Type: HTTP
+            URL: ~{srv-api/srv-url}
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: PURCHASEORDER-destination-service
+    service-plan: lite
+  requires:
+  - name: srv-api
+- name: PURCHASEORDER_html_repo_host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: PURCHASEORDER-html5-app-host-service
+    service-plan: app-host
+- name: uaa_PURCHASEORDER
+  type: org.cloudfoundry.managed-service
+  parameters:
+    path: ./xs-security.json
+    service: xsuaa
+    service-name: PURCHASEORDER-xsuaa-service
+    service-plan: application
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+  - builder: custom
+    commands:
+    - npx cds build --production
