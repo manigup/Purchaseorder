@@ -1,0 +1,581 @@
+<mvc:View
+    xmlns:core="sap.ui.core"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    controllerName="sp.fiori.purchaseorder.controller.PoAsnCreate"
+    xmlns:l="sap.ui.layout"
+    xmlns:f="sap.ui.layout.form"
+    class="sapUiSizeCompact"
+>
+    <Page
+        id="_IDGenPage1"
+        title="Create ASN"
+        titleAlignment="Center"
+        showNavButton="true"
+        navButtonPress="onNavBack"
+        class="sapUiSizeCompact"
+    >
+        <headerContent>
+            <!--<Button text="Print" icon="sap-icon://pdf-attachment" type="Attention" press="onPrint"></Button>-->
+            <Button
+                visible="{=${asnModel>/InvoiceNum} === ''}"
+                id="DraftButton"
+                text="Save as Draft"
+                icon="sap-icon://bookmark"
+                type="Reject"
+                press="onAsnSave"
+            />
+            <Button
+                id="_IDGenButton1"
+                text="Save"
+                icon="sap-icon://save"
+                type="Emphasized"
+                press="onAsnSave"
+            />
+        </headerContent>
+        <ObjectHeader
+            id="AsnObjectId"
+            title="Purchase Order : {asnModel>/Po_No}"
+            backgroundDesign="Translucent"
+            responsive="{device>/isPhone}"
+            fullScreenOptimized="true"
+            condensed="true"
+        >
+            <attributes>
+                <ObjectAttribute
+                    id="_IDGenObjectAttribute1"
+                    text="Plant :{asnModel>/Plant_Desc} ({asnModel>/Werks}) "
+                />
+            </attributes>
+        </ObjectHeader>
+        <f:SimpleForm
+            id="AsnFormId"
+            editable="true"
+            layout="ColumnLayout"
+            columnsM="2"
+            columnsL="2"
+            columnsXL="4"
+        >
+            <f:content>
+                <Label
+                    id="_IDGenLabel1"
+                    text=" Invoice Number"
+                />
+                <Input
+                    id="_IDGenInput1"
+                    type="Text"
+                    value="{asnModel>/InvoiceNum}"
+                    width="185px"
+                    maxLength="16"
+                    change="onInvNoChange"
+                />
+                <Label
+                    id="_IDGenLabel2"
+                    text=" Invoice Date"
+                />
+                <DatePicker
+                    id="DP1"
+                    value="{asnModel>/InvoiceDate}"
+                    width="185px"
+                    valueFormat="yyyyMMdd"
+                    displayFormat="long"
+                    enabled="false"
+                />
+                <Label
+                    id="_IDGenLabel3"
+                    text="Invoice Amount"
+                    required="true"
+                />
+                <Input
+                    id="invoiceAmtId"
+                    value="{asnModel>/InvoiceAmt}"
+                    type="Number"
+                    width="185px"
+                    enabled="false"
+                />
+                <!-- <Label
+                    id="_IDGenLabel4"
+                    text="Un-Planned Cost"
+                />
+                <Input
+                    id="unplannedAmtId"
+                    value="{asnModel>/UnplannedCost}"
+                    change="onDeliveryCost"
+                    liveChange="onUnplannedCostChange"
+                    type="Number"
+                    width="185px"
+                />
+                <Label
+                    id="_IDGenLabel18"
+                    text="Un-Planned Cost Text"
+                />
+                <Input
+                    id="unplannedTextId"
+                    value="{asnModel>/UnplannedCost_text}"
+                    width="185px"
+                /> -->
+                <Label
+                    id="_IDGenLabel5"
+                    text=" Invoice Value(Vendor)"
+                />
+                <Input
+                    id="invoiceValueId"
+                    value="{asnModel>/InvoiceVal}"
+                    type="Number"
+                    editable="false"
+                    width="185px"
+                />
+                <!--<Button type="Emphasized" icon="sap-icon://edit" press="onEditPress" />-->
+                <!--</HBox>-->
+                <!--<Label text="Packing List" required="true"/>-->
+                <!--<Input width="185px"/>-->
+            </f:content>
+        </f:SimpleForm>
+        <IconTabBar id="_IDGenIconTabBar1">
+            <items>
+                <IconTabFilter
+                    id="_IDGenIconTabFilter1"
+                    icon="sap-icon://hint"
+                >
+                    <ScrollContainer
+                        id="_IDGenScrollContainer1"
+                        horizontal="true"
+                        vertical="true"
+                    >
+                        <Table
+                            id="AsnCreateTable"
+                            mode="MultiSelect"
+                            rememberSelections="true"
+                            selectionChange="onRowSelect"
+                            items="{asnModel>/asnheadertoasnitemnav/results}"
+                        >
+                            <infoToolbar>
+                                <OverflowToolbar
+                                    id="_IDGenOverflowToolbar1"
+                                    height="70px"
+                                    width="1615px"
+                                    class="Toolbar"
+                                >
+                                    <HBox id="_IDGenHBox1">
+                                        <VBox id="_IDGenVBox1" width="70%">
+                                            <Label
+                                                id="_IDGenLabel6"
+                                                design="Bold"
+                                                textAlign="Center"
+                                                text="Shipment From Date"
+                                            />
+                                            <DatePicker
+                                                id="FromDateId"
+                                                valueFormat="yyyyMMdd"
+                                                displayFormat="dd.MM.yyyy"
+                                                change="onFromDateChange"
+                                            />
+                                        </VBox>
+                                        <VBox
+                                            id="_IDGenVBox2"
+                                            class="sapUiTinyMarginBegin"
+                                            width="70%"
+                                        >
+                                            <Label
+                                                id="_IDGenLabel7"
+                                                design="Bold"
+                                                textAlign="Center"
+                                                text="To Date"
+                                            />
+                                            <DatePicker
+                                                id="ToDateId"
+                                                valueFormat="yyyyMMdd"
+                                                displayFormat="dd.MM.yyyy"
+                                            />
+                                        </VBox>
+                                        <VBox id="_IDGenVBox3">
+                                            <Label id="_IDGenLabel8" />
+                                            <Button
+                                                id="_IDGenButton2"
+                                                class="sapUiSmallMarginBegin"
+                                                text="Go"
+                                                press="onDateFilter"
+                                                type="Emphasized"
+                                            />
+                                        </VBox>
+                                        <VBox id="_IDGenVBox4">
+                                            <Label id="_IDGenLabel9" />
+                                            <Button
+                                                id="_IDGenButton3"
+                                                class="sapUiSmallMarginBeginEnd"
+                                                text="Clear"
+                                                press="onDateFilterClear"
+                                                type="Reject"
+                                            />
+                                        </VBox>
+                                        <VBox
+                                            id="_IDGenVBox5"
+                                            width="150%"
+                                            visible="true"
+                                        >
+                                            <Label
+                                                id="_IDGenLabel10"
+                                                design="Bold"
+                                                textAlign="Center"
+                                                text="Enter Materials"
+                                            />
+                                            <SearchField
+                                                id="MaterialSearchId"
+                                                liveChange="onMaterialLiveChange"
+                                                width="310px"
+                                            />
+                                        </VBox>
+                                    </HBox>
+                                </OverflowToolbar>
+                            </infoToolbar>
+                            <columns>
+                                <Column
+                                    id="_IDGenColumn1"
+                                    width="3rem"
+                                    hAlign="Center"
+                                >
+                                    <Text
+                                        id="_IDGenText1"
+                                        text="Item No."
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn2"
+                                    minScreenWidth="Tablet"
+                                    width="5rem"
+                                    hAlign="Center"
+                                >
+                                    <Text
+                                        id="_IDGenText2"
+                                        text="Schedule line"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn3"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                    width="8rem"
+                                    hAlign="Center"
+                                >
+                                    <Text
+                                        id="_IDGenText3"
+                                        text="Material"
+                                    />
+                                </Column>
+                                <!-- <Column
+                                id="_IDGenColumn4"
+                                minScreenWidth="Tablet"
+                                demandPopin="true"
+                            >
+                                <Text
+                                    id="_IDGenText4"
+                                    text="Challan"
+                                />
+                            </Column> -->
+                                <Column
+                                    id="_IDGenColumn5"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                    width="7rem"
+                                    hAlign="Center"
+                                >
+                                    <Text
+                                        id="_IDGenText5"
+                                        text="Shipment Date"
+                                    />
+                                </Column>
+                                <!--<Column minScreenWidth="Tablet" demandPopin="true">-->
+                                <!--	<Text text="Del. Date"/>-->
+                                <!--</Column>-->
+                                <Column
+                                    id="_IDGenColumn"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                    width="10rem"
+                                    hAlign="Center"
+                                >
+                                    <Text
+                                        id="_IDGenText"
+                                        text="Material Expiry Date"
+                                        wrapping="true"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn6"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                    width="6rem"
+                                    hAlign="Center"
+                                >
+                                    <Text
+                                        id="_IDGenText6"
+                                        text="PO Qty."
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn7"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                    width="6rem"
+                                    hAlign="Center"
+                                >
+                                    <Text
+                                        id="_IDGenText7"
+                                        text="Conf.Qty"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn8"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                    width="6rem"
+                                    hAlign="Center"
+                                >
+                                    <Text
+                                        id="_IDGenText8"
+                                        text="Delivered Qty"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn9"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                    width="6rem"
+                                    hAlign="Center"
+                                >
+                                    <Text
+                                        id="_IDGenText9"
+                                        text="ASN Created"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn10"
+                                    minScreenWidth="Tablet"
+                                    width="9rem"
+                                    demandPopin="true"
+                                    hAlign="Center"
+                                >
+                                    <Text
+                                        id="_IDGenText10"
+                                        text="Avl. ASN Qty"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn11"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                    width="6rem"
+                                    hAlign="Center"
+                                >
+                                    <Text
+                                        id="_IDGenText11"
+                                        text="Net Price"
+                                    />
+                                </Column>
+                                <Column id="_IDGenColumn17" minScreenWidth="Tablet" demandPopin="true" width="7rem" hAlign="Center">
+								    <Text id="_IDGenText27" text="Supplier Net Price"/>
+							    </Column>
+                                <Column id="_IDGenColumn26" minScreenWidth="Tablet" demandPopin="true" width="7rem" hAlign="Center">
+								    <Text id="_IDGenText26" text="Tax Mismatch"/>
+							    </Column>
+                                <!--<Column minScreenWidth="Tablet" demandPopin="true">-->
+                                <!--	<Text text="Status"/>-->
+                                <!--</Column>-->
+                                <Column
+                                    id="_IDGenColumn12"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                    width="7rem"
+                                    hAlign="Center"
+                                >
+                                    <Label
+                                        id="_IDGenLabel11"
+                                        design="Bold"
+                                        text="Packing Material Type"
+                                        wrapping="true"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn13"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                    width="6rem"
+                                    hAlign="Center"
+                                >
+                                    <Label
+                                        id="_IDGenLabel12"
+                                        design="Bold"
+                                        text="Packing Material Qty"
+                                        wrapping="true"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn15"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                    width="6rem"
+                                    hAlign="Center"
+                                >
+                                    <Label
+                                        id="_IDGenLabel15"
+                                        design="Bold"
+                                        text="SPQ"
+                                        wrapping="true"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn14"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                    width="8rem"
+                                    visible='false'
+                                    hAlign="Center"
+                                >
+                                    <Label
+                                        id="_IDGenLabel13"
+                                        design="Bold"
+                                        text="Fixed Bin"
+                                        wrapping="true"
+                                    />
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem id="_IDGenColumnListItem1">
+                                    <cells>
+                                        <Text
+                                            id="_IDGenText12"
+                                            text="{asnModel>Ebelp}"
+                                        />
+                                        <ObjectIdentifier
+                                            id="_IDGenObjectIdentifier1"
+                                            title="{asnModel>Etenr}"
+                                        />
+                                        <!--<ObjectIdentifier title="{asnModel>Ebelp}"/>-->
+                                        <ObjectIdentifier
+                                            id="_IDGenObjectIdentifier2"
+                                            title="{asnModel>Matnr}"
+                                            text="{asnModel>Maktx}"
+                                            class="sapUiNoMarginTop"
+                                        />
+                                        <!-- <ObjectNumber
+                                        id="_IDGenObjectNumber1"
+                                        number="{asnModel>ChallanNo}"
+                                    /> -->
+                                        <Text
+                                            id="_IDGenText13"
+                                            text="{path:'asnModel>ShipDate', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"
+                                        />
+                                        <!--<Text text="{path:'asnModel>Eindt', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"/>-->
+                                        <DatePicker
+                                            id="_IDGenDatePicker1"
+                                            value="{asnModel>MatExpDate}"
+                                            valueFormat="yyyyMMdd"
+                                            minDate="{dateModel>/minDate}"
+                                            enabled="{asnModel>MatExp}"
+                                        />
+
+                                        <ObjectNumber
+                                            id="_IDGenObjectNumber2"
+                                            number="{asnModel>Po_Qty}"
+                                            unit="{asnModel>Meins}"
+                                        />
+                                        <ObjectNumber
+                                            id="_IDGenObjectNumber3"
+                                            number="{asnModel>Total_Qty}"
+                                            unit="{asnModel>Meins}"
+                                        />
+                                        <ObjectNumber
+                                            id="_IDGenObjectNumber4"
+                                            number="{asnModel>DelQty}"
+                                            unit="{asnModel>Meins}"
+                                        />
+                                        <ObjectNumber
+                                            id="_IDGenObjectNumber5"
+                                            number="{asnModel>Asn_Created}"
+                                            unit="{asnModel>Meins}"
+                                        />
+                                        <Input
+                                            id="qtyId"
+                                            type="Number"
+                                            value="{asnModel>Menge}"
+                                            class="sapUiTinyMarginEnd"
+                                            description="{asnModel>Meins}"
+                                            liveChange="onAsnQtyLiveChange"
+                                            change="onQuanChange"
+                                        />
+                                        <Link
+                                            id="_IDGenLink1"
+                                            text="{asnModel>Netpr} {asnModel>Currency}"
+                                            press="handleLinkPress"
+                                        />
+                                        <Input id="_IDGenInput3" value="{asnModel>NetprVen}" change="onRowSelect"/>
+									    <Switch id="_IDSwitch" state="{= ${asnModel>TaxChange} === 'X'? true : false}" customTextOn="Yes" customTextOff="No" change="onSwitchChange"/>
+                                        <Text
+                                            id="_IDGenText16"
+                                            text="{asnModel>PkgMatType}"
+                                        />
+                                        <Text
+                                            id="_IDGenText17"
+                                            text="{asnModel>PkgMatQty}"
+                                        />
+                                        <Text
+                                            id="_IDGenText18"
+                                            text="{asnModel>SOQ}"
+                                        />
+                                        <!-- <Select
+                                            id="_IDGenSelect1"
+                                            selectedKey="{asnModel>PkgMatType}"
+                                        >
+                                            <core:Item
+                                                id="_IDGenItem1"
+                                                key="EXP"
+                                                text="Expendable"
+                                            />
+                                            <core:Item
+                                                id="_IDGenItem2"
+                                                key="RET"
+                                                text="Returnable"
+                                            />
+                                        </Select>
+                                        <Input
+                                            id="_IDGenInput2"
+                                            type="Number"
+                                            value="{asnModel>PkgMatQty}"
+                                        /> -->
+                                        <!--<Text text="{asnModel>Status}"></Text>-->
+                                        <Select
+                                            id="_IDGenSelect2"
+                                            selectedKey="{asnModel>FixedBin}"
+                                        />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </ScrollContainer>
+                </IconTabFilter>
+                <IconTabFilter
+                    id="_IDGenIconTabFilter2"
+                    icon="sap-icon://attachment"
+                >
+                    <UploadCollection
+                        id="UploadCollection"
+                        maximumFilenameLength="55"
+                        multiple="true"
+                        sameFilenameAllowed="false"
+                        instantUpload="false"
+                        maximumFileSize="10"
+                        fileType="pdf"
+                        noDataDescription="Drop files or use the &quot;+&quot; button for pending upload"
+                        change="onChange"
+                        fileDeleted="onFileDeleted"
+                        filenameLengthExceed="onFilenameLengthExceed"
+                        fileSizeExceed="onFileSizeExceed"
+                        typeMissmatch="onTypeMissmatch"
+                        uploadComplete="onUploadComplete"
+                        beforeUploadStarts="onBeforeUploadStarts"
+                    />
+                </IconTabFilter>
+            </items>
+        </IconTabBar>
+    </Page>
+</mvc:View>

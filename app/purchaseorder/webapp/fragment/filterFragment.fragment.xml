@@ -1,0 +1,19 @@
+<Dialog id="_IDGenDialog1" title="Filters" titleAlignment="Center" xmlns:f="sap.ui.layout.form" xmlns:core="sap.ui.core" xmlns="sap.m" xmlns:calendar="sap.ui.unified"
+	afterClose="onFilterDialogClose">
+	<content>
+		<f:SimpleForm id="_IDGenSimpleForm1" editable="true" layout="ResponsiveGridLayout" labelSpanXL="3" labelSpanL="3" labelSpanM="3" labelSpanS="12"
+			adjustLabelSpan="false" emptySpanXL="4" emptySpanL="4" emptySpanM="4" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1"
+			singleContainerFullSize="false">
+			<Label id="_IDGenLabel1" design="Bold" text="Material"/>
+			<Input id="_IDGenInput1" value="{filterModel>/Matnr}" valueHelpRequest="onMaterialValueHelp" showValueHelp="true"></Input>
+			<Label id="_IDGenLabel2" design="Bold" text="Plant"/>
+			<Input id="_IDGenInput2" value="{filterModel>/Werks}" valueHelpRequest="onPlantValueHelp" showValueHelp="true"></Input>
+		</f:SimpleForm>
+	</content>
+	<beginButton>
+		<Button id="_IDGenButton1" type="Emphasized" text="Filter" press="onFilterSubmit"></Button>
+	</beginButton>
+	<endButton>
+		<Button id="_IDGenButton2" type="Reject" text="Cancel" press="onFilterCancel"></Button>
+	</endButton>
+</Dialog>

@@ -1,0 +1,7 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<List id="_IDGenList1" items="{errorModel>/errordetails}" growing="true">
+		<items>
+			<StandardListItem id="_IDGenStandardListItem1" icon="sap-icon://error" title="{errorModel>message}"/>
+		</items>
+	</List>
+</core:FragmentDefinition>
