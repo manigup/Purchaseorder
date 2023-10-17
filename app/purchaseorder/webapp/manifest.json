@@ -113,22 +113,64 @@
       },
       "routes": [
         {
-          "name": "RouteView",
-          "pattern": ":?query:",
-          "target": [
-            "TargetView"
+          "pattern": "",
+          "name": "PoSplit",
+          "view": "PoSplit",
+          "targetAggregation": "pages",
+          "controlId": "app",
+          "subroutes": [
+              {
+                  "pattern": "",
+                  "name": "PoMaster",
+                  "view": "PoMaster",
+                  "targetControl": "splitAppId",
+                  "targetAggregation": "masterPages",
+                  "subroutes": [
+                      {
+                          "pattern": "NoData",
+                          "name": "NoData",
+                          "view": "NoData",
+                          "targetAggregation": "detailPages"
+                      },
+                      {
+                          "pattern": "Detail/{Po_No}",
+                          "name": "PoDetail",
+                          "view": "PoDetail",
+                          "targetAggregation": "detailPages"
+                      }
+                  ]
+              }
           ]
-        }
-      ],
-      "targets": {
-        "TargetView": {
-          "viewType": "XML",
-          "transition": "slide",
-          "clearControlAggregation": false,
-          "viewId": "View",
-          "viewName": "View"
-        }
+      },
+      {
+          "pattern": "AsnCreate/{Po_No}/:Amount:",
+          "name": "PoAsnCreate",
+          "view": "PoAsnCreate",
+          "targetAggregation": "pages",
+          "controlId": "app"
+      },
+      {
+          "pattern": "AsnCreate/{Po_No}/{Asn_No}/:Amount:",
+          "name": "PoAsnEdit",
+          "view": "PoAsnEdit",
+          "targetAggregation": "pages",
+          "controlId": "app"
+      },
+      {
+          "pattern": "Confirmation/{Po_No}",
+          "name": "PoConfirmation",
+          "view": "PoConfirmation",
+          "targetAggregation": "pages",
+          "controlId": "app"
+      },
+      {
+          "pattern": "POItemDetails/{Po_No}/{Item_No}/{Uom}",
+          "name": "POItemDetails",
+          "view": "POItemDetails",
+          "targetAggregation": "pages",
+          "controlId": "app"
       }
+      ]
     },
     "rootView": {
       "viewName": "sp.fiori.purchaseorder.view.App",
