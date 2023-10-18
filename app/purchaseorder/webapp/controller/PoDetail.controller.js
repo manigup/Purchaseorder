@@ -180,8 +180,8 @@ sap.ui.define([
 
 			var Data = oEvent.getParameter("listItem").getBindingContext("detailModel").getObject();
 			this.router.navTo("POItemDetails", {
-				"Po_No": Data.Po_No,
-				"Item_No": Data.Item_No,
+				"Po_No": Data.PoNum,
+				"Item_No": Data.LineNum,
 				"Uom": Data.Uom
 			});
 
