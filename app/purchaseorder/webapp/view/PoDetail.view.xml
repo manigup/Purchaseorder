@@ -1,6 +1,6 @@
 <mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="sp.fiori.purchaseorder.controller.PoDetail"
  class="sapUiSizeCompact">
-	<Page id="_IDGenPage1" title="Purchase Order - {detailModel>/Po_No}" class="sapUiSizeCompact" titleAlignment="Center">
+	<Page id="_IDGenPage1" title="Purchase Order - {detailModel>/PoNum}" class="sapUiSizeCompact" titleAlignment="Center">
 		<content>
 			<!-- <ObjectHeader id="ObjectId"
 				title="Upcoming Delivery: {path:'detailModel>/Upcoming_Del_Date', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"
@@ -8,7 +8,7 @@
 				fullScreenOptimized="true"> -->
 				<ObjectHeader id="ObjectId">
 				<attributes>
-					<ObjectAttribute id="_IDGenObjectAttribute2" text="Vendor: {detailModel>/Vendor_Name}"/>
+					<ObjectAttribute id="_IDGenObjectAttribute2" text="Vendor: {detailModel>/VendorName}"/>
 					<!-- <ObjectAttribute id="_IDGenObjectAttribute1" title="Plant" text="{detailModel>/Plant_Desc} ({detailModel>/Plant})"/> -->
 					<!--<ObjectAttribute title="Validity"-->
 					<!--	text="{path:'detailModel>/ValidFrom', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'} - {path:'detailModel>/ValidTo', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"/>-->
@@ -16,8 +16,8 @@
 					<!--<ObjectAttribute title="Vendor" text="{detailModel>/Vendor_Name} ({detailModel>/Vendor_No})"></ObjectAttribute>-->
 				</attributes>
 				<statuses>
-					<ObjectStatus id="_IDGenObjectStatus1" text="{path:'detailModel>/Po_Date', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"/>
-					<ObjectStatus id="_IDGenObjectStatus2" text="{detailModel>/PoType}" state="Success"/>
+					<ObjectStatus id="_IDGenObjectStatus1" text="{path:'detailModel>/PoDate', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"/>
+					<!-- <ObjectStatus id="_IDGenObjectStatus2" text="{detailModel>/PoType}" state="Success"/> -->
 				</statuses>
 			</ObjectHeader>
 			<IconTabBar id="_IDGenIconTabBar1">
@@ -56,7 +56,8 @@
 									<Text id="_IDGenText7" text="Delivered Qty"/>
 								</Column>
 								<Column id="_IDGenColumn8" minScreenWidth="Tablet" demandPopin="true">
-									<Text id="_IDGenText8" text="Unit Price ({detailModel>/Currency})"/>
+									<Text id="_IDGenText8" text="Unit Price"/>
+									<!-- text="Unit Price ({detailModel>/Currency})"/> -->
 								</Column>
 								<Column id="_IDGenColumn9" minScreenWidth="Tablet" demandPopin="true">
 									<Text id="_IDGenText9" text="Status"/>
@@ -65,11 +66,11 @@
 							<items>
 								<ColumnListItem id="_IDGenColumnListItem1" type="Navigation">
 									<cells>
-										<Text id="_IDGenText10" text="{detailModel>Item_No}"></Text>
+										<Text id="_IDGenText10" text="{detailModel>LineNum}"></Text>
 										<FlexBox id="_IDGenFlexBox1" direction="Column" class="sapUiNoMarginTop">
 											<items>
-												<Text id="_IDGenText11" text="{detailModel>Material_Desc}"/>
-												<Link id="_IDGenLink1" text="{detailModel>Material_No}" press="onMaterialPress" emphasized="true" enabled="true"/>
+												<Text id="_IDGenText11" text="{detailModel>ItemDesc}"/>
+												<Link id="_IDGenLink1" text="{detailModel>ItemCode}" press="onMaterialPress" emphasized="true" enabled="true"/>
 												<!--<ObjectIdentifier title="{detailModel>Material_No}"/>-->
 											</items>
 										</FlexBox>
@@ -79,17 +80,18 @@
 										<!--		<ObjectIdentifier title="{detailModel>Wgbez}"/>-->
 										<!--	</items>-->
 										<!--</FlexBox>-->
-										<Text id="_IDGenText12" text="{detailModel>Hsn_Code}"></Text>
+										<Text id="_IDGenText12" text="{detailModel>HSNCode}"></Text>
 										<!-- <Text id="_IDGenText13" width="7em" text="{path:'detailModel>Delivery_Date', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"/> -->
-										<ObjectNumber id="_IDGenObjectNumber1" number="{detailModel>Quantity}" numberUnit="{detailModel>Uom}"/>
-										<!--press="onQuantityPress"/>-->
-										<ObjectNumber id="_IDGenObjectNumber2" number="{detailModel>Confirm_Qty}" numberUnit="{detailModel>Uom}"/>
-										<!--press="onConfQuantityPress"/>-->
-										<ObjectNumber id="_IDGenObjectNumber3" number="{detailModel>Delivered_Qty}" unit="{detailModel>Uom}"/>
-										<Text id="_IDGenText14" text="{detailModel>Total_Amount}"/>
+										<ObjectNumber id="_IDGenObjectNumber1" number="{detailModel>PoQty}" />
+										<!--numberUnit="{detailModel>Uom}" press="onQuantityPress"/>-->
+										<ObjectNumber id="_IDGenObjectNumber2" number="{detailModel>BalanceQty}" />
+										<!--numberUnit="{detailModel>Uom}" press="onConfQuantityPress"/>-->
+										<ObjectNumber id="_IDGenObjectNumber3" number="{detailModel>DeliveredQty}" />
+										<!-- unit="{detailModel>Uom}"/> -->
+										<Text id="_IDGenText14" text="{detailModel>UnitPrice}"/>
 										<!--press="onAmountPress"/>-->
-										<ObjectStatus id="_IDGenObjectStatus3" text="{detailModel>Confirm_Status}"
-											state="{path:'detailModel>Confirm_Status',formatter:'sp.fiori.purchaseorder.controller.formatter.statusCheck'}"/>
+										<ObjectStatus id="_IDGenObjectStatus3" text=""/>
+										<!-- text="{detailModel>Confirm_Status}" state="{path:'detailModel>Confirm_Status',formatter:'sp.fiori.purchaseorder.controller.formatter.statusCheck'}"/> -->
 									</cells>
 								</ColumnListItem>
 							</items>

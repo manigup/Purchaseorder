@@ -31,7 +31,7 @@ sap.ui.define([
 				this.getView().byId("masterListId").getBinding("items").filter([]);
 				this.getView().byId("masterListId").setSelectedItem(selectedList, true);
 				var list = that.getView().byId("masterListId");
-				var Po_No = selectedList.getBindingContext().getProperty("Po_No");
+				var Po_No = selectedList.getBindingContext().getProperty("PoNum");
 				that.router.navTo("PoDetail", {
 					"Po_No": Po_No
 				});
@@ -55,7 +55,7 @@ sap.ui.define([
 
 				if (selectedItem) {
 					list.setSelectedItem(selectedItem, true);
-					var Po_No = selectedItem.getBindingContext().getProperty("Po_No");
+					var Po_No = selectedItem.getBindingContext().getProperty("PoNum");
 					// var path = selectedItem.getBindingContext().getPath();
 					// var VendorNum = that.getView().getModel().getProperty(path).Vendor_No;
 					that.router.navTo("PoDetail", {
@@ -236,7 +236,7 @@ sap.ui.define([
 			var selectedItems = this.getView().byId("masterListId").getSelectedItems();
 			var Ebeln = [];
 			for (var i = 0; i < selectedItems.length; i++) {
-				var Po_No = selectedItems[0].getBindingContext().getObject().Po_No;
+				var Po_No = selectedItems[0].getBindingContext().getObject().PoNum;
 				Ebeln.push("Ebeln eq '" + Po_No + "'");
 			}
 
