@@ -6,16 +6,16 @@
 				selectionChange="onListItemPress">
 				<items>
 					<ObjectListItem class="purchaseOrder" id="listItemTemp" title="{Po_No}" type="Active" number="{Status}" numberState="Warning">
-						<attributes>
+						<!-- <attributes>
 							<ObjectAttribute id="_IDGenObjectAttribute1" title="Plant" text="{Plant}"/>
 							<ObjectAttribute id="_IDGenObjectAttribute2" text="{Plant_Desc}"/>
-						</attributes>
+						</attributes> -->
 						<firstStatus>
 							<ObjectStatus id="_IDGenObjectStatus1" text="{path:'Po_Date', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"/>
 						</firstStatus>
-						<secondStatus>
+						<!-- <secondStatus>
 						   <ObjectStatus id="_IDGenObjectStatus2" text="{UpdatedBy}"/>
-						</secondStatus>
+						</secondStatus> -->
 					</ObjectListItem>
 				</items>
 			</List>
@@ -23,8 +23,8 @@
 		<footer>
 			<Bar id="_IDGenBar1">
 				<contentLeft>
-					<Button id="FilterId" visible="true" icon="sap-icon://filter" press="onFilter" type="Emphasized"/>
-					<Button id="clearFilterId" visible="false" icon="sap-icon://clear-filter" press="onFilterClear" type="Emphasized"/>
+					<!-- <Button id="FilterId" visible="true" icon="sap-icon://filter" press="onFilter" type="Emphasized"/>
+					<Button id="clearFilterId" visible="false" icon="sap-icon://clear-filter" press="onFilterClear" type="Emphasized"/> -->
 				</contentLeft>
 			</Bar>
 		</footer>
