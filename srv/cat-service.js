@@ -15,6 +15,19 @@ module.exports = (srv) => {
     srv.on('READ', 'DocumentRowItems', async (req) => {
         try {
             const results = await getPurchaseOrders();
+    
+            // If _queryOptions exist and has $filter property
+            if (req._queryOptions && req._queryOptions.$filter) {
+                const filterStr = req._queryOptions.$filter;
+                const filterParts = filterStr.split(' eq ');
+                if (filterParts.length === 2) {
+                    const filterField = filterParts[0];
+                    const filterValue = filterParts[1].replace(/'/g, '');
+                    const filteredResults = results.documentRows.filter(row => String(row[filterField]) === filterValue);
+                    return filteredResults;
+                }
+            }
+    
             return results.documentRows;
         } catch (error) {
             console.error('Error fetching DocumentRowItems:', error);
