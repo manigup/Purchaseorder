@@ -34,6 +34,13 @@ module.exports = (srv) => {
             throw new Error('Unable to fetch DocumentRowItems.');
         }
     });
+
+    srv.on('getPurchaseMaterialQuantityList', async(req) => {
+        const {UnitCode, PoNum, MaterialCode} = req.data;
+        // Replace '-' with '/' for PoNum
+        const formattedPoNum = PoNum.replace(/-/g, '/');
+        return getPurchaseMaterialQuantityList(UnitCode, formattedPoNum, MaterialCode)
+    })
 };
 
 async function getPurchaseOrders() {
@@ -86,5 +93,29 @@ async function getPurchaseOrders() {
     } catch (error) {
         console.error('Error in API call:', error);
         throw error;
+    }
+}
+
+async function getPurchaseMaterialQuantityList(UnitCode, PoNum, MaterialCode) {
+    try {
+        const response = await axios({
+            method: 'get',
+            url: `https://imperialauto.co:84/IAIAPI.asmx/GetPurchaseMaterialQuantityList?UnitCode='${UnitCode}'&PoNum='${PoNum}'&MaterialCode='${MaterialCode}'&RequestBy='Manikandan'`,
+            headers: {
+                'Authorization': 'Bearer IncMpsaotdlKHYyyfGiVDg==',
+                'Content-Type': 'application/json'
+            },
+            data: {}
+        });
+
+        if (response.data && response.data.d) {
+            return JSON.parse(response.data.d);
+        } else {
+            console.error('Error parsing response:', response.data);
+            throw new Error('Error parsing the response from the API.');
+        }
+    } catch (error) {
+        console.error('Error in getPurchaseMaterialQuantityList API call:', error);
+        throw new Error('Unable to fetch Purchase Material Quantity List.');
     }
 }
