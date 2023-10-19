@@ -31,7 +31,8 @@ sap.ui.define([
 				this.getView().byId("masterListId").getBinding("items").filter([]);
 				this.getView().byId("masterListId").setSelectedItem(selectedList, true);
 				var list = that.getView().byId("masterListId");
-				var Po_No = selectedList.getBindingContext().getProperty("PoNum");
+				var PoNo = selectedList.getBindingContext().getProperty("PoNum");
+				var Po_No = PoNo.replace(/\//g,'-');
 				that.router.navTo("PoDetail", {
 					"Po_No": Po_No
 				});
@@ -40,7 +41,7 @@ sap.ui.define([
 			this.getView().byId("searchFieldId").setValue("");
 
 			this.getView().byId("masterListId").bindItems({
-				path: "/PO_HEADERSet",
+				path: "/PurchaseOrders",
 				template: this._listTemp
 			});
 			this._getFirstItem();
@@ -55,7 +56,8 @@ sap.ui.define([
 
 				if (selectedItem) {
 					list.setSelectedItem(selectedItem, true);
-					var Po_No = selectedItem.getBindingContext().getProperty("PoNum");
+					var PoNo = selectedItem.getBindingContext().getProperty("PoNum");
+					var Po_No = PoNo.replace(/\//g,'-');
 					// var path = selectedItem.getBindingContext().getPath();
 					// var VendorNum = that.getView().getModel().getProperty(path).Vendor_No;
 					that.router.navTo("PoDetail", {
@@ -76,7 +78,8 @@ sap.ui.define([
 			if (this.getView().byId("masterListId").getMode() == "MultiSelect") {
 				return;
 			}
-			var PoNum = oEvent.getParameter("listItem").getProperty("title");
+			var PoNo = oEvent.getParameter("listItem").getProperty("title");
+			var PoNum = PoNo.replace(/\//g,'-');
 			this.router.navTo("PoDetail", {
 				"Po_No": PoNum
 			});
