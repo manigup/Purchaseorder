@@ -12,7 +12,8 @@
 							<ObjectAttribute id="_IDGenObjectAttribute2" text="{Plant_Desc}"/>
 						</attributes> -->
 						<firstStatus>
-							<ObjectStatus id="_IDGenObjectStatus1" text="{path:'PoDate', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"/>
+							<ObjectStatus id="_IDGenObjectStatus1" text="{PoDate}"/>
+							<!-- text="{path:'PoDate', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"/> -->
 						</firstStatus>
 						<!-- <secondStatus>
 						   <ObjectStatus id="_IDGenObjectStatus2" text="{UpdatedBy}"/>

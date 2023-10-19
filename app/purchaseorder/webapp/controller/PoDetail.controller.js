@@ -1,7 +1,10 @@
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
-	"sap/m/MessageBox"
-], function (Controller, MessageBox) {
+	"sap/m/MessageBox",
+	"sap/ui/model/json/JSONModel",
+	"sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator",
+], function (Controller, MessageBox,JSONModel,Filter,FilterOperator) {
 	"use strict";
 
 	return Controller.extend("sp.fiori.purchaseorder.controller.PoDetail", {
@@ -22,6 +25,9 @@ sap.ui.define([
 			this.router = sap.ui.core.UIComponent.getRouterFor(this);
 			this.router.attachRouteMatched(this.handleRouteMatched, this);
 
+			this.detailHeaderModel = new sap.ui.model.json.JSONModel();
+			this.detailHeaderModel.setSizeLimit(1000);
+			this.getView().setModel(this.detailHeaderModel, "detailHeaderMode");
 			this.detailModel = new sap.ui.model.json.JSONModel();
 			this.detailModel.setSizeLimit(1000);
 			this.getView().setModel(this.detailModel, "detailModel");
@@ -44,28 +50,38 @@ sap.ui.define([
 
 				this.odata = {};
 				var that = this;
-
+				var oModel = this.getOwnerComponent().getModel();
 				// this.oDataModel.setHeaders({
 				// 	"loginId": that.loginData.loginName,
 				// 	"LoginType": that.loginData.userType
 				// });
 
-				this.Po_Num = event.getParameter("arguments").Po_No;
+				var PoNum = event.getParameter("arguments").Po_No;
+				this.Po_Num = PoNum.replace(/-/g,'/');
 				// this.Vendor_No = event.getParameter("arguments").Vendor_No;
 
 				// var request = "/PO_HEADERSet(Po_No='" + this.Po_Num + "',Vendor_No='" + this.Vendor_No + "')?$expand=headertoitemNav";
-
-				var request = "/PO_HEADERSet(Po_No='" + this.Po_Num + "',Vendor_No='')?$expand=headertoitemNav";
-				this.oDataModel.read(request, null, null, false, function (oData) {
-						that.odata = oData;
-						that.detailModel.setData(oData);
+				
+				var filters = new sap.ui.model.Filter("PNum_PoNum", sap.ui.model.FilterOperator.EQ, this.Po_Num);
+				
+				// var combinedFilter = new sap.ui.model.Filter({
+				// 	filters: filters
+				// });
+				var request = "/DocumentRowItems";
+				oModel.read(request, {
+					filters : [filters],
+					success : function (oData) {
+						that.odata = oData.results;
+						that.detailHeaderModel.setData(oData.results[0]);
+						that.detailHeaderModel.refresh(true);
+						that.detailModel.setData(oData.results);
 						that.detailModel.refresh(true);
 					},
-					function (oError) {
+					error : function (oError) {
 
 						var value = JSON.parse(oError.response.body);
 						MessageBox.error(value.error.message.value);
-
+					}
 					}
 				);
 

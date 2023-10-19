@@ -1,6 +1,6 @@
 <mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="sp.fiori.purchaseorder.controller.PoDetail"
  class="sapUiSizeCompact">
-	<Page id="_IDGenPage1" title="Purchase Order - {detailModel>/PoNum}" class="sapUiSizeCompact" titleAlignment="Center">
+	<Page id="_IDGenPage1" title="Purchase Order - {detailHeaderMode>/PNum_PoNum}" class="sapUiSizeCompact" titleAlignment="Center">
 		<content>
 			<!-- <ObjectHeader id="ObjectId"
 				title="Upcoming Delivery: {path:'detailModel>/Upcoming_Del_Date', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"
@@ -8,7 +8,7 @@
 				fullScreenOptimized="true"> -->
 				<ObjectHeader id="ObjectId">
 				<attributes>
-					<ObjectAttribute id="_IDGenObjectAttribute2" text="Vendor: {detailModel>/VendorName}"/>
+					<ObjectAttribute id="_IDGenObjectAttribute2" text="Vendor: {detailHeaderMode>/VendorName}"/>
 					<!-- <ObjectAttribute id="_IDGenObjectAttribute1" title="Plant" text="{detailModel>/Plant_Desc} ({detailModel>/Plant})"/> -->
 					<!--<ObjectAttribute title="Validity"-->
 					<!--	text="{path:'detailModel>/ValidFrom', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'} - {path:'detailModel>/ValidTo', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"/>-->
@@ -16,14 +16,15 @@
 					<!--<ObjectAttribute title="Vendor" text="{detailModel>/Vendor_Name} ({detailModel>/Vendor_No})"></ObjectAttribute>-->
 				</attributes>
 				<statuses>
-					<ObjectStatus id="_IDGenObjectStatus1" text="{path:'detailModel>/PoDate', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"/>
+					<ObjectStatus id="_IDGenObjectStatus1" text="{detailHeaderMode>/PoDate}"/>
+					<!-- text="{path:'detailModel>/PoDate', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"/> -->
 					<!-- <ObjectStatus id="_IDGenObjectStatus2" text="{detailModel>/PoType}" state="Success"/> -->
 				</statuses>
 			</ObjectHeader>
 			<IconTabBar id="_IDGenIconTabBar1">
 				<items>
 					<IconTabFilter id="_IDGenIconTabFilter1" icon="sap-icon://approvals" text="Items">
-						<Table id="DeliveryTableId" class="sapUiSizeCompact" items="{detailModel>/headertoitemNav/results}" itemPress="onItempress"
+						<Table id="DeliveryTableId" class="sapUiSizeCompact" items="{detailModel>/}" itemPress="onItempress"
 							fixedLayout="false">
 							<headerToolbar>
 								<Toolbar id="_IDGenToolbar1">
