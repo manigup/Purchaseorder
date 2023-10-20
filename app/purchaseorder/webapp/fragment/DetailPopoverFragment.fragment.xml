@@ -1,6 +1,6 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
 	<Popover showHeader="false" id="detailPopover" class="sapUiContentPadding" placement="Top">
-		<Table id="DeliveryTableId" class="sapUiSizeCompact" itemPress="onItempress" fixedLayout="false">
+		<Table id="DeliveryTableId" class="sapUiSizeCompact" items="{materialDescModel>/}" itemPress="onItempress" fixedLayout="false">
 			<columns>
 				<Column id="_IDGenColumn1" minScreenWidth="Tablet" demandPopin="true">
 					<Text id="_IDGenText1" text="Material"/>
@@ -18,10 +18,10 @@
 			<items>
 				<ColumnListItem id="TableTempId">
 					<cells>
-						<Text id="_IDGenText5" text="{Matnr}"/>
-						<Text id="_IDGenText6" text="{Maktx}"/>
-						<Text id="_IDGenText7" text="{Bdmng}"/>
-						<Text id="_IDGenText8" text="{Meins}"/>
+						<Text id="_IDGenText5" text="{materialDescModel>ItemCode}"/>
+						<Text id="_IDGenText6" text="{materialDescModel>ItemDesc}"/>
+						<Text id="_IDGenText7" text="{materialDescModel>PoQty}"/>
+						<Text id="_IDGenText8" text="{materialDescModel>UnitPrice}"/>
 					</cells>
 				</ColumnListItem>
 			</items>

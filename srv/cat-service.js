@@ -15,7 +15,7 @@ module.exports = (srv) => {
     srv.on('READ', 'DocumentRowItems', async (req) => {
         try {
             const results = await getPurchaseOrders();
-    
+
             // If _queryOptions exist and has $filter property
             if (req._queryOptions && req._queryOptions.$filter) {
                 const filterStr = req._queryOptions.$filter;
@@ -27,7 +27,7 @@ module.exports = (srv) => {
                     return filteredResults;
                 }
             }
-    
+
             return results.documentRows;
         } catch (error) {
             console.error('Error fetching DocumentRowItems:', error);
@@ -35,8 +35,8 @@ module.exports = (srv) => {
         }
     });
 
-    srv.on('getPurchaseMaterialQuantityList', async(req) => {
-        const {UnitCode, PoNum, MaterialCode} = req.data;
+    srv.on('getPurchaseMaterialQuantityList', async (req) => {
+        const { UnitCode, PoNum, MaterialCode } = req.data;
         // Replace '-' with '/' for PoNum
         const formattedPoNum = PoNum.replace(/-/g, '/');
         return getPurchaseMaterialQuantityList(UnitCode, formattedPoNum, MaterialCode)
@@ -57,22 +57,28 @@ async function getPurchaseOrders() {
 
         if (response.data && response.data.d) {
             const dataArray = JSON.parse(response.data.d);
-            
+
             const purchaseOrders = dataArray.map(data => {
                 return {
                     PoNum: data.PoNum,
                     PoDate: data.PoDate,
                     VendorName: data.VendorName,
+                    VendorCode: data.VendorCode,
+                    PlantCode: data.PlantCode,
+                    PlantName: data.PlantName,
                 };
             });
 
             // Extracting DocumentRows details
-            const documentRows = dataArray.flatMap(data => 
+            const documentRows = dataArray.flatMap(data =>
                 data.DocumentRows.map(row => {
                     return {
                         LineNum: parseInt(row.LineNum),
                         PoDate: data.PoDate,
                         VendorName: data.VendorName,
+                        VendorCode: data.VendorCode,
+                        PlantCode: data.PlantCode,
+                        PlantName: data.PlantName,
                         ItemCode: row.ItemCode,
                         ItemDesc: row.ItemDesc,
                         HSNCode: row.HSNCode,

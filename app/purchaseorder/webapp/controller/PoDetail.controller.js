@@ -3,8 +3,8 @@ sap.ui.define([
 	"sap/m/MessageBox",
 	"sap/ui/model/json/JSONModel",
 	"sap/ui/model/Filter",
-    "sap/ui/model/FilterOperator",
-], function (Controller, MessageBox,JSONModel,Filter,FilterOperator) {
+	"sap/ui/model/FilterOperator",
+], function (Controller, MessageBox, JSONModel, Filter, FilterOperator) {
 	"use strict";
 
 	return Controller.extend("sp.fiori.purchaseorder.controller.PoDetail", {
@@ -27,10 +27,13 @@ sap.ui.define([
 
 			this.detailHeaderModel = new sap.ui.model.json.JSONModel();
 			this.detailHeaderModel.setSizeLimit(1000);
-			this.getView().setModel(this.detailHeaderModel, "detailHeaderMode");
+			this.getView().setModel(this.detailHeaderModel, "detailHeaderModel");
 			this.detailModel = new sap.ui.model.json.JSONModel();
 			this.detailModel.setSizeLimit(1000);
 			this.getView().setModel(this.detailModel, "detailModel");
+			this.materialDescModel = new sap.ui.model.json.JSONModel();
+			this.materialDescModel.setSizeLimit(1000);
+			this.getView().setModel(this.materialDescModel, "materialDescModel");
 			this.popOverModel = new sap.ui.model.json.JSONModel();
 			this.detailAmountPopoverModel = new sap.ui.model.json.JSONModel();
 			this.ConfirmFragModel = new sap.ui.model.json.JSONModel();
@@ -57,32 +60,32 @@ sap.ui.define([
 				// });
 
 				var PoNum = event.getParameter("arguments").Po_No;
-				this.Po_Num = PoNum.replace(/-/g,'/');
+				this.Po_Num = PoNum.replace(/-/g, '/');
 				// this.Vendor_No = event.getParameter("arguments").Vendor_No;
 
 				// var request = "/PO_HEADERSet(Po_No='" + this.Po_Num + "',Vendor_No='" + this.Vendor_No + "')?$expand=headertoitemNav";
-				
+
 				var filters = new sap.ui.model.Filter("PNum_PoNum", sap.ui.model.FilterOperator.EQ, this.Po_Num);
-				
+
 				// var combinedFilter = new sap.ui.model.Filter({
 				// 	filters: filters
 				// });
 				var request = "/DocumentRowItems";
 				oModel.read(request, {
-					filters : [filters],
-					success : function (oData) {
+					filters: [filters],
+					success: function (oData) {
 						that.odata = oData.results;
 						that.detailHeaderModel.setData(oData.results[0]);
 						that.detailHeaderModel.refresh(true);
 						that.detailModel.setData(oData.results);
 						that.detailModel.refresh(true);
 					},
-					error : function (oError) {
+					error: function (oError) {
 
 						var value = JSON.parse(oError.response.body);
 						MessageBox.error(value.error.message.value);
 					}
-					}
+				}
 				);
 
 				/*	var data = this.detailModel.getData().headertoitemNav.results;*/
@@ -113,20 +116,25 @@ sap.ui.define([
 		onMaterialPress: function (oEvent) {
 			var that = this;
 			var LineItemData = oEvent.getSource().getParent().getBindingContext("detailModel").getObject();
-
+			var materialData = [];
+			materialData.push(LineItemData);
 			if (!this._oPopoverFragment) {
 				this._oPopoverFragment = sap.ui.xmlfragment("sp.fiori.purchaseorder.fragment.DetailPopoverFragment", this);
 
 				this.TableTempId = sap.ui.getCore().byId("TableTempId").clone();
 				this.getView().addDependent(this._oPopoverFragment);
 			}
-
-			sap.ui.getCore().byId("DeliveryTableId").bindAggregation("items", {
-				path: "/SubcontractMaterialSet?$filter=Ebeln eq '" + LineItemData.Po_No + "'and Ebelp  eq '" + LineItemData.Item_No + "'",
-				template: that.TableTempId
-			});
-
+			this._oPopoverFragment.setModel(new JSONModel(materialData), "materialDescModel");
+			// sap.ui.getCore().byId("DeliveryTableId").bindAggregation("items", {
+			// 	path: "/materialDescModel",
+			// 	template: that.TableTempId
+			// });
 			this._oPopoverFragment.openBy(oEvent.getSource());
+
+			// sap.ui.getCore().byId("DeliveryTableId").bindAggregation("items", {
+			// 	path: "/SubcontractMaterialSet?$filter=Ebeln eq '" + LineItemData.Po_No + "'and Ebelp  eq '" + LineItemData.Item_No + "'",
+			// 	template: that.TableTempId
+			// });
 			// this._oPopover.openBy(oEvent.getSource());
 
 		},
@@ -137,7 +145,7 @@ sap.ui.define([
 			this.router.navTo("PoAsnCreate", {
 				"Po_No": that.Po_Num,
 				"Amount": that.detailModel.getData().Amount
-					// "Vendor_No": that.detailModel.getData().Vendor_No
+				// "Vendor_No": that.detailModel.getData().Vendor_No
 
 			});
 		},
@@ -193,12 +201,12 @@ sap.ui.define([
 		},
 
 		onItempress: function (oEvent) {
-
 			var Data = oEvent.getParameter("listItem").getBindingContext("detailModel").getObject();
+			var PoNo = Data.PNum_PoNum;
+			var Po_No = PoNo.replace(/\//g, '-');
 			this.router.navTo("POItemDetails", {
-				"Po_No": Data.PoNum,
-				"Item_No": Data.LineNum,
-				"Uom": Data.Uom
+				"Po_No": Po_No,
+				"Item_No": Data.ItemCode
 			});
 
 		},
@@ -248,10 +256,10 @@ sap.ui.define([
 			var request = "/PoScheduleSet?$filter= Ebeln eq '" + this.Po_Num + "' and Ebelp eq '" + Ebelp + "' and Type eq '" +
 				type + "'";
 			this.oDataModel.read(request, null, null, false, function (oData) {
-					// that.odata = oData;
-					that.fragModel.setData(oData);
-					that.fragModel.refresh(true);
-				},
+				// that.odata = oData;
+				that.fragModel.setData(oData);
+				that.fragModel.refresh(true);
+			},
 				function (oError) {
 
 					var value = JSON.parse(oError.response.body);
@@ -302,10 +310,10 @@ sap.ui.define([
 			var request = "/PoScheduleSet?$filter= Ebeln eq '" + this.Po_Num + "' and Ebelp eq '" + Ebelp + "' and Type eq '" +
 				type + "'";
 			this.oDataModel.read(request, null, null, false, function (oData) {
-					// that.odata = oData;
-					that.fragModel.setData(oData);
-					that.fragModel.refresh(true);
-				},
+				// that.odata = oData;
+				that.fragModel.setData(oData);
+				that.fragModel.refresh(true);
+			},
 				function (oError) {
 
 					var value = JSON.parse(oError.response.body);
