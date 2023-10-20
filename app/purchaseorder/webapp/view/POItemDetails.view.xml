@@ -2,7 +2,7 @@
 	controllerName="sp.fiori.purchaseorder.controller.POItemDetails">
 	<Page id="_IDGenPage1" title="Puchase Order Number : {itemModel>/results/0/Ebeln}" showNavButton="true"
 		navButtonPress="sp.fiori.purchaseorder.controller.formatter.onNavBack" titleAlignment="Center">
-		<Table id="_IDGenTable1" items="{itemModel>/results}">
+		<Table id="_IDGenTable1" items="{itemModel>/}">
 			<columns>
 				<Column id="_IDGenColumn1" minScreenWidth="Tablet" demandPopin="true">
 					<Text id="_IDGenText1" text="Schedule Line"/>
@@ -20,10 +20,10 @@
 			<items>
 				<ColumnListItem id="_IDGenColumnListItem1">
 					<cells>
-						<Text id="_IDGenText5" text="{itemModel>Etenr}"/>
-						<ObjectIdentifier id="_IDGenObjectIdentifier1" title="{path:'itemModel>Eindt', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"/>
-						<ObjectNumber id="_IDGenObjectNumber1" number="{itemModel>Menge}" numberUnit="{itemModel>/Uom}" textAlign="End"/>
-						<ObjectNumber id="_IDGenObjectNumber2" number="{itemModel>Wemng}" numberUnit="{itemModel>/Uom}" textAlign="End"/>
+						<Text id="_IDGenText5" text="{itemModel>RowNum}"/>
+						<ObjectIdentifier id="_IDGenObjectIdentifier1" title="{path:'itemModel>DeliveryDate', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"/>
+						<ObjectNumber id="_IDGenObjectNumber1" number="{itemModel>DeliveryQuantity}" textAlign="End"/>
+						<ObjectNumber id="_IDGenObjectNumber2" number="{itemModel>DeliveryQuantity}" textAlign="End"/>
 					</cells>
 				</ColumnListItem>
 			</items>

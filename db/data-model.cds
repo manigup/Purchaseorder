@@ -1,26 +1,33 @@
 namespace my.bookshop;
 
 entity PurchaseOrders {
-  key PoNum: String;               
-  PoDate: Date;
-  VendorName: String;
-  DocumentRows: Composition of many DocumentRowItems on DocumentRows.PNum = $self;
-  //asnItems: Composition of many ASNItems on asnItems.PO_Reference = $self;
+  key PoNum        : String;
+      PoDate       : Date;
+      VendorName   : String;
+      VendorCode   : String;
+      PlantCode    : String;
+      PlantName    : String;
+      DocumentRows : Composition of many DocumentRowItems
+                       on DocumentRows.PNum = $self;
+//asnItems: Composition of many ASNItems on asnItems.PO_Reference = $self;
 }
 
 entity DocumentRowItems {
-  key UUID: UUID;
-  PoDate: Date;
-  VendorName: String;
-  LineNum: Integer;
-  ItemCode: String;
-  ItemDesc: String;
-  HSNCode: String;
-  PoQty: Integer;
-  DeliveredQty: Decimal;
-  BalanceQty: Decimal;
-  UnitPrice: Decimal;
-  PNum: Association to PurchaseOrders;
+  key UUID         : UUID;
+      PoDate       : Date;
+      VendorName   : String;
+      VendorCode   : String;
+      PlantCode    : String;
+      PlantName    : String;
+      LineNum      : Integer;
+      ItemCode     : String;
+      ItemDesc     : String;
+      HSNCode      : String;
+      PoQty        : Integer;
+      DeliveredQty : Decimal;
+      BalanceQty   : Decimal;
+      UnitPrice    : Decimal;
+      PNum         : Association to PurchaseOrders;
 }
 
 /*

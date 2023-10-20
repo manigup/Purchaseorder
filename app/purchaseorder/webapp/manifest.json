@@ -162,7 +162,7 @@
           "controlId": "app"
       },
       {
-          "pattern": "POItemDetails/{Po_No}/{Item_No}/{Uom}",
+          "pattern": "POItemDetails/{Po_No}/{Item_No}",
           "name": "POItemDetails",
           "view": "POItemDetails",
           "targetAggregation": "pages",

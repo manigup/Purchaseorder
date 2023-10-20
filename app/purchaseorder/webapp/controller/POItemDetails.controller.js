@@ -32,21 +32,29 @@ sap.ui.define([
 				return;
 			}
 
-			this.Schedule_No = evt.getParameter("arguments").Po_No;
+			this.Po_Num = evt.getParameter("arguments").Po_No;
+			this.Schedule_No = this.Po_Num .replace(/-/g,'/');
 			this.Item_No = evt.getParameter("arguments").Item_No;
-			this.Uom = evt.getParameter("arguments").Uom;
-
-			this.oDataModel.read("/Po_LineitemSet?$filter=Ebeln eq '" + this.Schedule_No + "' and Ebelp eq '" + this.Item_No + "'",
-				null,
-				null,
-				false,
-				function (oData, oResponse) {
-					oData.Uom = that.Uom;
-					that.itemModel.setData(oData);
-					that.itemModel.refresh(true);
-
-				});
-
+			// this.Uom = evt.getParameter("arguments").Uom;
+			var oModel = this.getOwnerComponent().getModel();
+                return new Promise(function(resolve, reject) {
+                    oModel.callFunction("/getPurchaseMaterialQuantityList", {
+                        method: "GET",
+                        urlParameters: {
+                            UnitCode: "P01",
+							PoNum: this.Schedule_No,
+							MaterialCode: this.Item_No
+                        },
+                        success: function (oData, response) {
+							that.itemModel.setData(oData.results);
+					        that.itemModel.refresh(true.results);
+                            resolve();
+                        }.bind(this),
+                        error: function (oError) {
+                            reject(new Error("Failed to fetch material data."));
+                        }
+                    });
+                }.bind(this));
 		},
 		onNavBack: function () {
 			jQuery.sap.require("sap.ui.core.routing.History");

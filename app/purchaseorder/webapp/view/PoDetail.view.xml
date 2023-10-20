@@ -1,6 +1,6 @@
 <mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="sp.fiori.purchaseorder.controller.PoDetail"
  class="sapUiSizeCompact">
-	<Page id="_IDGenPage1" title="Purchase Order - {detailHeaderMode>/PNum_PoNum}" class="sapUiSizeCompact" titleAlignment="Center">
+	<Page id="_IDGenPage1" title="Purchase Order - {detailHeaderModel>/PNum_PoNum}" class="sapUiSizeCompact" titleAlignment="Center">
 		<content>
 			<!-- <ObjectHeader id="ObjectId"
 				title="Upcoming Delivery: {path:'detailModel>/Upcoming_Del_Date', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"
@@ -8,16 +8,16 @@
 				fullScreenOptimized="true"> -->
 				<ObjectHeader id="ObjectId">
 				<attributes>
-					<ObjectAttribute id="_IDGenObjectAttribute2" text="Vendor: {detailHeaderMode>/VendorName}"/>
-					<!-- <ObjectAttribute id="_IDGenObjectAttribute1" title="Plant" text="{detailModel>/Plant_Desc} ({detailModel>/Plant})"/> -->
+					<ObjectAttribute id="_IDGenObjectAttribute2" text="Vendor: {detailHeaderModel>/VendorName}"/>
+					<ObjectAttribute id="_IDGenObjectAttribute1" title="Plant" text="{detailHeaderModel>/PlantName} ({detailHeaderModel>/PlantCode})"/>
 					<!--<ObjectAttribute title="Validity"-->
 					<!--	text="{path:'detailModel>/ValidFrom', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'} - {path:'detailModel>/ValidTo', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"/>-->
 					<!--					<ObjectAttribute title="Valid Until" text="{path:'detailModel>/ValidTo', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"/>-->
 					<!--<ObjectAttribute title="Vendor" text="{detailModel>/Vendor_Name} ({detailModel>/Vendor_No})"></ObjectAttribute>-->
 				</attributes>
 				<statuses>
-					<ObjectStatus id="_IDGenObjectStatus1" text="{detailHeaderMode>/PoDate}"/>
-					<!-- text="{path:'detailModel>/PoDate', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"/> -->
+					<ObjectStatus id="_IDGenObjectStatus1" text="{path:'detailHeaderModel>/PoDate', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"/>
+					<!-- text="{detailHeaderModel>/PoDate}"/> -->
 					<!-- <ObjectStatus id="_IDGenObjectStatus2" text="{detailModel>/PoType}" state="Success"/> -->
 				</statuses>
 			</ObjectHeader>
