@@ -32,6 +32,11 @@ sap.ui.define([
                 var serviceUrl = modulePath + slash + this.getMetadata().getManifestEntry("sap.app").dataSources.mainService.uri;
                 var oDataModel = new ODataModel(serviceUrl, true);
 
+                // Initialize the flagModel, outside of attachMetadataLoaded
+                var flagModel = new sap.ui.model.json.JSONModel({ "confirmPressFlag": false });
+                this.setModel(flagModel, "flagModel");
+                sap.ui.getCore().setModel(flagModel, "flagModel");
+
                 // metadata failed
                 oDataModel.attachMetadataFailed(err => {
                     var response = err.getParameter("response").body;
@@ -47,8 +52,8 @@ sap.ui.define([
                     sap.ui.getCore().setModel(oDataModel, "oDataModel");
                     oDataModel.setDefaultCountMode("None");
 
-                    var flagModel = new sap.ui.model.json.JSONModel({ "confirmPressFlag": false });
-                    sap.ui.getCore().setModel(flagModel, "flagModel");
+                    //var flagModel = new sap.ui.model.json.JSONModel({ "confirmPressFlag": false });
+                    //sap.ui.getCore().setModel(flagModel, "flagModel");
                 });
 
                 // odata request failed
