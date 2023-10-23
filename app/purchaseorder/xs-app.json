@@ -3,8 +3,8 @@
   "authenticationMethod": "route",
   "routes": [
     {
-      "source": "^/odata/(.*)$",
-      "target": "/odata/$1",
+      "source": "^/v2/(.*)$",
+      "target": "/v2/$1",
       "destination": "PURCHASEORDER-srv-api",
       "authenticationType": "xsuaa",
       "csrfProtection": false
