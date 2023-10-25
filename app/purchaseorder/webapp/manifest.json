@@ -20,6 +20,7 @@
         "uri": "/v2/odata/v4/catalog/",
         "type": "OData",
         "settings": {
+          "defaultCountMode": "None",
           "annotations": [],
           "localUri": "localService/metadata.xml",
           "odataVersion": "2.0"
@@ -80,6 +81,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
+          "defaultCountMode": "None",
           "bundleName": "sp.fiori.purchaseorder.i18n.i18n"
         }
       },
@@ -87,6 +89,7 @@
         "dataSource": "mainService",
         "preload": true,
         "settings": {
+          "defaultCountMode": "None",
           "synchronizationMode": "None",
           "operationMode": "Server",
           "autoExpandSelect": true,

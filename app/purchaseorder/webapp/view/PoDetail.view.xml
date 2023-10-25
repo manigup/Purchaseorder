@@ -1,6 +1,6 @@
 <mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="sp.fiori.purchaseorder.controller.PoDetail"
  class="sapUiSizeCompact">
-	<Page id="_IDGenPage1" title="Purchase Order - {detailHeaderModel>/PNum_PoNum}" class="sapUiSizeCompact" titleAlignment="Center">
+	<Page id="_IDGenPage1" title="Purchase Order - {detailHeaderModel>/PoNum}" class="sapUiSizeCompact" titleAlignment="Center">
 		<content>
 			<!-- <ObjectHeader id="ObjectId"
 				title="Upcoming Delivery: {path:'detailModel>/Upcoming_Del_Date', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"
