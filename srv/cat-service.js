@@ -2,37 +2,22 @@ const cds = require('@sap/cds');
 const axios = require('axios');
 
 module.exports = (srv) => {
-    srv.on('READ', 'PurchaseOrders', async (req) => {
-        try {
-            const results = await getPurchaseOrders();
-            return results.purchaseOrders;
-        } catch (error) {
-            console.error('Error fetching PurchaseOrders:', error);
-            throw new Error('Unable to fetch PurchaseOrders.');
+
+    const {PurchaseOrders} = srv.entities;
+    
+    srv.on('READ', PurchaseOrders, async (req, next) => {
+        const results = await getPurchaseOrders();
+        if (!results) throw new Error('Unable to fetch PurchaseOrders.');
+
+
+        const expandDocumentRows = req.query.SELECT.columns && req.query.SELECT.columns.some(({ expand, ref }) => expand && ref[0] === "DocumentRows");
+        
+        if (expandDocumentRows) {
+            results.purchaseOrders.forEach(po => {
+                po.DocumentRows = results.documentRows.filter(dr => dr.PNum_PoNum === po.PoNum);
+            });
         }
-    });
-
-    srv.on('READ', 'DocumentRowItems', async (req) => {
-        try {
-            const results = await getPurchaseOrders();
-
-            // If _queryOptions exist and has $filter property
-            if (req._queryOptions && req._queryOptions.$filter) {
-                const filterStr = req._queryOptions.$filter;
-                const filterParts = filterStr.split(' eq ');
-                if (filterParts.length === 2) {
-                    const filterField = filterParts[0];
-                    const filterValue = filterParts[1].replace(/'/g, '');
-                    const filteredResults = results.documentRows.filter(row => String(row[filterField]) === filterValue);
-                    return filteredResults;
-                }
-            }
-
-            return results.documentRows;
-        } catch (error) {
-            console.error('Error fetching DocumentRowItems:', error);
-            throw new Error('Unable to fetch DocumentRowItems.');
-        }
+       return results.purchaseOrders;
     });
 
     srv.on('getPurchaseMaterialQuantityList', async (req) => {
@@ -40,7 +25,7 @@ module.exports = (srv) => {
         // Replace '-' with '/' for PoNum
         const formattedPoNum = PoNum.replace(/-/g, '/');
         return getPurchaseMaterialQuantityList(UnitCode, formattedPoNum, MaterialCode)
-    })
+    });
 };
 
 async function getPurchaseOrders() {

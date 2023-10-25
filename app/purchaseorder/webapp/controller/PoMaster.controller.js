@@ -42,6 +42,7 @@ sap.ui.define([
 
 			this.getView().byId("masterListId").bindItems({
 				path: "/PurchaseOrders",
+				parameters: {countMode: 'None'},
 				template: this._listTemp
 			});
 			this._getFirstItem();

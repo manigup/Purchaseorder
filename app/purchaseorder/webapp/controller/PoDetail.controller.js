@@ -44,75 +44,39 @@ sap.ui.define([
 				sap.m.ObjectHeader.prototype.onAfterRendering.apply(this, arguments);
 				this.$().find('.sapMOHTitleDiv').find('.sapMText').css('color', "#af2323");
 			};
-
 		},
 
 		handleRouteMatched: function (event) {
-
 			if (event.getParameter("name") === "PoDetail") {
-
-				this.odata = {};
 				var that = this;
 				var oModel = this.getOwnerComponent().getModel();
-				// this.oDataModel.setHeaders({
-				// 	"loginId": that.loginData.loginName,
-				// 	"LoginType": that.loginData.userType
-				// });
-
+		
 				var PoNum = event.getParameter("arguments").Po_No;
 				this.Po_Num = PoNum.replace(/-/g, '/');
-				// this.Vendor_No = event.getParameter("arguments").Vendor_No;
-
-				// var request = "/PO_HEADERSet(Po_No='" + this.Po_Num + "',Vendor_No='" + this.Vendor_No + "')?$expand=headertoitemNav";
-
-				var filters = new sap.ui.model.Filter("PNum_PoNum", sap.ui.model.FilterOperator.EQ, this.Po_Num);
-
-				// var combinedFilter = new sap.ui.model.Filter({
-				// 	filters: filters
-				// });
-				var request = "/DocumentRowItems";
+		
+				// Fetch all PurchaseOrders with DocumentRows
+				var request = "/PurchaseOrders?$expand=DocumentRows";
 				oModel.read(request, {
-					filters: [filters],
 					success: function (oData) {
-						that.odata = oData.results;
-						that.detailHeaderModel.setData(oData.results[0]);
-						that.detailHeaderModel.refresh(true);
-						that.detailModel.setData(oData.results);
-						that.detailModel.refresh(true);
+						var filteredPurchaseOrder = oData.results.find(po => po.PoNum === that.Po_Num);
+						if (filteredPurchaseOrder) {
+							that.detailHeaderModel.setData(filteredPurchaseOrder);
+							that.detailHeaderModel.refresh(true);
+						
+							that.detailModel.setData(filteredPurchaseOrder.DocumentRows.results);
+							that.detailModel.refresh(true);
+						} else {
+							MessageBox.error("Purchase order not found");
+						}
 					},
 					error: function (oError) {
-
 						var value = JSON.parse(oError.response.body);
 						MessageBox.error(value.error.message.value);
 					}
-				}
-				);
-
-				/*	var data = this.detailModel.getData().headertoitemNav.results;*/
-				/*	this.checkCount = 0;
-					this.enabledCount = 0;
-					this.getView().byId("chkBoxSelectAll").setSelected(false);
-					this.getView().byId("chkBoxSelectAll").setEnabled(true);
-
-					for (var i = 0; i < data.length; i++) {
-						if (data[i].Confirm_Status == "Not Confirmed") {
-							this.enabledCount++;
-						}
-					}
-					if (this.enabledCount == 0) {
-						this.getView().byId("chkBoxSelectAll").setEnabled(false);
-					}*/
-
-				// this.getView().bindElement({
-				// 	path: request,
-				// 	events: {
-				// 		dataReceived: function(oError) {}
-				// 	}
-				// });
-
+				});
 			}
 		},
-
+		
 		onMaterialPress: function (oEvent) {
 			var that = this;
 			var LineItemData = oEvent.getSource().getParent().getBindingContext("detailModel").getObject();
