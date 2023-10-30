@@ -94,12 +94,12 @@ sap.ui.define([
 				var sValue = e.getParameter("query");
 				if (sValue) {
 					this.getView().byId("masterListId").bindItems({
-						path: "/PO_HEADERSet?search=" + sValue,
+						path: "/PurchaseOrders?search=" + sValue,
 						template: this._listTemp
 					});
 				} else {
 					this.getView().byId("masterListId").bindItems({
-						path: "/PO_HEADERSet",
+						path: "/PurchaseOrders",
 						template: this._listTemp
 					});
 				}
