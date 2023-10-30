@@ -5,18 +5,27 @@ module.exports = (srv) => {
 
     const {PurchaseOrders} = srv.entities;
     
-    srv.on('READ', PurchaseOrders, async (req, next) => {
+    srv.on('READ', PurchaseOrders, async (req) => {
         const results = await getPurchaseOrders();
         if (!results) throw new Error('Unable to fetch PurchaseOrders.');
 
-
         const expandDocumentRows = req.query.SELECT.columns && req.query.SELECT.columns.some(({ expand, ref }) => expand && ref[0] === "DocumentRows");
-        
         if (expandDocumentRows) {
             results.purchaseOrders.forEach(po => {
                 po.DocumentRows = results.documentRows.filter(dr => dr.PNum_PoNum === po.PoNum);
             });
         }
+
+        // Checking for search parameter
+        const searchVal = req._queryOptions && req._queryOptions.$search;
+        if (searchVal) {
+            const cleanedSearchVal = searchVal.trim().replace(/"/g, '');
+            results.purchaseOrders = results.purchaseOrders.filter(po =>
+                po.PoNum.includes(cleanedSearchVal)
+            );
+        }
+
+        
        return results.purchaseOrders;
     });
 
