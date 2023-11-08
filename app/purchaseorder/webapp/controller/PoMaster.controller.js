@@ -42,7 +42,12 @@ sap.ui.define([
 
 			this.getView().byId("masterListId").bindItems({
 				path: "/PurchaseOrders",
-				parameters: {countMode: 'None'},
+				parameters: {
+					custom: {
+						unitCode: 'P02'
+					},
+					countMode: 'None'
+				},
 				template: this._listTemp
 			});
 			this._getFirstItem();
@@ -95,11 +100,21 @@ sap.ui.define([
 				if (sValue) {
 					this.getView().byId("masterListId").bindItems({
 						path: "/PurchaseOrders?search=" + sValue,
+						parameters: {
+							custom: {
+								unitCode: 'P02'
+							}
+						},
 						template: this._listTemp
 					});
 				} else {
 					this.getView().byId("masterListId").bindItems({
 						path: "/PurchaseOrders",
+						parameters: {
+							custom: {
+								unitCode: 'P02'
+							},
+						},
 						template: this._listTemp
 					});
 				}

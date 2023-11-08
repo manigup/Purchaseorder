@@ -6,7 +6,8 @@ module.exports = (srv) => {
     const {PurchaseOrders} = srv.entities;
     
     srv.on('READ', PurchaseOrders, async (req) => {
-        const results = await getPurchaseOrders();
+        const {unitCode} = req._queryOptions
+        const results = await getPurchaseOrders(unitCode);
         if (!results) throw new Error('Unable to fetch PurchaseOrders.');
 
         const expandDocumentRows = req.query.SELECT.columns && req.query.SELECT.columns.some(({ expand, ref }) => expand && ref[0] === "DocumentRows");
@@ -37,11 +38,11 @@ module.exports = (srv) => {
     });
 };
 
-async function getPurchaseOrders() {
+async function getPurchaseOrders(unitCode) {
     try {
         const response = await axios({
             method: 'get',
-            url: "https://imperialauto.co:84/IAIAPI.asmx/GetPurchaseMaterialList?UnitCode='P01'&RequestBy='Manikandan'",
+            url: `https://imperialauto.co:84/IAIAPI.asmx/GetPurchaseMaterialList?UnitCode='${unitCode}'&RequestBy='Manikandan'`,
             headers: {
                 'Authorization': 'Bearer IncMpsaotdlKHYyyfGiVDg==',
                 'Content-Type': 'application/json'
