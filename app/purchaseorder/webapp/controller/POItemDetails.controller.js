@@ -32,6 +32,7 @@ sap.ui.define([
 				return;
 			}
 
+			var unitCode = sessionStorage.getItem("unitCode");
 			this.Po_Num = evt.getParameter("arguments").Po_No;
 			this.Schedule_No = this.Po_Num .replace(/-/g,'/');
 			this.Item_No = evt.getParameter("arguments").Item_No;
@@ -41,7 +42,7 @@ sap.ui.define([
                     oModel.callFunction("/getPurchaseMaterialQuantityList", {
                         method: "GET",
                         urlParameters: {
-                            UnitCode: "P01",
+                            UnitCode: unitCode,
 							PoNum: this.Schedule_No,
 							MaterialCode: this.Item_No
                         },

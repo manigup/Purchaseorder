@@ -25,6 +25,7 @@ sap.ui.define([
 				return;
 			}
 			var that = this;
+			var unitCode = sessionStorage.getItem("unitCode");
 			if (that.flagModel.getData().confirmPressFlag) {
 				var selectedList = this.getView().byId("masterListId").getSelectedItem();
 				this.getView().byId("searchFieldId").setValue("");
@@ -44,7 +45,7 @@ sap.ui.define([
 				path: "/PurchaseOrders",
 				parameters: {
 					custom: {
-						unitCode: 'P02'
+						unitCode: unitCode
 					},
 					countMode: 'None'
 				},
