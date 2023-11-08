@@ -54,7 +54,8 @@ sap.ui.define([
 				this.getView().byId("DP1").setMinDate(Yesterday);
 				this.getView().byId("DP1").setMaxDate(Today);
 
-				this.Po_Num = event.getParameter("arguments").Po_No;
+				var PoNum = event.getParameter("arguments").Po_No;
+				this.Po_Num = PoNum.replace(/-/g, '/')
 				this.Amount = event.getParameter("arguments").Amount;
 				this.Vendor_No = event.getParameter("arguments").Vendor_No;
 

@@ -53,9 +53,9 @@ sap.ui.define([
 		
 				var PoNum = event.getParameter("arguments").Po_No;
 				this.Po_Num = PoNum.replace(/-/g, '/');
-		
+				var unitCode = sessionStorage.getItem("unitCode");
 				// Fetch all PurchaseOrders with DocumentRows
-				var request = "/PurchaseOrders?$expand=DocumentRows&unitCode=" + 'P02';
+				var request = "/PurchaseOrders?$expand=DocumentRows&unitCode=" + unitCode;
 				oModel.read(request, {
 					success: function (oData) {
 						var filteredPurchaseOrder = oData.results.find(po => po.PoNum === that.Po_Num);
@@ -106,8 +106,9 @@ sap.ui.define([
 		onCreateAsn: function () {
 			sap.ui.core.BusyIndicator.show(0);
 			var that = this;
+			var Po_No = that.Po_Num.replace(/\//g,'-');
 			this.router.navTo("PoAsnCreate", {
-				"Po_No": that.Po_Num,
+				"Po_No": Po_No,
 				"Amount": that.detailModel.getData().Amount
 				// "Vendor_No": that.detailModel.getData().Vendor_No
 
