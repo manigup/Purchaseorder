@@ -93,6 +93,7 @@ sap.ui.define([
 		},
 
 		onSearch: function (e) {
+			var unitCode = sessionStorage.getItem("unitCode");
 			if (e.getParameter("refreshButtonPressed") === true) {
 				this.getView().byId("masterListId").getBinding("items").refresh(true);
 				this._getFirstItem();
@@ -103,7 +104,7 @@ sap.ui.define([
 						path: "/PurchaseOrders?search=" + sValue,
 						parameters: {
 							custom: {
-								unitCode: 'P02'
+								unitCode: unitCode
 							}
 						},
 						template: this._listTemp
@@ -113,7 +114,7 @@ sap.ui.define([
 						path: "/PurchaseOrders",
 						parameters: {
 							custom: {
-								unitCode: 'P02'
+								unitCode: unitCode
 							},
 						},
 						template: this._listTemp
