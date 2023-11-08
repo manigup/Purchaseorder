@@ -106,9 +106,9 @@ sap.ui.define([
 		onCreateAsn: function () {
 			sap.ui.core.BusyIndicator.show(0);
 			var that = this;
-			var Po_No = that.Po_Num.replace(/\//g,'-');
+			//var Po_No = that.Po_Num.replace(/\//g,'-');
 			this.router.navTo("PoAsnCreate", {
-				"Po_No": Po_No,
+				"Po_No": that.Po_Num,
 				"Amount": that.detailModel.getData().Amount
 				// "Vendor_No": that.detailModel.getData().Vendor_No
 
