@@ -55,7 +55,7 @@ sap.ui.define([
 				this.Po_Num = PoNum.replace(/-/g, '/');
 		
 				// Fetch all PurchaseOrders with DocumentRows
-				var request = "/PurchaseOrders?$expand=DocumentRows";
+				var request = "/PurchaseOrders?$expand=DocumentRows&unitCode=" + 'P02';
 				oModel.read(request, {
 					success: function (oData) {
 						var filteredPurchaseOrder = oData.results.find(po => po.PoNum === that.Po_Num);
