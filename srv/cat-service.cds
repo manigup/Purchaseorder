@@ -10,6 +10,7 @@ service CatalogService {
     entity PurchaseOrders as projection on my.PurchaseOrders;
     entity DocumentRowItems as projection on my.DocumentRowItems;
     entity ASNItems as projection on my.ASNItems;
+    entity ASNList as projection on my.ASNList;
 
     function getPurchaseMaterialQuantityList(UnitCode:String, PoNum: String, MaterialCode: String) returns array of PurchaseMaterialQuantityInfo;
 }

@@ -10,6 +10,7 @@ entity PurchaseOrders {
       DocumentRows : Composition of many DocumentRowItems
                        on DocumentRows.PNum = $self;
       asnItems: Composition of many ASNItems on asnItems.CustomerReferenceNumber = $self;
+      asnList: Composition of many ASNItems on asnList.CustomerReferenceNumber = $self;
 }
 
 entity DocumentRowItems {
@@ -31,6 +32,32 @@ entity DocumentRowItems {
 }
 
 entity ASNItems {
+  CustomerReferenceNumber: Association to PurchaseOrders;
+  ItemCode: String;
+  TemRevNo: String;
+  ItemUOM: String;
+  HsnCode: String;
+  AddressCode: String;
+  ItemRate: String;
+  BalanceQty: String;
+  ASSValue: String;
+  PFA: String;
+  FFC: String;
+  OT1: String;
+  IGP: String;
+  IGA: String;
+  CGP: String;
+  CGA: String;
+  SGP: String;
+  SGA: String;
+  UGP: String;
+  UGA: String;
+  LineValue: String;
+  TCS: String;
+  TCA: String;
+}
+
+entity ASNList {
   key UUID: UUID;
   CustomerReferenceNumber: Association to PurchaseOrders;
   ItemCode: String;
@@ -55,4 +82,8 @@ entity ASNItems {
   LineValue: String;
   TCS: String;
   TCA: String;
+  InvoiceNumber: String;
+  InvoiceAmount: String;
+  InvoiceDate: String;
+  InvoiceValue: String;
 }
