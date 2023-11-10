@@ -11,6 +11,7 @@ entity PurchaseOrders {
                        on DocumentRows.PNum = $self;
       asnItems: Composition of many ASNItems on asnItems.CustomerReferenceNumber = $self;
       asnList: Composition of many ASNItems on asnList.CustomerReferenceNumber = $self;
+      asnListHeader: Composition of many ASNItems on asnListHeader.CustomerReferenceNumber = $self;
 }
 
 entity DocumentRowItems {
@@ -82,8 +83,13 @@ entity ASNList {
   LineValue: String;
   TCS: String;
   TCA: String;
-  InvoiceNumber: String;
-  InvoiceAmount: String;
+}
+
+entity ASNListHeader{
+  key CustomerReferenceNumber: Association to PurchaseOrders;
+  AsnNum: String;
+  InvoiceAmt: String;
+  InvoiceVal: String;
   InvoiceDate: String;
-  InvoiceValue: String;
+  InvoiceNum: String;
 }
