@@ -9,7 +9,7 @@ entity PurchaseOrders {
       PlantName    : String;
       DocumentRows : Composition of many DocumentRowItems
                        on DocumentRows.PNum = $self;
-//asnItems: Composition of many ASNItems on asnItems.PO_Reference = $self;
+      asnItems: Composition of many ASNItems on asnItems.CustomerReferenceNumber = $self;
 }
 
 entity DocumentRowItems {
@@ -30,25 +30,29 @@ entity DocumentRowItems {
       PNum         : Association to PurchaseOrders;
 }
 
-/*
 entity ASNItems {
-  key ASN_ID : String;
-  PO_Reference : Association to PurchaseOrders;
-  ItemNo : Integer;
-  Schedulingline: Integer;
-  Material: String;
-  ShipmentDate: DateTime;
-  MaterialExpiryDate: DateTime;
-  POQty: Integer;
-  ConfQty: Integer;
-  DeliveredQty: Integer;
-  ASNCreated: Integer;
-  AvlASNQty: Integer;
-  NetPrice: Decimal;
-  SupplierNetPrice: Decimal;
-  TaxMismatch: Boolean;
-  PackingMaterialType: String;
-  PackingMaterialQty: Integer;
-  SPQ: Decimal;
+  key UUID: UUID;
+  CustomerReferenceNumber: Association to PurchaseOrders;
+  ItemCode: String;
+  TemRevNo: String;
+  ItemUOM: String;
+  HsnCode: String;
+  AddressCode: String;
+  ItemRate: String;
+  BalanceQty: String;
+  ASSValue: String;
+  PFA: String;
+  FFC: String;
+  OT1: String;
+  IGP: String;
+  IGA: String;
+  CGP: String;
+  CGA: String;
+  SGP: String;
+  SGA: String;
+  UGP: String;
+  UGA: String;
+  LineValue: String;
+  TCS: String;
+  TCA: String;
 }
-*/
