@@ -62,6 +62,9 @@ entity ASNList {
   key UUID: UUID;
   CustomerReferenceNumber: Association to PurchaseOrders;
   ItemCode: String;
+  Menge: String;
+  Netpr: String;
+  PkgMatQty: String;
   TemRevNo: String;
   ItemUOM: String;
   HsnCode: String;
@@ -80,6 +83,9 @@ entity ASNList {
   SGA: String;
   UGP: String;
   UGA: String;
+  Sgst: String;
+  Cgst: String;
+  Igst: String;
   LineValue: String;
   TCS: String;
   TCA: String;
