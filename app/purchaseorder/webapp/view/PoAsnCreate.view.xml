@@ -59,7 +59,7 @@
             <f:content>
                 <Label text=" Address Code" />
                 <Text
-                    value="{asnModel>/0/AddressCode}"
+                    text="{asnModel>/0/AddressCode}"
                     width="185px"
                 />
                 <Label
@@ -979,7 +979,7 @@
                                         />
                                         <Text
                                             id="_IDGenText7"
-                                            text="{asnModel>CustomerReferenceNumber}"
+                                            text="{asnModel>CustomerReferenceNumber_PoNum}"
                                         />
                                         <Text
                                             id="_IDGenText8"
