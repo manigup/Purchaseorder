@@ -14,4 +14,6 @@ service CatalogService {
     entity ASNListHeader as projection on my.ASNListHeader;
 
     function getPurchaseMaterialQuantityList(UnitCode:String, PoNum: String, MaterialCode: String) returns array of PurchaseMaterialQuantityInfo;
+
+    action PostASN(asnData: String) returns String;
 }
