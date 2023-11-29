@@ -44,6 +44,19 @@ module.exports = (srv) => {
         const formattedPoNum = PoNum.replace(/-/g, '/');
         return getPurchaseMaterialQuantityList(UnitCode, formattedPoNum, MaterialCode)
     });
+
+    srv.on('PostASN', async (req) => {
+        const asnDataString = req.data.asnData;
+        const asnDataParsed = JSON.parse(asnDataString);
+        const asnDataFormatted = JSON.stringify(asnDataParsed, null, 2);
+        try {
+            const response = await postASN(asnDataFormatted);
+            return response;
+        } catch (error) {
+            console.error('Error in PostASN API call:', error);
+            throw new Error(`Error posting ASN: ${error.message}`);
+        }
+    });
 };
 
 async function getPurchaseOrders(unitCode) {
@@ -174,6 +187,29 @@ async function fetchASNList(unitCode, docNum) {
         }
     } catch (error) {
         console.error('Error fetching ASN List:', error);
+        throw error;
+    }
+}
+
+async function postASN(asnData) {
+    try {
+        const response = await axios({
+            method: 'post',
+            url: 'https://imperialauto.co:84/IAIAPI.asmx/PostASN',
+            headers: {
+                'Authorization': 'Bearer IncMpsaotdlKHYyyfGiVDg==',
+                'Content-Type': 'application/json'
+            },
+            data: asnData
+        });
+
+        if (response.data && response.data.SuccessCode) {
+            return "ASN Posted Successfully: " + response.data.Result;
+        } else {
+            throw new Error(response.data.ErrorDescription || 'Unknown error occurred');
+        }
+    } catch (error) {
+        console.error('Error in postASN:', error);
         throw error;
     }
 }
