@@ -337,7 +337,7 @@ sap.ui.define([
                         this.onAsnSaveDB();
                     }.bind(this),
                     error: function (error) {
-                        MessageBox.success("ASN creation failed");
+                        MessageBox.error("ASN creation failed");
                     }
                 });
 			}
