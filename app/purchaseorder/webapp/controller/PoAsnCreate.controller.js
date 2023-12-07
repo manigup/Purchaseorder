@@ -363,10 +363,20 @@ sap.ui.define([
 			var ASNHeaderData = {
 				"CustomerReferenceNumber_PoNum": this.data[0].CustomerReferenceNumber_PoNum,
 				"AsnNum": this.data.AsnNum,
-				// "InvoiceAmt": this.data.InvoiceAmt.toString(),
-				// "InvoiceVal": this.data.InvoiceVal.toString(),
 				"InvoiceDate": this.data.BillDate,
-				"InvoiceNum": this.data.BillNumber
+				"InvoiceNum": this.data.BillNumber,
+				"DocketNumber": this.data.DocketNumber,
+				"GRDate": this.data.GRDate,
+				"TransportName": this.data.TransportName,
+				"TransportMode": this.data.TransportMode,
+				"EwayBillNumber": this.data.EwayBillNumber,
+				"EwayBillDate": this.data.EwayBillDate,
+				"MillNumber": this.data.MillNumber,
+				"MillName": this.data.MillName,
+				"PDIRNumber": this.data.PDIRNumber,
+				"HeatNumber": this.data.HeatNumber,
+				"BatchNumber": this.data.BatchNumber,
+				"ManufacturingMonth": this.data.ManufacturingMonth
 			};
 			var ASNItemData = [];
 			// var createData = {
@@ -961,6 +971,48 @@ sap.ui.define([
 		// 	// 	e.getSource().setValue();
 		// 	// }
 		// },
+		onQuantityChange : function(e){
+			const val = e.getParameter("newValue"),
+				obj = e.getSource().getParent().getBindingContext("asnModel").getObject();
+				var path = e.getSource().getParent().getBindingContextPath().split("/")[1];
+			var data = this.asnModel.getData();
+			data[path].BalanceQty = val;	
+			data[path].ASSValue = parseFloat(data[path].BalanceQty) * parseFloat(data[path].ItemRate);
+			if(data[path].PFA){
+				data[path].ASSValue = parseFloat(data[path].ASSValue) + parseFloat(data[path].PFA);
+			}
+			if(data[path].FFC){
+				data[path].ASSValue = parseFloat(data[path].ASSValue) + parseFloat(data[path].FFC);
+			}
+			if(data[path].OT1){
+				data[path].ASSValue = parseFloat(data[path].ASSValue) + parseFloat(data[path].OT1);
+			}	
+			this.asnModel.refresh(true);
+		},
+		onPackChange : function(e){
+			const val = e.getParameter("value") || 0;
+			var path = e.getSource().getParent().getBindingContextPath().split("/")[1];	
+			var data = this.asnModel.getData();	
+			data[path].PFA = val;
+			data[path].ASSValue = (parseFloat(data[path].BalanceQty) * parseFloat(data[path].ItemRate)) + parseFloat(data[path].PFA) + parseFloat(data[path].FFC) + parseFloat(data[path].OT1);	
+			this.asnModel.refresh(true);
+		},
+		onFreightChange : function(e){
+			const val = e.getParameter("value") || 0;
+			var path = e.getSource().getParent().getBindingContextPath().split("/")[1];	
+			var data = this.asnModel.getData();	
+			data[path].FFC = val;	
+			data[path].ASSValue = (parseFloat(data[path].BalanceQty) * parseFloat(data[path].ItemRate)) + parseFloat(data[path].PFA) + parseFloat(data[path].FFC) + parseFloat(data[path].OT1);
+			this.asnModel.refresh(true);
+		},
+		onOtherChange : function(e){
+			const val = e.getParameter("value") || 0;
+			var path = e.getSource().getParent().getBindingContextPath().split("/")[1];	
+			var data = this.asnModel.getData();	
+			data[path].OT1 = val;	
+			data[path].ASSValue = (parseFloat(data[path].BalanceQty) * parseFloat(data[path].ItemRate)) + parseFloat(data[path].PFA) + parseFloat(data[path].FFC) + parseFloat(data[path].OT1);
+			this.asnModel.refresh(true);
+		}
 
 	});
 

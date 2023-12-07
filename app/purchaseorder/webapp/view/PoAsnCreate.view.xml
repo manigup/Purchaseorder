@@ -969,14 +969,30 @@
                                             id="_IDGenText1"
                                             value="{asnModel>BillLineNumber}"
                                         />
-                                        <Text
-                                            id="_IDGenText5"
-                                            text="{asnModel>ScheduleNumber}"
-                                        />
-                                        <Text
-                                            id="_IDGenText6"
-                                            text="{asnModel>ScheduleLineNumber}"
-                                        />
+                                        <ComboBox
+                                            id="schnoId"
+                                            items="{ScheduleNumber>/}"
+                                            selectedKey="{asnModel>/ScheduleNumber}"
+                                            change="ScheduleNumberHelpSelect"
+                                        >
+                                            <core:Item
+                                                id="_IDGenItem1"
+                                                key="{ScheduleNumber>code}"
+                                                text="{ScheduleNumber>code}"
+                                            />
+                                        </ComboBox>
+                                        <ComboBox
+                                            id="schlinenoId"
+                                            items="{ScheduleLineNumber>/}"
+                                            selectedKey="{asnModel>/ScheduleLineNumber}"
+                                            change="ScheduleLineNumberHelpSelect"
+                                        >
+                                            <core:Item
+                                                id="_IDGenItem2"
+                                                key="{ScheduleLineNumber>code}"
+                                                text="{ScheduleLineNumber>code}"
+                                            />
+                                        </ComboBox>
                                         <Text
                                             id="_IDGenText7"
                                             text="{asnModel>CustomerReferenceNumber_PoNum}"
@@ -1000,18 +1016,22 @@
                                         <Input
                                             id="quantityId"
                                             value="{asnModel>BalanceQty}"
+                                            change="onQuantityChange"
                                         />
                                         <Input
                                             id="pkgamtId"
                                             value="{asnModel>PFA}"
+                                            change="onPackChange"
                                         />
                                         <Input
                                             id="freightId"
                                             value="{asnModel>FFC}"
+                                            change="onFreightChange"
                                         />
                                         <Input
                                             id="othchargeId"
                                             value="{asnModel>OT1}"
+                                            change="onOtherChange"
                                         />
                                         <Text
                                             id="assvalId"
