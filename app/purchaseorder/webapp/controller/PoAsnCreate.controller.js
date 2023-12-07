@@ -278,7 +278,7 @@ sap.ui.define([
 							"BillDate": this.data.BillDate, 
 							"ScheduleNumber": items[i].ScheduleNumber, 
 							"ScheduleLineNumber": items[i].ScheduleLineNumber,
-							"PONumber": items[i].CustomerReferenceNumber,
+							"PONumber": items[i].CustomerReferenceNumber_PoNum,
 							"IAIItemCode": items[i].ItemCode,  
 							"UOM": items[i].ItemUOM,
 							"HSNCode": items[i].HsnCode,
