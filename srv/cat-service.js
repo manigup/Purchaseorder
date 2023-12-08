@@ -45,6 +45,32 @@ module.exports = (srv) => {
         return getPurchaseMaterialQuantityList(UnitCode, formattedPoNum, MaterialCode)
     });
 
+    srv.on('GetScheduleNumber', async (req) => {
+        console.log('GetScheduleNumber')
+        const { UnitCode, AddressCode } = req.data;
+    
+        try {
+            const scheduleNumber = await fetchScheduleNumber(UnitCode, AddressCode);
+            return scheduleNumber;
+        } catch (error) {
+            console.error('Error in GetScheduleNumber:', error);
+            throw new Error('Failed to retrieve schedule number.');
+        }
+    });
+    
+    srv.on('GetScheduleLineNumber', async (req) => {
+        console.log(req.data)
+        const { UnitCode, AddressCode, ScheduleNumber } = req.data;
+    
+        try {
+            const scheduleLineNumber = await fetchScheduleLineNumber(UnitCode, AddressCode, ScheduleNumber);
+            return scheduleLineNumber;
+        } catch (error) {
+            console.error('Error in GetScheduleLineNumber:', error);
+            throw new Error('Failed to retrieve schedule line number.');
+        }
+    });    
+
     srv.on('PostASN', async (req) => {
         const asnDataString = req.data.asnData;
         const asnDataParsed = JSON.parse(asnDataString);
@@ -213,3 +239,42 @@ async function postASN(asnData) {
         throw error;
     }
 }
+
+async function fetchScheduleNumber(UnitCode, AddressCode) {
+    try {
+        const response = await axios.get(`https://imperialauto.co:84/IAIAPI.asmx/GetScheduleNumber?UnitCode='${UnitCode}'&AddressCode='${AddressCode}'&RequestBy='Manikandan'`, {
+            headers: {
+                'Authorization': 'Bearer IncMpsaotdlKHYyyfGiVDg==',
+                'Content-Type': 'application/json'
+            }
+        });
+        const scheduleNumbers = JSON.parse(response.data.d).map(item => ({
+            Schedulenumber: item.Schedulenumber
+        }));
+        return scheduleNumbers;
+    } catch (error) {
+        console.error('Error in fetchScheduleNumber:', error);
+        throw error;
+    }
+}
+
+async function fetchScheduleLineNumber(UnitCode, AddressCode, ScheduleNumber) {
+    // Replace hyphens with slashes in ScheduleNumber
+    const formattedScheduleNumber = ScheduleNumber.replace(/-/g, '/');
+    try {
+        const response = await axios.get(`https://imperialauto.co:84/IAIAPI.asmx/GetScheduleLineNumber?UnitCode='${UnitCode}'&AddressCode='${AddressCode}'&ScheduleNumber='${formattedScheduleNumber}'&RequestBy='Manikandan'`, {
+            headers: {
+                'Authorization': 'Bearer IncMpsaotdlKHYyyfGiVDg==',
+                'Content-Type': 'application/json'
+            }
+        });
+        const scheduleLineNumbers = JSON.parse(response.data.d).map(item => ({
+            Schedulelinenumber: item.Schedulelinenumber
+        }));
+        return scheduleLineNumbers;
+    } catch (error) {
+        console.error('Error in fetchScheduleLineNumber:', error);
+        throw error;
+    }
+}
+
