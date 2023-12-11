@@ -30,7 +30,7 @@ sp.fiori.purchaseorder.controller.formatter = {
 
 			// var date = oDate.substring(4, 6) + "/" + oDate.substring(6, 8) + "/" + oDate.substring(0, 4);
 
-			// var DateInstance = new Date(date);
+			//var DateInstance = new Date(date);
 			var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
 				pattern: "MMM dd, yyyy"
 			});

@@ -241,8 +241,9 @@ async function postASN(asnData) {
 }
 
 async function fetchScheduleNumber(UnitCode, AddressCode) {
+    const formattedScheduleNumber = ScheduleNumber.replace(/-/g, '/');
     try {
-        const response = await axios.get(`https://imperialauto.co:84/IAIAPI.asmx/GetScheduleNumber?UnitCode='${UnitCode}'&AddressCode='${AddressCode}'&RequestBy='Manikandan'`, {
+        const response = await axios.get(`https://imperialauto.co:84/IAIAPI.asmx/GetScheduleNumber?UnitCode='${UnitCode}'&AddressCode='${formattedScheduleNumber}'&RequestBy='Manikandan'`, {
             headers: {
                 'Authorization': 'Bearer IncMpsaotdlKHYyyfGiVDg==',
                 'Content-Type': 'application/json'
