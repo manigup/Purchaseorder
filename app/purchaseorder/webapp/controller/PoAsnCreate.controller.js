@@ -63,7 +63,7 @@ sap.ui.define([
 				//this.Po_Num = "19/01P/03/00001";
 				this.Amount = event.getParameter("arguments").Amount;
 				this.Vendor_No = event.getParameter("arguments").Vendor_No;
-				var unitCode = sessionStorage.getItem("unitCode");
+				var unitCode = sessionStorage.getItem("unitCode") || "P01";
 				//var unitCode = "P01";
 				var oModel = this.getOwnerComponent().getModel();
 
@@ -275,13 +275,13 @@ sap.ui.define([
 						return;
 					} else {
 						var row = {
-							"BillLineNumber": items[i].BillLineNumber, 
-							"BillNumber": this.data.BillNumber, 
-							"BillDate": this.data.BillDate, 
-							"ScheduleNumber": items[i].ScheduleNumber, 
+							"BillLineNumber": items[i].BillLineNumber,
+							"BillNumber": this.data.BillNumber,
+							"BillDate": this.data.BillDate,
+							"ScheduleNumber": items[i].ScheduleNumber,
 							"ScheduleLineNumber": items[i].ScheduleLineNumber,
 							"PONumber": items[i].CustomerReferenceNumber_PoNum,
-							"IAIItemCode": items[i].ItemCode,  
+							"IAIItemCode": items[i].ItemCode,
 							"UOM": items[i].ItemUOM,
 							"HSNCode": items[i].HsnCode,
 							"Rate": items[i].ItemRate,
@@ -291,27 +291,27 @@ sap.ui.define([
 							"OtherCharges": items[i].OT1,
 							"AssValue": items[i].ASSValue,
 							"IGST": items[i].IGP,
-							"IGA": items[i].IGA, 
-							"CGST": items[i].CGP, 
+							"IGA": items[i].IGA,
+							"CGST": items[i].CGP,
 							"CGA": items[i].CGA,
 							"SGST": items[i].SGP,
 							"SGA": items[i].SGA,
-							"TCS": items[i].TCS, 
-							"TCA": items[i].TCA, 
+							"TCS": items[i].TCS,
+							"TCA": items[i].TCA,
 							"LineValue": items[i].LineValue,
-							"TransportName": this.data.TransportName, 
-							"TransportMode": this.data.TransportMode, 
-							"DocketNumber": this.data.DocketNumber, 
+							"TransportName": this.data.TransportName,
+							"TransportMode": this.data.TransportMode,
+							"DocketNumber": this.data.DocketNumber,
 							"GRDate": this.data.GRDate,
-    						"Packaging": items[i].Packaging, 
-							"WeightPerKG": items[i].WeightPerKG, 
-							"EwayBillNumber": this.data.EwayBillNumber, 
+							"Packaging": items[i].Packaging,
+							"WeightPerKG": items[i].WeightPerKG,
+							"EwayBillNumber": this.data.EwayBillNumber,
 							"EwayBillDate": this.data.EwayBillDate,
-							"MillNumber": this.data.MillNumber, 
-							"MillName": this.data.MillName, 
-							"PDIRNumber": this.data.PDIRNumber, 
-							"HeatNumber": this.data.HeatNumber, 
-							"BatchNumber": this.data.BatchNumber, 
+							"MillNumber": this.data.MillNumber,
+							"MillName": this.data.MillName,
+							"PDIRNumber": this.data.PDIRNumber,
+							"HeatNumber": this.data.HeatNumber,
+							"BatchNumber": this.data.BatchNumber,
 							"ManufacturingMonth": this.data.ManufacturingMonth
 						};
 						form.RowDetails.push(row);
@@ -320,30 +320,30 @@ sap.ui.define([
 				}
 				var formdatastr = JSON.stringify(form);
 				this.hardcodedURL = "";
-                if (window.location.href.includes("launchpad")) {
-                    this.hardcodedURL = "https://impautosuppdev.launchpad.cfapps.ap10.hana.ondemand.com/da8bb600-97b5-4ae9-822d-e6aa134d8e1a.onboarding.spfiorionboarding-0.0.1";
-                }
-                var sPath = this.hardcodedURL + `/v2/odata/v4/catalog/submitFormData`;
-                $.ajax({
-                    type: "POST",
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    url: sPath,
-                    data: JSON.stringify({
-                        data: formdatastr
-                    }),
-                    context: this,
-                    success: function (data, textStatus, jqXHR) {
+				if (window.location.href.includes("launchpad")) {
+					this.hardcodedURL = "https://impautosuppdev.launchpad.cfapps.ap10.hana.ondemand.com/da8bb600-97b5-4ae9-822d-e6aa134d8e1a.onboarding.spfiorionboarding-0.0.1";
+				}
+				var sPath = this.hardcodedURL + `/v2/odata/v4/catalog/submitFormData`;
+				$.ajax({
+					type: "POST",
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					url: sPath,
+					data: JSON.stringify({
+						data: formdatastr
+					}),
+					context: this,
+					success: function (data, textStatus, jqXHR) {
 						MessageBox.success("ASN created succesfully");
-                        this.onAsnSaveDB();
-                    }.bind(this),
-                    error: function (error) {
-                        MessageBox.error("ASN creation failed");
-                    }
-                });
+						this.onAsnSaveDB();
+					}.bind(this),
+					error: function (error) {
+						MessageBox.error("ASN creation failed");
+					}
+				});
 			}
-			
+
 		},
 		onAsnSaveDB: function () {
 			var that = this;
@@ -973,45 +973,45 @@ sap.ui.define([
 		// 	// 	e.getSource().setValue();
 		// 	// }
 		// },
-		onQuantityChange : function(e){
+		onQuantityChange: function (e) {
 			const val = e.getParameter("newValue"),
 				obj = e.getSource().getParent().getBindingContext("asnModel").getObject();
-				var path = e.getSource().getParent().getBindingContextPath().split("/")[1];
+			var path = e.getSource().getParent().getBindingContextPath().split("/")[1];
 			var data = this.asnModel.getData();
-			data[path].BalanceQty = val;	
+			data[path].BalanceQty = val;
 			data[path].ASSValue = parseFloat(data[path].BalanceQty) * parseFloat(data[path].ItemRate);
-			if(data[path].PFA){
+			if (data[path].PFA) {
 				data[path].ASSValue = parseFloat(data[path].ASSValue) + parseFloat(data[path].PFA);
 			}
-			if(data[path].FFC){
+			if (data[path].FFC) {
 				data[path].ASSValue = parseFloat(data[path].ASSValue) + parseFloat(data[path].FFC);
 			}
-			if(data[path].OT1){
+			if (data[path].OT1) {
 				data[path].ASSValue = parseFloat(data[path].ASSValue) + parseFloat(data[path].OT1);
-			}	
+			}
 			this.asnModel.refresh(true);
 		},
-		onPackChange : function(e){
+		onPackChange: function (e) {
 			const val = e.getParameter("value") || 0;
-			var path = e.getSource().getParent().getBindingContextPath().split("/")[1];	
-			var data = this.asnModel.getData();	
+			var path = e.getSource().getParent().getBindingContextPath().split("/")[1];
+			var data = this.asnModel.getData();
 			data[path].PFA = val;
-			data[path].ASSValue = (parseFloat(data[path].BalanceQty) * parseFloat(data[path].ItemRate)) + parseFloat(data[path].PFA) + parseFloat(data[path].FFC) + parseFloat(data[path].OT1);	
-			this.asnModel.refresh(true);
-		},
-		onFreightChange : function(e){
-			const val = e.getParameter("value") || 0;
-			var path = e.getSource().getParent().getBindingContextPath().split("/")[1];	
-			var data = this.asnModel.getData();	
-			data[path].FFC = val;	
 			data[path].ASSValue = (parseFloat(data[path].BalanceQty) * parseFloat(data[path].ItemRate)) + parseFloat(data[path].PFA) + parseFloat(data[path].FFC) + parseFloat(data[path].OT1);
 			this.asnModel.refresh(true);
 		},
-		onOtherChange : function(e){
+		onFreightChange: function (e) {
 			const val = e.getParameter("value") || 0;
-			var path = e.getSource().getParent().getBindingContextPath().split("/")[1];	
-			var data = this.asnModel.getData();	
-			data[path].OT1 = val;	
+			var path = e.getSource().getParent().getBindingContextPath().split("/")[1];
+			var data = this.asnModel.getData();
+			data[path].FFC = val;
+			data[path].ASSValue = (parseFloat(data[path].BalanceQty) * parseFloat(data[path].ItemRate)) + parseFloat(data[path].PFA) + parseFloat(data[path].FFC) + parseFloat(data[path].OT1);
+			this.asnModel.refresh(true);
+		},
+		onOtherChange: function (e) {
+			const val = e.getParameter("value") || 0;
+			var path = e.getSource().getParent().getBindingContextPath().split("/")[1];
+			var data = this.asnModel.getData();
+			data[path].OT1 = val;
 			data[path].ASSValue = (parseFloat(data[path].BalanceQty) * parseFloat(data[path].ItemRate)) + parseFloat(data[path].PFA) + parseFloat(data[path].FFC) + parseFloat(data[path].OT1);
 			this.asnModel.refresh(true);
 		},
@@ -1019,13 +1019,13 @@ sap.ui.define([
 			var unitCode = sessionStorage.getItem("unitCode");
 			var modeldata = this.getView().getModel("asnModel").getData();
 			var Po_No = modeldata[0].CustomerReferenceNumber_PoNum;
-			this.AddressCode = Po_No.replace(/\//g,'-');
+			this.AddressCode = Po_No.replace(/\//g, '-');
 			var oComboBox = this.getView().byId("schnoId");
 			if (!oComboBox.getModel("ScheduleNumber")) {
-				this.GetScheduleNumber(unitCode,this.AddressCode);
+				this.GetScheduleNumber(unitCode, this.AddressCode);
 			}
 		},
-		GetScheduleNumber:function (UnitCode,AddressCode) {
+		GetScheduleNumber: function (UnitCode, AddressCode) {
 			var oComboBox = this.getView().byId("schnoId");
 			var oModel = this.getView().getModel();
 			return new Promise(function (resolve, reject) {
@@ -1041,26 +1041,26 @@ sap.ui.define([
 						oScheduleNumberModel.setData({ items: scheduleNumberData });
 						this.getView().setModel(oScheduleNumberModel, "schedulenumber");
 						resolve();
-                    }.bind(this),
+					}.bind(this),
 					error: function (oError) {
 						reject(new Error("Failed to fetch Schedule Number."));
 					}
 				});
 			}.bind(this));
 		},
-		ScheduleNumberHelpSelect : function(){
+		ScheduleNumberHelpSelect: function () {
 			var oStateSelect = this.getView().byId("schlinenoId");
-            var sCountryKey = this.getView().byId("schnoId").getSelectedKey();
+			var sCountryKey = this.getView().byId("schnoId").getSelectedKey();
 			var unitCode = sessionStorage.getItem("unitCode");
 
-                if (sCountryKey) {
-                    oStateSelect.setEnabled(true);
-                    this.GetScheduleLineNumber(unitCode,this.AddressCode,sCountryKey);
-                } else {
-                    oStateSelect.setEnabled(false);
-                }
+			if (sCountryKey) {
+				oStateSelect.setEnabled(true);
+				this.GetScheduleLineNumber(unitCode, this.AddressCode, sCountryKey);
+			} else {
+				oStateSelect.setEnabled(false);
+			}
 		},
-		GetScheduleLineNumber:function (UnitCode,AddressCode,ScheduleNumber) {
+		GetScheduleLineNumber: function (UnitCode, AddressCode, ScheduleNumber) {
 			var oStateSelect = this.getView().byId("schlinenoId");
 			var oModel = this.getView().getModel();
 			return new Promise(function (resolve, reject) {
@@ -1072,45 +1072,45 @@ sap.ui.define([
 						ScheduleNumber: ScheduleNumber
 					},
 					success: function (oData) {
-                        var oJsonModel = new sap.ui.model.json.JSONModel();
-                        oJsonModel.setData({ ScLNum: oData.results });
+						var oJsonModel = new sap.ui.model.json.JSONModel();
+						oJsonModel.setData({ ScLNum: oData.results });
 
-                        oStateSelect.setModel(oJsonModel, "ScheduleLineNumber");
-                        oStateSelect.bindItems({
-                            path: "ScheduleLineNumber>/ScLNum",
-                            template: new sap.ui.core.Item({
-                                key: "{ScheduleLineNumber>code}",
-                                text: "{ScheduleLineNumber>code}"
-                            })
-                        });
-                    }.bind(this),
+						oStateSelect.setModel(oJsonModel, "ScheduleLineNumber");
+						oStateSelect.bindItems({
+							path: "ScheduleLineNumber>/ScLNum",
+							template: new sap.ui.core.Item({
+								key: "{ScheduleLineNumber>code}",
+								text: "{ScheduleLineNumber>code}"
+							})
+						});
+					}.bind(this),
 					error: function (oError) {
 						reject(new Error("Failed to fetch Schedule Line Number."));
 					}
 				});
 			}.bind(this));
-		
+
 		},
-		ScheduleLineNumberHelpSelect :function(){
+		ScheduleLineNumberHelpSelect: function () {
 			// var oStateSelect = this.getView().byId("schlinenoId");
-            //     var data = this.createModel.getData();
-            //     if (oStateSelect.getSelectedKey()) {
-            //         var sCountryKey = this.getView().byId("schnoId").getSelectedKey();
-            //         var sStateKey = oStateSelect.getSelectedKey();
-            //         if (sCountryKey === "India") {
-            //             if (sStateKey === "Haryana") {
-            //                 data.Location = "Within State";
-            //             } else {
-            //                 data.Location = "Outside State";
-            //             }
-            //         } else {
-            //             data.Location = "Outside Country";
-            //         }
-            //         this.loadCities(sCountryKey, sStateKey);
-            //     } else {
-            //         MessageToast.show("Please select a state first.");
-            //     }
-            //     this.createModel.refresh(true);
+			//     var data = this.createModel.getData();
+			//     if (oStateSelect.getSelectedKey()) {
+			//         var sCountryKey = this.getView().byId("schnoId").getSelectedKey();
+			//         var sStateKey = oStateSelect.getSelectedKey();
+			//         if (sCountryKey === "India") {
+			//             if (sStateKey === "Haryana") {
+			//                 data.Location = "Within State";
+			//             } else {
+			//                 data.Location = "Outside State";
+			//             }
+			//         } else {
+			//             data.Location = "Outside Country";
+			//         }
+			//         this.loadCities(sCountryKey, sStateKey);
+			//     } else {
+			//         MessageToast.show("Please select a state first.");
+			//     }
+			//     this.createModel.refresh(true);
 		},
 
 

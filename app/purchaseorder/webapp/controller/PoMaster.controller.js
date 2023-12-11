@@ -25,7 +25,7 @@ sap.ui.define([
 				return;
 			}
 			var that = this;
-			var unitCode = sessionStorage.getItem("unitCode");
+			var unitCode = sessionStorage.getItem("unitCode") || "P01";
 			if (that.flagModel.getData().confirmPressFlag) {
 				var selectedList = this.getView().byId("masterListId").getSelectedItem();
 				this.getView().byId("searchFieldId").setValue("");
@@ -33,7 +33,7 @@ sap.ui.define([
 				this.getView().byId("masterListId").setSelectedItem(selectedList, true);
 				var list = that.getView().byId("masterListId");
 				var PoNo = selectedList.getBindingContext().getProperty("PoNum");
-				var Po_No = PoNo.replace(/\//g,'-');
+				var Po_No = PoNo.replace(/\//g, '-');
 				that.router.navTo("PoDetail", {
 					"Po_No": Po_No
 				});
@@ -65,7 +65,7 @@ sap.ui.define([
 				if (selectedItem) {
 					list.setSelectedItem(selectedItem, true);
 					var PoNo = selectedItem.getBindingContext().getProperty("PoNum");
-					var Po_No = PoNo.replace(/\//g,'-');
+					var Po_No = PoNo.replace(/\//g, '-');
 					// var path = selectedItem.getBindingContext().getPath();
 					// var VendorNum = that.getView().getModel().getProperty(path).Vendor_No;
 					that.router.navTo("PoDetail", {
@@ -87,7 +87,7 @@ sap.ui.define([
 				return;
 			}
 			var PoNo = oEvent.getParameter("listItem").getProperty("title");
-			var PoNum = PoNo.replace(/\//g,'-');
+			var PoNum = PoNo.replace(/\//g, '-');
 			this.router.navTo("PoDetail", {
 				"Po_No": PoNum
 			});

@@ -50,10 +50,10 @@ sap.ui.define([
 			if (event.getParameter("name") === "PoDetail") {
 				var that = this;
 				var oModel = this.getOwnerComponent().getModel();
-		
+
 				var PoNum = event.getParameter("arguments").Po_No;
 				this.Po_Num = PoNum.replace(/-/g, '/');
-				var unitCode = sessionStorage.getItem("unitCode");
+				var unitCode = sessionStorage.getItem("unitCode") || "P01";
 				//var unitCode = "P01";
 				// Fetch all PurchaseOrders with DocumentRows
 				var request = "/PurchaseOrders?$expand=DocumentRows&unitCode=" + unitCode;
@@ -63,7 +63,7 @@ sap.ui.define([
 						if (filteredPurchaseOrder) {
 							that.detailHeaderModel.setData(filteredPurchaseOrder);
 							that.detailHeaderModel.refresh(true);
-						
+
 							that.detailModel.setData(filteredPurchaseOrder.DocumentRows.results);
 							that.detailModel.refresh(true);
 						} else {
@@ -77,7 +77,7 @@ sap.ui.define([
 				});
 			}
 		},
-		
+
 		onMaterialPress: function (oEvent) {
 			var that = this;
 			var LineItemData = oEvent.getSource().getParent().getBindingContext("detailModel").getObject();
@@ -107,7 +107,7 @@ sap.ui.define([
 		onCreateAsn: function () {
 			sap.ui.core.BusyIndicator.show(0);
 			var that = this;
-			var Po_No = that.Po_Num.replace(/\//g,'-');
+			var Po_No = that.Po_Num.replace(/\//g, '-');
 			this.router.navTo("PoAsnCreate", {
 				"Po_No": Po_No,
 				"Amount": that.detailModel.getData().Amount
