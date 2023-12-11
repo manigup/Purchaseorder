@@ -59,8 +59,8 @@ sap.ui.define([
 				this.getView().byId("DP1").setMaxDate(Today);
 
 				var Po_Num = event.getParameter("arguments").Po_No;
-				//this.Po_Num = Po_Num.replace(/-/g, '/');
-				this.Po_Num = "19/01P/03/00001";
+				this.Po_Num = Po_Num.replace(/-/g, '/');
+				//this.Po_Num = "19/01P/03/00001";
 				this.Amount = event.getParameter("arguments").Amount;
 				this.Vendor_No = event.getParameter("arguments").Vendor_No;
 				var unitCode = sessionStorage.getItem("unitCode");
@@ -1018,8 +1018,8 @@ sap.ui.define([
 		initializeScheduleNumber: function () {
 			var unitCode = sessionStorage.getItem("unitCode");
 			var modeldata = this.getView().getModel("asnModel").getData();
-			this.AddressCode = modeldata[0].CustomerReferenceNumber_PoNum;
-
+			var Po_No = modeldata[0].CustomerReferenceNumber_PoNum;
+			this.AddressCode = Po_No.replace(/\//g,'-');
 			var oComboBox = this.getView().byId("schnoId");
 			if (!oComboBox.getModel("ScheduleNumber")) {
 				this.GetScheduleNumber(unitCode,this.AddressCode);

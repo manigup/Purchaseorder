@@ -21,9 +21,9 @@
 				<ColumnListItem id="_IDGenColumnListItem1">
 					<cells>
 						<Text id="_IDGenText5" text="{itemModel>RowNum}"/>
-						<ObjectIdentifier id="_IDGenObjectIdentifier1" title="{path:'itemModel>DeliveryDate', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"/>
-						<ObjectNumber id="_IDGenObjectNumber1" number="{itemModel>DeliveryQuantity}" textAlign="End"/>
-						<ObjectNumber id="_IDGenObjectNumber2" number="{itemModel>DeliveryQuantity}" textAlign="End"/>
+						<ObjectIdentifier id="_IDGenObjectIdentifier1" text="{itemModel>DeliveryDate}"/>
+						<ObjectNumber id="_IDGenObjectNumber1" number="{itemModel>DeliveryQty}" textAlign="End"/>
+						<ObjectNumber id="_IDGenObjectNumber2" number="{itemModel>DeliveryQty}" textAlign="End"/>
 					</cells>
 				</ColumnListItem>
 			</items>

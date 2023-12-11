@@ -2,8 +2,9 @@ using my.bookshop as my from '../db/data-model';
 
 type PurchaseMaterialQuantityInfo {
     RowNum: Integer;
-    DeliveryDate: DateTime;
-    DeliveryQuantity: Integer;
+    DeliveryDate: String;
+    DeliveryQty: Integer;
+    Status: String;
 };
 
 type ScheduleNumberType {
