@@ -32,6 +32,7 @@ sap.ui.define([
 			this.dateConfirmationModel = new sap.ui.model.json.JSONModel();
 			this.getView().setModel(this.dateConfirmationModel, "DateConfirmationModel");
 			this.popOverModel = new sap.ui.model.json.JSONModel();
+			//this.initializeScheduleNumber();
 		},
 		handleRouteMatched: function (event) {
 
@@ -77,6 +78,7 @@ sap.ui.define([
 
 							that.asnModel.setData(oData.results);
 							that.asnModel.refresh(true);
+							that.initializeScheduleNumber();
 						} else {
 							MessageBox.error("Purchase order not found");
 						}
@@ -1012,7 +1014,105 @@ sap.ui.define([
 			data[path].OT1 = val;	
 			data[path].ASSValue = (parseFloat(data[path].BalanceQty) * parseFloat(data[path].ItemRate)) + parseFloat(data[path].PFA) + parseFloat(data[path].FFC) + parseFloat(data[path].OT1);
 			this.asnModel.refresh(true);
-		}
+		},
+		initializeScheduleNumber: function () {
+			var unitCode = sessionStorage.getItem("unitCode");
+			var modeldata = this.getView().getModel("asnModel").getData();
+			this.AddressCode = modeldata[0].CustomerReferenceNumber_PoNum;
+
+			var oComboBox = this.getView().byId("schnoId");
+			if (!oComboBox.getModel("ScheduleNumber")) {
+				this.GetScheduleNumber(unitCode,this.AddressCode);
+			}
+		},
+		GetScheduleNumber:function (UnitCode,AddressCode) {
+			var oComboBox = this.getView().byId("schnoId");
+			var oModel = this.getView().getModel();
+			return new Promise(function (resolve, reject) {
+				oModel.callFunction("/GetScheduleNumber", {
+					method: "GET",
+					urlParameters: {
+						UnitCode: UnitCode,
+						AddressCode: AddressCode
+					},
+					success: function (oData) {
+						var scheduleNumberData = oData.results;
+						var oScheduleNumberModel = new sap.ui.model.json.JSONModel();
+						oScheduleNumberModel.setData({ items: scheduleNumberData });
+						this.getView().setModel(oScheduleNumberModel, "schedulenumber");
+						resolve();
+                    }.bind(this),
+					error: function (oError) {
+						reject(new Error("Failed to fetch Schedule Number."));
+					}
+				});
+			}.bind(this));
+		},
+		ScheduleNumberHelpSelect : function(){
+			var oStateSelect = this.getView().byId("schlinenoId");
+            var sCountryKey = this.getView().byId("schnoId").getSelectedKey();
+			var unitCode = sessionStorage.getItem("unitCode");
+
+                if (sCountryKey) {
+                    oStateSelect.setEnabled(true);
+                    this.GetScheduleLineNumber(unitCode,this.AddressCode,sCountryKey);
+                } else {
+                    oStateSelect.setEnabled(false);
+                }
+		},
+		GetScheduleLineNumber:function (UnitCode,AddressCode,ScheduleNumber) {
+			var oStateSelect = this.getView().byId("schlinenoId");
+			var oModel = this.getView().getModel();
+			return new Promise(function (resolve, reject) {
+				oModel.callFunction("/GetScheduleLineNumber", {
+					method: "GET",
+					urlParameters: {
+						UnitCode: UnitCode,
+						AddressCode: AddressCode,
+						ScheduleNumber: ScheduleNumber
+					},
+					success: function (oData) {
+                        var oJsonModel = new sap.ui.model.json.JSONModel();
+                        oJsonModel.setData({ ScLNum: oData.results });
+
+                        oStateSelect.setModel(oJsonModel, "ScheduleLineNumber");
+                        oStateSelect.bindItems({
+                            path: "ScheduleLineNumber>/ScLNum",
+                            template: new sap.ui.core.Item({
+                                key: "{ScheduleLineNumber>code}",
+                                text: "{ScheduleLineNumber>code}"
+                            })
+                        });
+                    }.bind(this),
+					error: function (oError) {
+						reject(new Error("Failed to fetch Schedule Line Number."));
+					}
+				});
+			}.bind(this));
+		
+		},
+		ScheduleLineNumberHelpSelect :function(){
+			// var oStateSelect = this.getView().byId("schlinenoId");
+            //     var data = this.createModel.getData();
+            //     if (oStateSelect.getSelectedKey()) {
+            //         var sCountryKey = this.getView().byId("schnoId").getSelectedKey();
+            //         var sStateKey = oStateSelect.getSelectedKey();
+            //         if (sCountryKey === "India") {
+            //             if (sStateKey === "Haryana") {
+            //                 data.Location = "Within State";
+            //             } else {
+            //                 data.Location = "Outside State";
+            //             }
+            //         } else {
+            //             data.Location = "Outside Country";
+            //         }
+            //         this.loadCities(sCountryKey, sStateKey);
+            //     } else {
+            //         MessageToast.show("Please select a state first.");
+            //     }
+            //     this.createModel.refresh(true);
+		},
+
 
 	});
 

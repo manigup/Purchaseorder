@@ -59,6 +59,7 @@
             <f:content>
                 <Label text=" Address Code" />
                 <Text
+                    id= "AddressCodeid"
                     text="{asnModel>/0/AddressCode}"
                     width="185px"
                 />
@@ -971,14 +972,14 @@
                                         />
                                         <ComboBox
                                             id="schnoId"
-                                            items="{ScheduleNumber>/}"
+                                            items="{schedulenumber>/items}"
                                             selectedKey="{asnModel>/ScheduleNumber}"
                                             change="ScheduleNumberHelpSelect"
                                         >
                                             <core:Item
                                                 id="_IDGenItem1"
-                                                key="{ScheduleNumber>code}"
-                                                text="{ScheduleNumber>code}"
+                                                key="{schedulenumber>ScheduleNumber}"
+                                                text="{schedulenumber>ScheduleNumber}"
                                             />
                                         </ComboBox>
                                         <ComboBox
