@@ -172,7 +172,7 @@ async function getPurchaseMaterialQuantityList(UnitCode, PoNum, MaterialCode) {
         throw new Error('Unable to fetch Purchase Material Quantity List.');
     }
 }
-
+/*
 async function fetchASNList(unitCode, docNum) {
     try {
         const response = await axios({
@@ -221,6 +221,7 @@ async function fetchASNList(unitCode, docNum) {
         throw error;
     }
 }
+*/
 
 async function postASN(asnData) {
     try {
