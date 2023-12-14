@@ -6,8 +6,9 @@ module.exports = (srv) => {
     const {PurchaseOrders, ASNItems } = srv.entities;
     
     srv.on('READ', PurchaseOrders, async (req) => {
-        const {unitCode} = req._queryOptions
-        const results = await getPurchaseOrders(unitCode);
+        //const {AddressCode} = req._queryOptions
+        const AddressCode = 'DIE-01-02'
+        const results = await getPurchaseOrders(AddressCode);
         if (!results) throw new Error('Unable to fetch PurchaseOrders.');
 
         const expandDocumentRows = req.query.SELECT.columns && req.query.SELECT.columns.some(({ expand, ref }) => expand && ref[0] === "DocumentRows");
@@ -26,7 +27,6 @@ module.exports = (srv) => {
             );
         }
 
-        
        return results.purchaseOrders;
     });
 
@@ -46,7 +46,6 @@ module.exports = (srv) => {
     });
 
     srv.on('GetScheduleNumber', async (req) => {
-        console.log('GetScheduleNumber')
         const { UnitCode, AddressCode } = req.data;
     
         try {
@@ -59,7 +58,6 @@ module.exports = (srv) => {
     });
     
     srv.on('GetScheduleLineNumber', async (req) => {
-        console.log(req.data)
         const { UnitCode, AddressCode, ScheduleNumber } = req.data;
     
         try {
@@ -85,11 +83,11 @@ module.exports = (srv) => {
     });
 };
 
-async function getPurchaseOrders(unitCode) {
+async function getPurchaseOrders(AddressCode) {
     try {
         const response = await axios({
             method: 'get',
-            url: `https://imperialauto.co:84/IAIAPI.asmx/GetPurchaseMaterialList?UnitCode='${unitCode}'&RequestBy='Manikandan'`,
+            url: `https://imperialauto.co:84/IAIAPI.asmx/GetPurchaseMaterialList?AddressCode='${AddressCode}'&RequestBy='Manikandan'`,
             headers: {
                 'Authorization': 'Bearer IncMpsaotdlKHYyyfGiVDg==',
                 'Content-Type': 'application/json'
@@ -104,10 +102,12 @@ async function getPurchaseOrders(unitCode) {
                 return {
                     PoNum: data.PoNum,
                     PoDate: data.PoDate,
-                    VendorName: data.VendorName,
                     VendorCode: data.VendorCode,
+                    VendorName: data.VendorName,
                     PlantCode: data.PlantCode,
                     PlantName: data.PlantName,
+                    ValidFrom: data.ValidFrom,
+                    ValidTo: data.ValidTo
                 };
             });
 
@@ -117,17 +117,21 @@ async function getPurchaseOrders(unitCode) {
                     return {
                         LineNum: parseInt(row.LineNum),
                         PoDate: data.PoDate,
-                        VendorName: data.VendorName,
-                        VendorCode: data.VendorCode,
-                        PlantCode: data.PlantCode,
-                        PlantName: data.PlantName,
                         ItemCode: row.ItemCode,
                         ItemDesc: row.ItemDesc,
-                        HSNCode: row.HSNCode,
+                        HSNCode:  row.HSNCode,
                         PoQty: parseInt(row.PoQty),
                         DeliveredQty: parseFloat(row.DeliveredQty),
                         BalanceQty: parseFloat(row.BalanceQty),
                         UnitPrice: parseFloat(row.UnitPrice),
+                        UOM: row.UOM,
+                        Currency: row.Currency,
+                        Status: row.Status,
+                        VendorName: data.VendorName,
+                        VendorCode: data.VendorCode,
+                        PlantCode: data.PlantCode,
+                        PlantName: data.PlantName,
+                        ConfirmStatus: "",
                         PNum_PoNum: data.PoNum  // associating with the current PurchaseOrder
                     };
                 })

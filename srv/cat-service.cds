@@ -2,8 +2,12 @@ using my.bookshop as my from '../db/data-model';
 
 type PurchaseMaterialQuantityInfo {
     RowNum: Integer;
-    DeliveryDate: String;
+    PONum: String;
+    ItemCode: String;
+    ItemDesc: String;
+    PoQty: Integer;
     DeliveryQty: Integer;
+    DeliveryDate: String;
     Status: String;
 };
 
