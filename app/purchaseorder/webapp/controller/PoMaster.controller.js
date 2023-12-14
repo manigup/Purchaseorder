@@ -44,10 +44,10 @@ sap.ui.define([
 			this.getView().byId("masterListId").bindItems({
 				path: "/PurchaseOrders",
 				parameters: {
-					custom: {
-						unitCode: unitCode
-						//unitCode: 'P01'
-					},
+					// custom: {
+					// 	unitCode: unitCode
+					// 	//unitCode: 'P01'
+					// },
 					countMode: 'None'
 				},
 				template: this._listTemp

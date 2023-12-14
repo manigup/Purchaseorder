@@ -56,7 +56,7 @@ sap.ui.define([
 				var unitCode = sessionStorage.getItem("unitCode") || "P01";
 				//var unitCode = "P01";
 				// Fetch all PurchaseOrders with DocumentRows
-				var request = "/PurchaseOrders?$expand=DocumentRows&unitCode=" + unitCode;
+				var request = "/PurchaseOrders?$expand=DocumentRows";
 				oModel.read(request, {
 					success: function (oData) {
 						var filteredPurchaseOrder = oData.results.find(po => po.PoNum === that.Po_Num);
@@ -65,6 +65,17 @@ sap.ui.define([
 							that.detailHeaderModel.refresh(true);
 
 							that.detailModel.setData(filteredPurchaseOrder.DocumentRows.results);
+							that.detailModel.refresh(true);
+							var detailModelData = that.getView().getModel("detailModel").getData();
+							for(var i = 0; i < detailModelData.length; i++){
+								if(detailModelData[i].DeliveredQty === "0"){
+									detailModelData[i].ConfirmStatus = "Open";
+								}else if(detailModelData[i].DeliveredQty === detailModelData[i].PoQty){
+									detailModelData[i].ConfirmStatus = "Closed";
+								}else if((detailModelData[i].DeliveredQty > "0") && (detailModelData[i].DeliveredQty < detailModelData[i].PoQty)){
+									detailModelData[i].ConfirmStatus = "Partially";
+								}
+							}
 							that.detailModel.refresh(true);
 						} else {
 							MessageBox.error("Purchase order not found");

@@ -72,7 +72,7 @@ sp.fiori.purchaseorder.controller.formatter = {
 		}
 		return false;
 	},
-	statusCheck: function (oStatus) {
+	statusCheckConf: function (oStatus) {
 		if (oStatus === "Confirmed") {
 			return "Success";
 		} else if (oStatus === "Partially Confirmed") {
@@ -83,6 +83,18 @@ sp.fiori.purchaseorder.controller.formatter = {
 		else if (oStatus === "Confirmation Required") {
 			return "Error";
 		}  
+		else {
+			return "None";
+		}
+	},
+	statusCheck: function (oStatus) {
+		if (oStatus === "Closed") {
+			return "Success";
+		} else if (oStatus === "Partially") {
+			return "Warning";
+		} else if (oStatus === "Open") {
+			return "Error";
+		} 
 		else {
 			return "None";
 		}

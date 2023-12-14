@@ -138,9 +138,7 @@
                                 >
                                     <Text
                                         id="_IDGenText8"
-                                        text="Unit Price"
-                                    />
-                                    <!-- text="Unit Price ({detailModel>/Currency})"/> -->
+                                         text="Unit Price ({detailModel>/0/Currency})"/>
                                 </Column>
                                 <Column
                                     id="_IDGenColumn9"
@@ -197,16 +195,19 @@
                                         <ObjectNumber
                                             id="_IDGenObjectNumber1"
                                             number="{detailModel>PoQty}"
+                                            unit="{detailModel>UOM}"
                                         />
                                         <!--numberUnit="{detailModel>Uom}" press="onQuantityPress"/>-->
                                         <ObjectNumber
                                             id="_IDGenObjectNumber2"
                                             number="{detailModel>BalanceQty}"
+                                            unit="{detailModel>UOM}"
                                         />
                                         <!--numberUnit="{detailModel>Uom}" press="onConfQuantityPress"/>-->
                                         <ObjectNumber
                                             id="_IDGenObjectNumber3"
                                             number="{detailModel>DeliveredQty}"
+                                            unit="{detailModel>UOM}"
                                         />
                                         <!-- unit="{detailModel>Uom}"/> -->
                                         <Text
@@ -216,9 +217,8 @@
                                         <!--press="onAmountPress"/>-->
                                         <ObjectStatus
                                             id="_IDGenObjectStatus3"
-                                            text=""
-                                        />
-                                        <!-- text="{detailModel>Confirm_Status}" state="{path:'detailModel>Confirm_Status',formatter:'sp.fiori.purchaseorder.controller.formatter.statusCheck'}"/> -->
+                                            text="{detailModel>ConfirmStatus}" 
+                                            state="{path:'detailModel>ConfirmStatus',formatter:'sp.fiori.purchaseorder.controller.formatter.statusCheck'}"/> 
                                     </cells>
                                 </ColumnListItem>
                             </items>
