@@ -68,17 +68,32 @@ sap.ui.define([
 				var oModel = this.getOwnerComponent().getModel();
 
 				this.getView().byId("AsnCreateTable").removeSelections(true);
-				var request = `/ASNItems?unitCode=${unitCode}&docNum=${this.Po_Num}`;
+				//var request = `/ASNItems?unitCode=${unitCode}&docNum=${this.Po_Num}`;
+				var request = "/PurchaseOrders?$expand=DocumentRows";
 				oModel.read(request, {
 					success: function (oData) {
-						var filteredPurchaseOrder = oData.results.find(po => po.CustomerReferenceNumber_PoNum === that.Po_Num);
+						var filteredPurchaseOrder = oData.results.find(po => po.PoNum === that.Po_Num);
 						if (filteredPurchaseOrder) {
 							that.detailHeaderModel.setData(filteredPurchaseOrder);
 							that.detailHeaderModel.refresh(true);
 
-							that.asnModel.setData(oData.results);
+							that.asnModel.setData(filteredPurchaseOrder);
 							that.asnModel.refresh(true);
-							that.initializeScheduleNumber();
+							var asnModelData = that.getView().getModel("asnModel").getData();
+							for(var i = 0; i < asnModelData.DocumentRows.results.length; i++){
+								asnModelData.DocumentRows.results[i].ASSValue = parseFloat(asnModelData.DocumentRows.results[i].BalanceQty) * parseFloat(asnModelData.DocumentRows.results[i].UnitPrice);
+								if (asnModelData.DocumentRows.results[i].PFA) {
+									asnModelData.DocumentRows.results[i].ASSValue = parseFloat(asnModelData.DocumentRows.results[i].ASSValue) + parseFloat(asnModelData.DocumentRows.results[i].PFA);
+								}
+								if (asnModelData.DocumentRows.results[i].FFC) {
+									asnModelData.DocumentRows.results[i].ASSValue = parseFloat(asnModelData.DocumentRows.results[i].ASSValue) + parseFloat(asnModelData.DocumentRows.results[i].FFC);
+								}
+								if (asnModelData.DocumentRows.results[i].OT1) {
+									asnModelData.DocumentRows.results[i].ASSValue = parseFloat(asnModelData.DocumentRows.results[i].ASSValue) + parseFloat(asnModelData.DocumentRows.results[i].OT1);
+								}
+							}
+							that.asnModel.refresh(true);
+							//that.initializeScheduleNumber();
 						} else {
 							MessageBox.error("Purchase order not found");
 						}
@@ -243,7 +258,7 @@ sap.ui.define([
 			var oModel = this.getOwnerComponent().getModel();
 			this.data = this.asnModel.getData();
 			var form = {
-				"UnitCode": sessionStorage.getItem("unitCode"),
+				"UnitCode": sessionStorage.getItem("unitCode") || "P01",
 				"CreatedBy": "Manikandan",
 				"CreatedIP": "",
 				"RowDetails": []
@@ -275,21 +290,21 @@ sap.ui.define([
 						return;
 					} else {
 						var row = {
-							"BillLineNumber": items[i].BillLineNumber,
+							"BillLineNumber": items[i].LineNum,
 							"BillNumber": this.data.BillNumber,
 							"BillDate": this.data.BillDate,
 							"ScheduleNumber": items[i].ScheduleNumber,
 							"ScheduleLineNumber": items[i].ScheduleLineNumber,
-							"PONumber": items[i].CustomerReferenceNumber_PoNum,
+							"PONumber": items[i].PNum_PoNum,
 							"IAIItemCode": items[i].ItemCode,
-							"UOM": items[i].ItemUOM,
-							"HSNCode": items[i].HsnCode,
-							"Rate": items[i].ItemRate,
+							"UOM": items[i].UOM,
+							"HSNCode": items[i].HSNCode,
+							"Rate": items[i].UnitPrice,
 							"Quantity": items[i].BalanceQty,
 							"PackingAmount": items[i].PFA,
 							"Freight": items[i].FFC,
 							"OtherCharges": items[i].OT1,
-							"AssValue": items[i].ASSValue,
+							"AssetValue": items[i].ASSValue,
 							"IGST": items[i].IGP,
 							"IGA": items[i].IGA,
 							"CGST": items[i].CGP,
@@ -363,7 +378,7 @@ sap.ui.define([
 			//var ButtonText = event.getSource().getText();
 			this.data = this.asnModel.getData();
 			var ASNHeaderData = {
-				"CustomerReferenceNumber_PoNum": this.data[0].CustomerReferenceNumber_PoNum,
+				"PNum_PoNum": this.data.PNum_PoNum,
 				"AsnNum": this.data.AsnNum,
 				"InvoiceDate": this.data.BillDate,
 				"InvoiceNum": this.data.BillNumber,
@@ -378,7 +393,10 @@ sap.ui.define([
 				"PDIRNumber": this.data.PDIRNumber,
 				"HeatNumber": this.data.HeatNumber,
 				"BatchNumber": this.data.BatchNumber,
-				"ManufacturingMonth": this.data.ManufacturingMonth
+				"ManufacturingMonth": this.data.ManufacturingMonth,
+				"PlantName": this.data.PlantName,
+				"PlantCode": this.data.PlantCode,
+				"VendorCode": this.data.VendorCode
 			};
 			var ASNItemData = [];
 			// var createData = {
@@ -976,10 +994,10 @@ sap.ui.define([
 		onQuantityChange: function (e) {
 			const val = e.getParameter("newValue"),
 				obj = e.getSource().getParent().getBindingContext("asnModel").getObject();
-			var path = e.getSource().getParent().getBindingContextPath().split("/")[1];
-			var data = this.asnModel.getData();
+			var path = e.getSource().getParent().getBindingContextPath().split("/")[3];
+			var data = this.asnModel.getData().DocumentRows.results;
 			data[path].BalanceQty = val;
-			data[path].ASSValue = parseFloat(data[path].BalanceQty) * parseFloat(data[path].ItemRate);
+			data[path].ASSValue = parseFloat(data[path].BalanceQty) * parseFloat(data[path].UnitPrice);
 			if (data[path].PFA) {
 				data[path].ASSValue = parseFloat(data[path].ASSValue) + parseFloat(data[path].PFA);
 			}
@@ -993,32 +1011,38 @@ sap.ui.define([
 		},
 		onPackChange: function (e) {
 			const val = e.getParameter("value") || 0;
-			var path = e.getSource().getParent().getBindingContextPath().split("/")[1];
-			var data = this.asnModel.getData();
+			var path = e.getSource().getParent().getBindingContextPath().split("/")[3];
+			var data = this.asnModel.getData().DocumentRows.results;
 			data[path].PFA = val;
-			data[path].ASSValue = (parseFloat(data[path].BalanceQty) * parseFloat(data[path].ItemRate)) + parseFloat(data[path].PFA) + parseFloat(data[path].FFC) + parseFloat(data[path].OT1);
+			if (data[path].FFC === undefined){data[path].FFC = "0"}
+			if (data[path].OT1 === undefined){data[path].OT1 = "0"}
+			data[path].ASSValue = (parseFloat(data[path].BalanceQty) * parseFloat(data[path].UnitPrice)) + parseFloat(data[path].PFA) + parseFloat(data[path].FFC) + parseFloat(data[path].OT1);
 			this.asnModel.refresh(true);
 		},
 		onFreightChange: function (e) {
 			const val = e.getParameter("value") || 0;
-			var path = e.getSource().getParent().getBindingContextPath().split("/")[1];
-			var data = this.asnModel.getData();
+			var path = e.getSource().getParent().getBindingContextPath().split("/")[3];
+			var data = this.asnModel.getData().DocumentRows.results;
 			data[path].FFC = val;
-			data[path].ASSValue = (parseFloat(data[path].BalanceQty) * parseFloat(data[path].ItemRate)) + parseFloat(data[path].PFA) + parseFloat(data[path].FFC) + parseFloat(data[path].OT1);
+			if (data[path].PFA === undefined){data[path].PFA = "0"}
+			if (data[path].OT1 === undefined){data[path].OT1 = "0"}
+			data[path].ASSValue = (parseFloat(data[path].BalanceQty) * parseFloat(data[path].UnitPrice)) + parseFloat(data[path].PFA) + parseFloat(data[path].FFC) + parseFloat(data[path].OT1);
 			this.asnModel.refresh(true);
 		},
 		onOtherChange: function (e) {
 			const val = e.getParameter("value") || 0;
-			var path = e.getSource().getParent().getBindingContextPath().split("/")[1];
-			var data = this.asnModel.getData();
+			var path = e.getSource().getParent().getBindingContextPath().split("/")[3];
+			var data = this.asnModel.getData().DocumentRows.results;
 			data[path].OT1 = val;
-			data[path].ASSValue = (parseFloat(data[path].BalanceQty) * parseFloat(data[path].ItemRate)) + parseFloat(data[path].PFA) + parseFloat(data[path].FFC) + parseFloat(data[path].OT1);
+			if (data[path].FFC === undefined){data[path].FFC = "0"}
+			if (data[path].PFA === undefined){data[path].PFA = "0"}
+			data[path].ASSValue = (parseFloat(data[path].BalanceQty) * parseFloat(data[path].UnitPrice)) + parseFloat(data[path].PFA) + parseFloat(data[path].FFC) + parseFloat(data[path].OT1);
 			this.asnModel.refresh(true);
 		},
 		initializeScheduleNumber: function () {
 			var unitCode = sessionStorage.getItem("unitCode");
 			var modeldata = this.getView().getModel("asnModel").getData();
-			var Po_No = modeldata[0].CustomerReferenceNumber_PoNum;
+			var Po_No = modeldata.PNum_PoNum;
 			this.AddressCode = Po_No.replace(/\//g, '-');
 			var oComboBox = this.getView().byId("schnoId");
 			if (!oComboBox.getModel("ScheduleNumber")) {
@@ -1072,17 +1096,11 @@ sap.ui.define([
 						ScheduleNumber: ScheduleNumber
 					},
 					success: function (oData) {
-						var oJsonModel = new sap.ui.model.json.JSONModel();
-						oJsonModel.setData({ ScLNum: oData.results });
-
-						oStateSelect.setModel(oJsonModel, "ScheduleLineNumber");
-						oStateSelect.bindItems({
-							path: "ScheduleLineNumber>/ScLNum",
-							template: new sap.ui.core.Item({
-								key: "{ScheduleLineNumber>code}",
-								text: "{ScheduleLineNumber>code}"
-							})
-						});
+						var scheduleLineNumberData = oData.results;
+						var oScheduleLineNumberModel = new sap.ui.model.json.JSONModel();
+						oScheduleLineNumberModel.setData({ items: scheduleLineNumberData });
+						this.getView().setModel(oScheduleLineNumberModel, "schedulelinenumber");
+						resolve();
 					}.bind(this),
 					error: function (oError) {
 						reject(new Error("Failed to fetch Schedule Line Number."));

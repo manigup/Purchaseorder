@@ -1,6 +1,6 @@
 <mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m"
 	controllerName="sp.fiori.purchaseorder.controller.POItemDetails">
-	<Page id="_IDGenPage1" title="Puchase Order Number : {itemModel>/results/0/Ebeln}" showNavButton="true"
+	<Page id="_IDGenPage1" title="Puchase Order Number : {itemModel>/0/PONum}" showNavButton="true"
 		navButtonPress="sp.fiori.purchaseorder.controller.formatter.onNavBack" titleAlignment="Center">
 		<Table id="_IDGenTable1" items="{itemModel>/}">
 			<columns>

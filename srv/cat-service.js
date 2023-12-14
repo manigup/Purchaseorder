@@ -115,7 +115,7 @@ async function getPurchaseOrders(AddressCode) {
             const documentRows = dataArray.flatMap(data =>
                 data.DocumentRows.map(row => {
                     return {
-                        LineNum: parseInt(row.LineNum),
+                        LineNum: row.LineNum,
                         PoDate: data.PoDate,
                         ItemCode: row.ItemCode,
                         ItemDesc: row.ItemDesc,
@@ -132,6 +132,7 @@ async function getPurchaseOrders(AddressCode) {
                         PlantCode: data.PlantCode,
                         PlantName: data.PlantName,
                         ConfirmStatus: "",
+                        ASSValue:"",
                         PNum_PoNum: data.PoNum  // associating with the current PurchaseOrder
                     };
                 })

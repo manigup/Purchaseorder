@@ -35,7 +35,7 @@
         </headerContent>
         <ObjectHeader
             id="AsnObjectId"
-            title="Purchase Order : {asnModel>/0/CustomerReferenceNumber_PoNum}"
+            title="Purchase Order : {asnModel>/PoNum}"
             backgroundDesign="Translucent"
             responsive="{device>/isPhone}"
             fullScreenOptimized="true"
@@ -44,7 +44,8 @@
             <attributes>
                 <ObjectAttribute
                     id="_IDGenObjectAttribute1"
-                    text="Plant :{asnModel>/0/Plant_Desc} ({asnModel>/0/Werks}) "
+                    text="Plant :{asnModel>/PlantName} ({asnModel>/PlantCode}) "
+                    visible="{= ${asnModel>/PlantCode} !== ''}"
                 />
             </attributes>
         </ObjectHeader>
@@ -60,7 +61,7 @@
                 <Label text=" Address Code" />
                 <Text
                     id= "AddressCodeid"
-                    text="{asnModel>/0/AddressCode}"
+                    text="{asnModel>/VendorCode}"
                     width="185px"
                 />
                 <Label
@@ -245,7 +246,7 @@
                             mode="MultiSelect"
                             rememberSelections="true"
                             selectionChange="onRowSelect"
-                            items="{asnModel>/}"
+                            items="{asnModel>/DocumentRows/results}"
                         >
                             <infoToolbar>
                                 <OverflowToolbar
@@ -551,7 +552,7 @@
                                         wrapping="true"
                                     />
                                 </Column>
-                                <Column
+                                <!-- <Column
                                     minScreenWidth="Tablet"
                                     demandPopin="true"
                                     width="6rem"
@@ -562,8 +563,8 @@
                                         text="SCH No"
                                         wrapping="true"
                                     />
-                                </Column>
-                                <Column
+                                </Column> -->
+                                <!-- <Column
                                     minScreenWidth="Tablet"
                                     demandPopin="true"
                                     width="6rem"
@@ -574,7 +575,7 @@
                                         text="SCH Line No"
                                         wrapping="true"
                                     />
-                                </Column>
+                                </Column> -->
                                 <Column
                                     minScreenWidth="Tablet"
                                     demandPopin="true"
@@ -968,9 +969,9 @@
                                         /> -->
                                         <Input
                                             id="_IDGenText1"
-                                            value="{asnModel>BillLineNumber}"
+                                            value="{asnModel>LineNum}"
                                         />
-                                        <ComboBox
+                                        <!-- <ComboBox
                                             id="schnoId"
                                             items="{schedulenumber>/items}"
                                             selectedKey="{asnModel>/ScheduleNumber}"
@@ -981,22 +982,22 @@
                                                 key="{schedulenumber>ScheduleNumber}"
                                                 text="{schedulenumber>ScheduleNumber}"
                                             />
-                                        </ComboBox>
-                                        <ComboBox
+                                        </ComboBox> -->
+                                        <!-- <ComboBox
                                             id="schlinenoId"
-                                            items="{ScheduleLineNumber>/}"
+                                            items="{schedulelinenumber>/items}"
                                             selectedKey="{asnModel>/ScheduleLineNumber}"
                                             change="ScheduleLineNumberHelpSelect"
                                         >
                                             <core:Item
                                                 id="_IDGenItem2"
-                                                key="{ScheduleLineNumber>code}"
-                                                text="{ScheduleLineNumber>code}"
+                                                key="{schedulelinenumber>ScheduleLineNumber}"
+                                                text="{schedulelinenumber>ScheduleLineNumber}"
                                             />
-                                        </ComboBox>
+                                        </ComboBox> -->
                                         <Text
                                             id="_IDGenText7"
-                                            text="{asnModel>CustomerReferenceNumber_PoNum}"
+                                            text="{asnModel>PNum_PoNum}"
                                         />
                                         <Text
                                             id="_IDGenText8"
@@ -1004,15 +1005,15 @@
                                         />
                                         <Text
                                             id="_IDGenText12"
-                                            text="{asnModel>ItemUOM}"
+                                            text="{asnModel>UOM}"
                                         />
                                         <Text
                                             id="_IDGenText13"
-                                            text="{asnModel>HsnCode}"
+                                            text="{asnModel>HSNCode}"
                                         />
                                         <Text
                                             id="_IDGenText14"
-                                            text="{asnModel>ItemRate}"
+                                            text="{asnModel>UnitPrice}"
                                         />
                                         <Input
                                             id="quantityId"
