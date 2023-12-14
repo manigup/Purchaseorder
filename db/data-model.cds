@@ -3,10 +3,12 @@ namespace my.bookshop;
 entity PurchaseOrders {
   key PoNum         : String;
       PoDate        : Date;
-      VendorName    : String;
       VendorCode    : String;
+      VendorName    : String;
       PlantCode     : String;
       PlantName     : String;
+      ValidFrom     : String;
+      ValidTo      : String;
       DocumentRows  : Composition of many DocumentRowItems
                         on DocumentRows.PNum = $self;
       asnItems      : Composition of many ASNItems
@@ -32,6 +34,10 @@ entity DocumentRowItems {
       DeliveredQty : Decimal;
       BalanceQty   : Decimal;
       UnitPrice    : Decimal;
+      UOM          : String;
+      Currency     : String;
+      Status       : String;
+      ConfirmStatus: String;
       PNum         : Association to PurchaseOrders;
 }
 
