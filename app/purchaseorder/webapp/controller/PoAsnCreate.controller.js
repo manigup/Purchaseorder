@@ -336,7 +336,7 @@ sap.ui.define([
 				var formdatastr = JSON.stringify(form);
 				this.hardcodedURL = "";
 				if (window.location.href.includes("launchpad")) {
-					this.hardcodedURL = "https://impautosuppdev.launchpad.cfapps.ap10.hana.ondemand.com/da8bb600-97b5-4ae9-822d-e6aa134d8e1a.onboarding.spfiorionboarding-0.0.1";
+					this.hardcodedURL = "https://impautosuppdev.launchpad.cfapps.ap10.hana.ondemand.com/547b58c0-9667-470f-a767-c8524482b3ed.PO.spfioripurchaseorder-0.0.1";
 				}
 				var sPath = this.hardcodedURL + `/v2/odata/v4/catalog/submitFormData`;
 				$.ajax({
@@ -365,17 +365,7 @@ sap.ui.define([
 			//this.getView().byId("MaterialSearchId").setValue("");
 			//this.onRowSelect(event);
 			var oModel = this.getOwnerComponent().getModel();
-			//this.calculateInvoiceAmt();
-			//var invoiceAmount = this.getView().byId("invoiceAmtId").getValue().trim();
-			//var unplannedAmount = this.getView().byId("unplannedAmtId").getValue().trim();
-			//unplannedAmount = Math.abs(parseFloat(unplannedAmount));
-			//unplannedAmount = unplannedAmount ? unplannedAmount : 0;
-			//var InvoiceVal = +invoiceAmount + +unplannedAmount;
-			//this.getView().byId("invoiceValueId").setValue(InvoiceVal.toFixed(2));
-
-			// that.onDeliveryCost();
-
-			//var ButtonText = event.getSource().getText();
+			
 			this.data = this.asnModel.getData();
 			var ASNHeaderData = {
 				"PNum_PoNum": this.data.PNum_PoNum,
@@ -399,41 +389,10 @@ sap.ui.define([
 				"VendorCode": this.data.VendorCode
 			};
 			var ASNItemData = [];
-			// var createData = {
-			// 	"Update": false,
-			// 	"DraftAsn": false,
-			// 	"AsnNum": this.data.AsnNum,
-			// 	"Buyer_Name": this.data.Buyer_Name,
-			// 	"Currency": this.data.Currency,
-			// 	"InvoiceAmt": this.data.InvoiceAmt.toString(),
-			// 	"InvoiceVal": this.data.InvoiceVal.toString(),
-			// 	"UnplannedCost": this.data.UnplannedCost.toString(),
-			// 	"UnplannedCost_text": this.data.UnplannedCost_text,
-			// 	"InvoiceDate": this.data.InvoiceDate,
-			// 	"InvoiceNum": this.data.InvoiceNum,
-			// 	"Po_No": this.data.Po_No,
-			// 	"Purchase_Group_Desc": this.data.Purchase_Group_Desc,
-			// 	"ShipTime": this.data.ShipTime,
-			// 	"Total_Amount": this.data.Total_Amount.toString(),
-			// 	"Vendor_No": this.data.Vendor_No,
-			// 	"Werks": this.data.Werks,
-			// 	"asnheadertoasnitemnav": []
-			// };
-			// if (ButtonText === "Save as Draft") {
-			// 	var DraftAsn = true;
-			// } 
-			// else {
-			// 	if (this.getView().byId("UploadCollection").getItems().length <= 0) {
-			// 		MessageBox.error("Atleast One attachment is required.");
-			// 		return;
-			// 	}
-			// }
-			// createData.Total_Amount = this.Amount;
-			// createData.Vendor_No = this.Vendor_No;
+			
 			var oTable = this.getView().byId("AsnCreateTable");
 			var contexts = oTable.getSelectedContexts();
-			// !createData.InvoiceNum || || !createData.InvoiceDate
-			//uncomment 300-312
+			
 			if (ASNHeaderData.InvoiceNum) {
 				if (!ASNHeaderData.InvoiceDate) {
 					MessageBox.error("Please fill the Invoice Date");
@@ -443,10 +402,7 @@ sap.ui.define([
 				MessageBox.error("Please fill the Invoice Number");
 				return;
 			}
-			// if (!ASNHeaderData.InvoiceAmt) {
-			// 	MessageBox.error("Please fill all the required Information");
-			// 	return;
-			// } 
+			
 			if (!contexts.length) {
 				MessageBox.error("No Item Selected");
 				return;
@@ -464,44 +420,13 @@ sap.ui.define([
 						return;
 					} else {
 						ASNItemData.push(items[i]);
-						//if (items[i].Status === 'CNR') { // If status is confirmation not reqd. check PO quantity
-						// if (parseFloat(items[i].Menge) <= (parseFloat(items[i].BalanceQty) - parseFloat(items[i].Asn_Created))) {
-						// 	ASNItemData.push(items[i]);
-						// } else {
-						// 	MessageBox.error("ASN Quantity is greater than the balance quantity for " + items[i].Maktx);
-						// 	sap.ui.core.BusyIndicator.hide();
-						// 	return;
-						// }
-						//} 
-						// else { // If status is confirmation reqd. check confirmation quantity
-						// 	if (parseFloat(items[i].Menge) <= (parseFloat(items[i].Total_Qty) - parseFloat(items[i].Asn_Created))) {
-						// 		createData.asnheadertoasnitemnav.push(items[i]);
-						// 	} else {
-						// 		MessageBox.error("ASN Quantity is greater than the balance quantity for " + items[i].Maktx);
-						// 		sap.ui.core.BusyIndicator.hide();
-						// 		return;
-						// 	}
-						// }
+						
 					}
 
 				}
 				oModel.create("/ASNListHeader", ASNHeaderData, null, function (oData, response) {
 					MessageBox.success("ASN created succesfully");
-					// that.asn = oData.AsnNum;
-					// that.year = oData.Fis_Year;
-					// var ASN = oData.AsnNum + "/" + oData.Fis_Year;
-					//that.onStartUpload();
-					//MessageBox.success("ASN " + oData.AsnNum + "/" + oData.Fis_Year + " created succesfully  ", {
-					// MessageBox.success("ASN created succesfully  ", {
-					// 	actions: [sap.m.MessageBox.Action.OK],
-					// 	icon: sap.m.MessageBox.Icon.SUCCESS,
-					// 	title: "Success",
-					// 	onClose: function (oAction) {
-					// 		if (oAction === "OK") {
-					// 			sp.fiori.purchaseorder.controller.formatter.onNavBack();
-					// 		}
-					// 	}
-					// });
+					
 
 				}, function (oError) {
 					try {
@@ -514,11 +439,7 @@ sap.ui.define([
 				});
 				for (var i = 0; i < ASNItemData.length; i++) {
 					oModel.create("/ASNList", ASNItemData[i], null, function (oData, response) {
-						// that.asn = oData.AsnNum;
-						// that.year = oData.Fis_Year;
-						// var ASN = oData.AsnNum + "/" + oData.Fis_Year;
-						//that.onStartUpload();
-						//MessageBox.success("ASN " + oData.AsnNum + "/" + oData.Fis_Year + " created succesfully  ", {
+						
 						MessageBox.success("ASN created succesfully  ", {
 							actions: [sap.m.MessageBox.Action.OK],
 							icon: sap.m.MessageBox.Icon.SUCCESS,
@@ -774,7 +695,7 @@ sap.ui.define([
 				afilters.push(new sap.ui.model.Filter("Matnr", sap.ui.model.FilterOperator.EQ, ""));
 				afilters.push(new sap.ui.model.Filter("Maktx", sap.ui.model.FilterOperator.Contains, ""));
 				//this.calculateInvoiceAmt();
-				this.onRowSelect(oEvent);
+				//this.onRowSelect(oEvent);
 
 			}
 			// afilters.push(new sap.ui.model.Filter("Matnr", sap.ui.model.FilterOperator.Contains, search));
