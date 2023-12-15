@@ -338,7 +338,7 @@ sap.ui.define([
 				if (window.location.href.includes("launchpad")) {
 					this.hardcodedURL = "https://impautosuppdev.launchpad.cfapps.ap10.hana.ondemand.com/547b58c0-9667-470f-a767-c8524482b3ed.PO.spfioripurchaseorder-0.0.1";
 				}
-				var sPath = this.hardcodedURL + `/v2/odata/v4/catalog/submitFormData`;
+				var sPath = this.hardcodedURL + `/v2/odata/v4/catalog/PostASN`;
 				$.ajax({
 					type: "POST",
 					headers: {
@@ -346,7 +346,7 @@ sap.ui.define([
 					},
 					url: sPath,
 					data: JSON.stringify({
-						data: formdatastr
+						asnData: formdatastr
 					}),
 					context: this,
 					success: function (data, textStatus, jqXHR) {
