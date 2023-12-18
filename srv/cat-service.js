@@ -30,14 +30,6 @@ module.exports = (srv) => {
        return results.purchaseOrders;
     });
 
-    srv.on('READ', ASNItems, async (req) => {
-        const {unitCode, docNum} = req._queryOptions
-        const asnList = await fetchASNList(unitCode, docNum);
-        if (!asnList) throw new Error('Unable to fetch ASN List.');
-
-        return asnList;
-    });
-
     srv.on('getPurchaseMaterialQuantityList', async (req) => {
         const { UnitCode, PoNum, MaterialCode } = req.data;
         // Replace '-' with '/' for PoNum
