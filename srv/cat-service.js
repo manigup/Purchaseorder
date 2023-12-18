@@ -3,7 +3,7 @@ const axios = require('axios');
 
 module.exports = (srv) => {
 
-    const {PurchaseOrders, ASNItems } = srv.entities;
+    const {PurchaseOrders} = srv.entities;
     
     srv.on('READ', PurchaseOrders, async (req) => {
         //const {AddressCode} = req._queryOptions
