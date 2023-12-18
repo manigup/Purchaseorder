@@ -526,8 +526,8 @@ sap.ui.define([
 
 				}, function (oError) {
 					try {
-						var error = JSON.parse(oError.response.body);
-						MessageBox.error(error.error.message.value);
+						//var error = JSON.parse(oError.response.body);
+						MessageBox.error(oError.response.body);
 					} catch (err) {
 						var errorXML = jQuery.parseXML(oError.getParameter("responseText")).querySelector("message").textContent;
 						MessageBox.error(errorXML);
@@ -549,8 +549,8 @@ sap.ui.define([
 
 					}, function (oError) {
 						try {
-							var error = JSON.parse(oError.response.body);
-							MessageBox.error(error.error.message.value);
+							//var error = JSON.parse(oError.response.body);
+							MessageBox.error(oError.response.body);
 						} catch (err) {
 							var errorXML = jQuery.parseXML(oError.getParameter("responseText")).querySelector("message").textContent;
 							MessageBox.error(errorXML);
