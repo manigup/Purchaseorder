@@ -520,7 +520,7 @@ sap.ui.define([
 					}
 
 				}
-				oModel.create("/ASNListHeader", ASNHeaderData, null, function (oData, response) {
+				oModel.update("/ASNListHeader", ASNHeaderData, null, function (oData, response) {
 					MessageBox.success("ASN created succesfully");
 					
 
@@ -534,7 +534,7 @@ sap.ui.define([
 					}
 				});
 				for (var i = 0; i < ASNItemData.length; i++) {
-					oModel.create("/ASNList", ASNItemData[i], null, function (oData, response) {
+					oModel.update("/ASNList", ASNItemData[i], null, function (oData, response) {
 						
 						MessageBox.success("ASN created succesfully  ", {
 							actions: [sap.m.MessageBox.Action.OK],
