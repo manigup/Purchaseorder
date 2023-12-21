@@ -6,8 +6,8 @@ module.exports = (srv) => {
     const {PurchaseOrders, ASNItems } = srv.entities;
     
     srv.on('READ', PurchaseOrders, async (req) => {
-        //const {AddressCode} = req._queryOptions
-        const AddressCode = 'DIE-01-02'
+        const {AddressCode} = req._queryOptions
+        //const AddressCode = 'DIE-01-02'
         const results = await getPurchaseOrders(AddressCode);
         if (!results) throw new Error('Unable to fetch PurchaseOrders.');
 

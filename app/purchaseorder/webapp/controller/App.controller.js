@@ -37,27 +37,20 @@
         }
       },
       onInit: function () {
-        // var site = window.location.href.includes("site");
-        // if (site) {
-        //   var slash = site ? "/" : "";
-        //   var modulePath = jQuery.sap.getModulePath("sp/fiori/purchaseorder");
-        //   modulePath = modulePath === "." ? "" : modulePath;
-        //   $.ajax({
-        //     url: modulePath + slash + "user-api/attributes",
-        //     type: "GET",
-        //     success: res => {
-        //       const attributes = res,
-        //         loginId = attributes.login_name[0],
-        //         loginType = attributes.type[0].substring(0, 1).toUpperCase();
-        //       sap.ui.getCore().getModel("oDataModel").setHeaders({
-        //         "companycode": sessionStorage.getItem("compCode"),
-        //         "loginId": loginId,
-        //         "LoginType": loginType
-        //       });
-        //       this.doRoute();
-        //     }
-        //   });
-        // } else {
+        var site = window.location.href.includes("site");
+        if (site) {
+          var slash = site ? "/" : "";
+          var modulePath = jQuery.sap.getModulePath("sp/fiori/purchaseorder");
+          modulePath = modulePath === "." ? "" : modulePath;
+          $.ajax({
+            url: modulePath + slash + "user-api/attributes",
+            type: "GET",
+            success: res => {
+              sessionStorage.setItem('AddressCode', res.login_name[0]);
+              this.doRoute();
+            }
+          });
+        } else {
         //   sap.ui.getCore().getModel("oDataModel").setHeaders({
         //     "companycode": "1000",
         //     "loginId": "401122",

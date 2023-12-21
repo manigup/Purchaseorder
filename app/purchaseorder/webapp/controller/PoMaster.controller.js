@@ -26,6 +26,7 @@ sap.ui.define([
 			}
 			var that = this;
 			var unitCode = sessionStorage.getItem("unitCode") || "P01";
+			this.AddressCode = sessionStorage.getItem("AddressCode") || 'DIE-01-02';
 			if (that.flagModel.getData().confirmPressFlag) {
 				var selectedList = this.getView().byId("masterListId").getSelectedItem();
 				this.getView().byId("searchFieldId").setValue("");
@@ -44,10 +45,10 @@ sap.ui.define([
 			this.getView().byId("masterListId").bindItems({
 				path: "/PurchaseOrders",
 				parameters: {
-					// custom: {
-					// 	unitCode: unitCode
-					// 	//unitCode: 'P01'
-					// },
+					custom: {
+						AddressCode: this.AddressCode
+						//unitCode: 'P01'
+					},
 					countMode: 'None'
 				},
 				template: this._listTemp
