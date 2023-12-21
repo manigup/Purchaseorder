@@ -54,9 +54,10 @@ sap.ui.define([
 				var PoNum = event.getParameter("arguments").Po_No;
 				this.Po_Num = PoNum.replace(/-/g, '/');
 				var unitCode = sessionStorage.getItem("unitCode") || "P01";
+				this.AddressCode = sessionStorage.getItem("AddressCode") || 'DIE-01-02'
 				//var unitCode = "P01";
 				// Fetch all PurchaseOrders with DocumentRows
-				var request = "/PurchaseOrders?$expand=DocumentRows";
+				var request = "/PurchaseOrders?$expand=DocumentRows&AddressCode=" + this.AddressCode;
 				oModel.read(request, {
 					success: function (oData) {
 						var filteredPurchaseOrder = oData.results.find(po => po.PoNum === that.Po_Num);

@@ -64,12 +64,13 @@ sap.ui.define([
 				this.Amount = event.getParameter("arguments").Amount;
 				this.Vendor_No = event.getParameter("arguments").Vendor_No;
 				var unitCode = sessionStorage.getItem("unitCode") || "P01";
+				this.AddressCode = sessionStorage.getItem("AddressCode") || 'DIE-01-02'
 				//var unitCode = "P01";
 				var oModel = this.getOwnerComponent().getModel();
 
 				this.getView().byId("AsnCreateTable").removeSelections(true);
 				//var request = `/ASNItems?unitCode=${unitCode}&docNum=${this.Po_Num}`;
-				var request = "/PurchaseOrders?$expand=DocumentRows";
+				var request = "/PurchaseOrders?$expand=DocumentRows&AddressCode" + this.AddressCode;
 				oModel.read(request, {
 					success: function (oData) {
 						var filteredPurchaseOrder = oData.results.find(po => po.PoNum === that.Po_Num);
