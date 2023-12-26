@@ -460,11 +460,15 @@ sap.ui.define([
 			}
 
 		},
+
+/*
 		onAsnSaveDB: function () {
 			var that = this;
 			//this.getView().byId("MaterialSearchId").setValue("");
 			//this.onRowSelect(event);
 			var oModel = this.getOwnerComponent().getModel();
+			var oUploadCollection = this.getView().byId("UploadCollection");
+    		var files = oUploadCollection.getItems();
 			
 			this.data = this.asnModel.getData();
 			var ASNHeaderData = {
@@ -567,6 +571,102 @@ sap.ui.define([
 				// }
 			//}
 		},
+*/
+
+		onAsnSaveDB: function () {
+			var that = this;
+			var oModel = this.getOwnerComponent().getModel();
+
+			this.data = this.asnModel.getData();
+			var ASNHeaderData = {
+				"PNum_PoNum": this.data.PoNum,
+				"AsnNum": this.data.AsnNum,
+				"BillDate": this.data.BillDate,
+				"BillNumber": this.data.BillNumber,
+				"DocketNumber": this.data.DocketNumber,
+				"GRDate": this.data.GRDate,
+				"TransportName": this.data.TransportName,
+				"TransportMode": this.data.TransportMode,
+				"EwayBillNumber": this.data.EwayBillNumber,
+				"EwayBillDate": this.data.EwayBillDate,
+				"MillNumber": this.data.MillNumber,
+				"MillName": this.data.MillName,
+				"PDIRNumber": this.data.PDIRNumber,
+				"HeatNumber": this.data.HeatNumber,
+				"BatchNumber": this.data.BatchNumber,
+				"ManufacturingMonth": this.data.ManufacturingMonth,
+				"PlantName": this.data.PlantName,
+				"PlantCode": this.data.PlantCode,
+				"VendorCode": this.data.VendorCode
+			};
+
+			var ASNItemData = [];
+			var oTable = this.getView().byId("AsnCreateTable");
+			var contexts = oTable.getSelectedContexts();
+
+			if (!ASNHeaderData.BillNumber) {
+				MessageBox.error("Please fill the Invoice Number");
+				return;
+			} else if (!ASNHeaderData.BillDate) {
+				MessageBox.error("Please fill the Invoice Date");
+				return;
+			}
+
+			if (!contexts.length) {
+				MessageBox.error("No Item Selected");
+				return;
+			} 
+
+			contexts.forEach(function (context) {
+				var item = context.getObject();
+				if (!item.BalanceQty) {
+					MessageBox.error("ASN Quantity is required for selected items");
+					return;
+				} else {
+					item.ASSValue = item.ASSValue.toString();
+					ASNItemData.push(item);
+				}
+			});
+
+			var processASNData = function () {
+				oModel.create("/ASNListHeader", ASNHeaderData, {
+					success: function (oData) {
+						MessageBox.success("ASN Header created successfully.");
+						// Create ASN items
+						ASNItemData.forEach(function (item) {
+							oModel.create("/ASNList", item, {
+								success: function (oData) {
+									MessageBox.success("ASN Item created successfully.");
+								},
+								error: function (oError) {
+									MessageBox.error("Error creating ASN Item: " + oError.message);
+								}
+							});
+						});
+					},
+					error: function (oError) {
+						MessageBox.error("Error creating ASN Header: " + oError.message);
+					}
+				});
+			};
+
+			if (this._file) {
+				var reader = new FileReader();
+				reader.onload = function (e) {
+					var base64 = e.target.result.split(',')[1];
+					ASNHeaderData.Attachment = base64;
+					ASNHeaderData.AttachmentName = that._file.name;
+					ASNHeaderData.HasAttachment = true;
+		
+					processASNData();
+				};
+				reader.readAsDataURL(this._file);
+			} else {
+				ASNHeaderData.HasAttachment = false;
+				processASNData();
+			}
+		},
+
 		handleLinkPress: function (oEvent) {
 			if (!this._oPopover) {
 				this._oPopover = sap.ui.xmlfragment("sp.fiori.purchaseorder.fragment.PricePopoverFragment", this);
@@ -594,6 +694,7 @@ sap.ui.define([
 		},
 
 		//	********************************************Upload File start Code ***********************************
+		/*
 		onChange: function (oEvent) {
 			var oUploadCollection = oEvent.getSource();
 
@@ -606,6 +707,24 @@ sap.ui.define([
 			}
 
 		},
+		*/
+		onChange: function (oEvent) {
+			var oUploadCollection = oEvent.getSource();
+		
+			if (this.header_xcsrf_token) {
+				var oCustomerHeaderToken = new sap.m.UploadCollectionParameter({
+					name: "x-csrf-token",
+					value: this.header_xcsrf_token
+				});
+				oUploadCollection.addHeaderParameter(oCustomerHeaderToken);
+			}
+
+			var aFiles = oEvent.getParameter("files");
+			if (aFiles && aFiles.length > 0) {
+				this._file = aFiles[0];
+			}
+		},
+		
 
 		onStartUpload: function (oEvent) {
 			var oUploadCollection = this.getView().byId("UploadCollection");
