@@ -99,4 +99,8 @@ entity ASNListHeader {
       PlantName          : String;
       PlantCode          : String;
       VendorCode         : String;
+      Attachment         : LargeBinary;
+      @Core.ContentDisposition.Filename: AttachmentName
+      AttachmentName     : String; // Original filename of the attachment
+      HasAttachment      : Boolean default false;
 }

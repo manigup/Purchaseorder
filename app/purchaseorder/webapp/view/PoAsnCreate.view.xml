@@ -600,7 +600,7 @@
                     <UploadCollection
                         id="UploadCollection"
                         maximumFilenameLength="55"
-                        multiple="true"
+                        multiple="false"
                         sameFilenameAllowed="false"
                         instantUpload="false"
                         maximumFileSize="10"
