@@ -70,7 +70,7 @@ sap.ui.define([
 
 				this.getView().byId("AsnCreateTable").removeSelections(true);
 				//var request = `/ASNItems?unitCode=${unitCode}&docNum=${this.Po_Num}`;
-				var request = "/PurchaseOrders?$expand=DocumentRows&AddressCode" + this.AddressCode;
+				var request = "/PurchaseOrders?$expand=DocumentRows&AddressCode=" + this.AddressCode;
 				oModel.read(request, {
 					success: function (oData) {
 						var filteredPurchaseOrder = oData.results.find(po => po.PoNum === that.Po_Num);
@@ -81,18 +81,18 @@ sap.ui.define([
 							that.asnModel.setData(filteredPurchaseOrder);
 							that.asnModel.refresh(true);
 							var asnModelData = that.getView().getModel("asnModel").getData();
-							for(var i = 0; i < asnModelData.DocumentRows.results.length; i++){
-								asnModelData.DocumentRows.results[i].ASSValue = parseFloat(asnModelData.DocumentRows.results[i].BalanceQty) * parseFloat(asnModelData.DocumentRows.results[i].UnitPrice);
-								if (asnModelData.DocumentRows.results[i].PFA) {
-									asnModelData.DocumentRows.results[i].ASSValue = parseFloat(asnModelData.DocumentRows.results[i].ASSValue) + parseFloat(asnModelData.DocumentRows.results[i].PFA);
-								}
-								if (asnModelData.DocumentRows.results[i].FFC) {
-									asnModelData.DocumentRows.results[i].ASSValue = parseFloat(asnModelData.DocumentRows.results[i].ASSValue) + parseFloat(asnModelData.DocumentRows.results[i].FFC);
-								}
-								if (asnModelData.DocumentRows.results[i].OT1) {
-									asnModelData.DocumentRows.results[i].ASSValue = parseFloat(asnModelData.DocumentRows.results[i].ASSValue) + parseFloat(asnModelData.DocumentRows.results[i].OT1);
-								}
-							}
+							// for(var i = 0; i < asnModelData.DocumentRows.results.length; i++){
+							// 	asnModelData.DocumentRows.results[i].ASSValue = parseFloat(asnModelData.DocumentRows.results[i].BalanceQty) * parseFloat(asnModelData.DocumentRows.results[i].UnitPrice);
+							// 	if (asnModelData.DocumentRows.results[i].PFA) {
+							// 		asnModelData.DocumentRows.results[i].ASSValue = parseFloat(asnModelData.DocumentRows.results[i].ASSValue) + parseFloat(asnModelData.DocumentRows.results[i].PFA);
+							// 	}
+							// 	if (asnModelData.DocumentRows.results[i].FFC) {
+							// 		asnModelData.DocumentRows.results[i].ASSValue = parseFloat(asnModelData.DocumentRows.results[i].ASSValue) + parseFloat(asnModelData.DocumentRows.results[i].FFC);
+							// 	}
+							// 	if (asnModelData.DocumentRows.results[i].OT1) {
+							// 		asnModelData.DocumentRows.results[i].ASSValue = parseFloat(asnModelData.DocumentRows.results[i].ASSValue) + parseFloat(asnModelData.DocumentRows.results[i].OT1);
+							// 	}
+							// }
 							that.asnModel.refresh(true);
 							//that.initializeScheduleNumber();
 						} else {
@@ -250,8 +250,8 @@ sap.ui.define([
 
 		onNavBack: function () {
 			// this.router.navTo("PoMaster");
-			this.byId("FromDateId").setValue();
-			this.byId("ToDateId").setValue();
+			// this.byId("FromDateId").setValue();
+			// this.byId("ToDateId").setValue();
 			history.go(-1);
 		},
 		onAsnSave: function (event) {
@@ -488,10 +488,10 @@ sap.ui.define([
 				"PlantCode": this.data.PlantCode,
 				"VendorCode": this.data.VendorCode
 			};
-			var ASNItemData = [];
+			// var ASNItemData = [];
 			
-			var oTable = this.getView().byId("AsnCreateTable");
-			var contexts = oTable.getSelectedContexts();
+			// var oTable = this.getView().byId("AsnCreateTable");
+			// var contexts = oTable.getSelectedContexts();
 			
 			if (ASNHeaderData.BillNumber) {
 				if (!ASNHeaderData.BillDate) {
@@ -502,29 +502,32 @@ sap.ui.define([
 				MessageBox.error("Please fill the Invoice Number");
 				return;
 			}
-			
-			if (!contexts.length) {
-				MessageBox.error("No Item Selected");
+			if (this.getView().byId("UploadCollection").getItems().length <= 0) {
+				MessageBox.error("Please attach invoice.");
 				return;
-			} else {
-				var items = contexts.map(function (c) {
-					return c.getObject();
-				});
+			}
+			// if (!contexts.length) {
+			// 	MessageBox.error("No Item Selected");
+			// 	return;
+			// } else {
+			// 	var items = contexts.map(function (c) {
+			// 		return c.getObject();
+			// 	});
 
-				for (var i = 0; i < items.length; i++) {
+			// 	for (var i = 0; i < items.length; i++) {
 
-					if (!items[i].BalanceQty) {
-						MessageBox.error("ASN Quantity is required for selected items");
-						sap.ui.core.BusyIndicator.hide();
+			// 		if (!items[i].BalanceQty) {
+			// 			MessageBox.error("ASN Quantity is required for selected items");
+			// 			sap.ui.core.BusyIndicator.hide();
 
-						return;
-					} else {
-						items[i].ASSValue = items[i].ASSValue.toString();
-						ASNItemData.push(items[i]);
+			// 			return;
+			// 		} else {
+			// 			items[i].ASSValue = items[i].ASSValue.toString();
+			// 			ASNItemData.push(items[i]);
 						
-					}
+			// 		}
 
-				}
+			// 	}
 				oModel.create("/ASNListHeader", ASNHeaderData, null, function (oData, response) {
 					MessageBox.success("ASN created succesfully");
 					
@@ -538,31 +541,31 @@ sap.ui.define([
 						MessageBox.error(errorXML);
 					}
 				});
-				for (var i = 0; i < ASNItemData.length; i++) {
-					oModel.create("/ASNList", ASNItemData[i], null, function (oData, response) {
+				// for (var i = 0; i < ASNItemData.length; i++) {
+				// 	oModel.create("/ASNList", ASNItemData[i], null, function (oData, response) {
 						
-						MessageBox.success("ASN created succesfully  ", {
-							actions: [sap.m.MessageBox.Action.OK],
-							icon: sap.m.MessageBox.Icon.SUCCESS,
-							title: "Success",
-							onClose: function (oAction) {
-								if (oAction === "OK") {
-									sp.fiori.purchaseorder.controller.formatter.onNavBack();
-								}
-							}
-						});
+				// 		MessageBox.success("ASN created succesfully  ", {
+				// 			actions: [sap.m.MessageBox.Action.OK],
+				// 			icon: sap.m.MessageBox.Icon.SUCCESS,
+				// 			title: "Success",
+				// 			onClose: function (oAction) {
+				// 				if (oAction === "OK") {
+				// 					sp.fiori.purchaseorder.controller.formatter.onNavBack();
+				// 				}
+				// 			}
+				// 		});
 
-					}, function (oError) {
-						try {
-							//var error = JSON.parse(oError.response.body);
-							MessageBox.error(oError.response.body);
-						} catch (err) {
-							var errorXML = jQuery.parseXML(oError.getParameter("responseText")).querySelector("message").textContent;
-							MessageBox.error(errorXML);
-						}
-					});
-				}
-			}
+				// 	}, function (oError) {
+				// 		try {
+				// 			//var error = JSON.parse(oError.response.body);
+				// 			MessageBox.error(oError.response.body);
+				// 		} catch (err) {
+				// 			var errorXML = jQuery.parseXML(oError.getParameter("responseText")).querySelector("message").textContent;
+				// 			MessageBox.error(errorXML);
+				// 		}
+				// 	});
+				// }
+			//}
 		},
 		handleLinkPress: function (oEvent) {
 			if (!this._oPopover) {
