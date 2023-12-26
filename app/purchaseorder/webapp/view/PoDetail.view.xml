@@ -239,7 +239,7 @@
                 <!--	visible="{= ${detailModel>Status} === 'New'? false : true}"/>-->
                 <Button
                     id="_IDGenButton1"
-                    text="Create ASN"
+                    text="Submit Invoice"
                     press="onCreateAsn"
                     icon="sap-icon://add"
                     type="Emphasized"
