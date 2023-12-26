@@ -1089,7 +1089,7 @@
                         </Table>
                     </ScrollContainer>
                 </IconTabFilter>
-                <!-- <IconTabFilter
+                <IconTabFilter
                     id="_IDGenIconTabFilter2"
                     icon="sap-icon://attachment"
                 >
@@ -1110,7 +1110,7 @@
                         uploadComplete="onUploadComplete"
                         beforeUploadStarts="onBeforeUploadStarts"
                     />
-                </IconTabFilter> -->
+                </IconTabFilter>
             </items>
         </IconTabBar>
     </Page>
