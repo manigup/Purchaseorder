@@ -275,6 +275,10 @@ sap.ui.define([
 				MessageBox.error("Please fill the Invoice Number");
 				return;
 			}
+			if (this.getView().byId("UploadCollection").getItems().length <= 0) {
+				MessageBox.error("Atleast One attachment is required.");
+				return;
+			}
 			if (!contexts.length) {
 				MessageBox.error("No Item Selected");
 				return;
