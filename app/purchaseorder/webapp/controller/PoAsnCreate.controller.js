@@ -656,7 +656,6 @@ sap.ui.define([
 					var base64 = e.target.result.split(',')[1];
 					ASNHeaderData.Attachment = base64;
 					ASNHeaderData.AttachmentName = that._file.name;
-					ASNHeaderData.HasAttachment = true;
 		
 					processASNData();
 				};
