@@ -38,7 +38,7 @@
                         id="_IDGenObjectStatus1"
                         text="{path:'detailHeaderModel>/PoDate', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"
                     />
-                    <ObjectStatus text="{detailHeaderModel>/InvStatus}" state="{=${detailHeaderModel>/InvStatus} === 'Completed' ? 'Success' : 'Error' }">
+                    <ObjectStatus text="{detailHeaderModel>/HasAttachments}" state="{=${detailHeaderModel>/HasAttachments} === 'Invoice Submitted' ? 'Success' : 'Warning' }">
                     </ObjectStatus>
                     <!-- text="{detailHeaderModel>/PoDate}"/> -->
                     <!-- <ObjectStatus id="_IDGenObjectStatus2" text="{detailModel>/PoType}" state="Success"/> -->
@@ -50,6 +50,11 @@
                         id="_IDGenIconTabFilter1"
                         icon="sap-icon://approvals"
                         text="Items"
+                    >
+                     <ScrollContainer
+                        id="_IDGenScrollContainer1"
+                        horizontal="true"
+                        vertical="true"
                     >
                         <Table
                             id="DeliveryTableId"
@@ -450,6 +455,7 @@
                                 </ColumnListItem>
                             </items>
                         </Table>
+                        </ScrollContainer>
                     </IconTabFilter>
                     <!--<IconTabFilter icon="sap-icon://inspection" text="T&amp;C"></IconTabFilter>-->
                     <!--<IconTabFilter icon="sap-icon://copy" text="PDF">-->
@@ -466,9 +472,8 @@
                 <!--	visible="{= ${detailModel>Status} === 'New'? false : true}"/>-->
                 <Button
                     id="_IDGenButton1"
-                    text="Submit Invoice"
+                    text="{=${detailHeaderModel>/HasAttachments} === 'Invoice Submitted' ? 'Display Invoice' : 'Submit Invoice' }"
                     press="onCreateAsn"
-                    icon="sap-icon://add"
                     type="Emphasized"
                     visible="true"
                     enabled="true"

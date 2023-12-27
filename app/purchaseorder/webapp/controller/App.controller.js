@@ -46,7 +46,9 @@
             url: modulePath + slash + "user-api/attributes",
             type: "GET",
             success: res => {
+              if( res.login_name[0] !==  res.email){
               sessionStorage.setItem('AddressCode', res.login_name[0]);
+              }
               this.doRoute();
             }
           });
