@@ -3,12 +3,12 @@ const axios = require('axios');
 
 module.exports = (srv) => {
 
-    const {PurchaseOrders} = srv.entities;
+    const {PurchaseOrders, ASNListHeader} = srv.entities;
     
     srv.on('READ', PurchaseOrders, async (req) => {
         const {AddressCode} = req._queryOptions
         //const AddressCode = 'DIE-01-02'
-        const results = await getPurchaseOrders(AddressCode);
+        const results = await getPurchaseOrders(AddressCode, ASNListHeader);
         if (!results) throw new Error('Unable to fetch PurchaseOrders.');
 
         const expandDocumentRows = req.query.SELECT.columns && req.query.SELECT.columns.some(({ expand, ref }) => expand && ref[0] === "DocumentRows");
@@ -75,7 +75,7 @@ module.exports = (srv) => {
     });
 };
 
-async function getPurchaseOrders(AddressCode) {
+async function getPurchaseOrders(AddressCode, ASNListHeader) {
     try {
         const response = await axios({
             method: 'get',
@@ -87,10 +87,14 @@ async function getPurchaseOrders(AddressCode) {
             data: {}
         });
 
+        const responseASN = await SELECT.from(ASNListHeader).columns('PNum_PoNum')
+
         if (response.data && response.data.d) {
             const dataArray = JSON.parse(response.data.d);
+            const asnSet = new Set(responseASN.map(asn => asn.PNum_PoNum));
 
             const purchaseOrders = dataArray.map(data => {
+                const hasMatchingASN = asnSet.has(data.PoNum);
                 return {
                     PoNum: data.PoNum,
                     PoDate: data.PoDate,
@@ -99,7 +103,8 @@ async function getPurchaseOrders(AddressCode) {
                     PlantCode: data.PlantCode,
                     PlantName: data.PlantName,
                     ValidFrom: data.ValidFrom,
-                    ValidTo: data.ValidTo
+                    ValidTo: data.ValidTo,
+                    HasAttachments: hasMatchingASN ? "Invoice Submitted" : "Invoice Submission Pending",
                 };
             });
 

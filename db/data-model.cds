@@ -9,6 +9,7 @@ entity PurchaseOrders {
       PlantName     : String;
       ValidFrom     : String;
       ValidTo       : String;
+      HasAttachments: String;
       DocumentRows  : Composition of many DocumentRowItems
                         on DocumentRows.PNum = $self;
       asnList       : Composition of many ASNList
@@ -102,5 +103,4 @@ entity ASNListHeader {
       Attachment         : LargeBinary;
       @Core.ContentDisposition.Filename: AttachmentName
       AttachmentName     : String; // Original filename of the attachment
-      HasAttachment      : Boolean default false;
 }
