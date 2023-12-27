@@ -600,6 +600,7 @@
                     <UploadCollection
                         id="UploadCollection"
                         maximumFilenameLength="55"
+                        items="{detailHeaderModel>/}"
                         multiple="false"
                         sameFilenameAllowed="false"
                         instantUpload="false"
@@ -612,7 +613,15 @@
                         typeMissmatch="onTypeMissmatch"
                         uploadComplete="onUploadComplete"
                         beforeUploadStarts="onBeforeUploadStarts"
-                    />
+                    >
+                    <items>
+                <UploadCollectionItem
+                    fileName="{detailHeaderModel>AttachmentName}"
+                    url="{detailHeaderModel>Url}"
+                    visibleEdit="false"
+                />
+            </items>
+            </UploadCollection>
                 </IconTabFilter>
             </items>
         </IconTabBar>

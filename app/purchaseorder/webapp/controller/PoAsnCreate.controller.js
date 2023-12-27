@@ -78,6 +78,10 @@ sap.ui.define([
 							that.asnModel.setData(filteredPurchaseOrder);
 							that.asnModel.refresh(true);
 							var asnModelData = that.getView().getModel("asnModel").getData();
+							if(asnModelData.HasAttachments === "Invoice Submitted")
+							{
+								that.getHeaderDetails();
+							}
 							//that.initializeScheduleNumber();
 						} else {
 							MessageBox.error("Purchase order not found");
@@ -91,6 +95,45 @@ sap.ui.define([
 				sap.ui.core.BusyIndicator.hide();
 			}
 			// this.asnModel.refresh(true); 
+		},
+		getHeaderDetails: function () {
+			var that = this;
+			var oModel = this.getView().getModel();
+				oModel.read("/ASNListHeader", {
+					success: function (oData) {
+						var filteredPurchaseOrder = oData.results.find(po => po.PNum_PoNum === that.Po_Num);
+						if (filteredPurchaseOrder) {
+							var asnModelData = that.getView().getModel("asnModel").getData();
+							asnModelData.BillNumber = filteredPurchaseOrder.BillNumber;
+							asnModelData.BillDate = filteredPurchaseOrder.BillDate;
+							asnModelData.DocketNumber = filteredPurchaseOrder.DocketNumber;
+							asnModelData.GRDate = filteredPurchaseOrder.GRDate;
+							asnModelData.TransportName = filteredPurchaseOrder.TransportName;
+							asnModelData.TransportMode = filteredPurchaseOrder.TransportMode;
+							asnModelData.EwayBillNumber = filteredPurchaseOrder.EwayBillNumber;
+							asnModelData.EwayBillDate = filteredPurchaseOrder.EwayBillDate;
+							asnModelData.MillNumber = filteredPurchaseOrder.MillNumber;
+							asnModelData.MillName = filteredPurchaseOrder.MillName;
+							asnModelData.PDIRNumber = filteredPurchaseOrder.PDIRNumber;
+							asnModelData.HeatNumber = filteredPurchaseOrder.HeatNumber;
+							asnModelData.BatchNumber = filteredPurchaseOrder.BatchNumber;
+							asnModelData.ManufacturingMonth = filteredPurchaseOrder.ManufacturingMonth;
+							that.asnModel.refresh(true);
+
+							var attachments = [];
+							attachments.push(filteredPurchaseOrder);
+							attachments[0].Url = this.getView().getModel().sServiceUrl + `/ASNListHeader(PNum_PoNum='${that.Po_Num}')/$value`;
+							that.detailHeaderModel.setData(attachments);
+							that.detailHeaderModel.refresh(true);
+						} else {
+							MessageBox.error("Purchase order not found");
+						}
+					}.bind(this),
+					error: function (oError) {
+						var value = JSON.parse(oError.response.body);
+						MessageBox.error(value.error.message.value);
+					}.bind(this)
+				});
 		},
 
 		onUnplannedCostChange: function (oEvent) {
