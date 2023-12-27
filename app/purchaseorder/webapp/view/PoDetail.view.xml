@@ -38,7 +38,7 @@
                         id="_IDGenObjectStatus1"
                         text="{path:'detailHeaderModel>/PoDate', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"
                     />
-                    <ObjectStatus text="{detailHeaderModel>/InvStatus}" state="{=${detailHeaderModel>/InvStatus} === 'Completed' ? 'Success' : 'Error' }">
+                    <ObjectStatus text="{detailHeaderModel>/HasAttachments}" state="{=${detailHeaderModel>/HasAttachments} === 'Invoice Submitted' ? 'Success' : 'Warning' }">
                     </ObjectStatus>
                     <!-- text="{detailHeaderModel>/PoDate}"/> -->
                     <!-- <ObjectStatus id="_IDGenObjectStatus2" text="{detailModel>/PoType}" state="Success"/> -->
