@@ -75,25 +75,9 @@ sap.ui.define([
 					success: function (oData) {
 						var filteredPurchaseOrder = oData.results.find(po => po.PoNum === that.Po_Num);
 						if (filteredPurchaseOrder) {
-							that.detailHeaderModel.setData(filteredPurchaseOrder);
-							that.detailHeaderModel.refresh(true);
-
 							that.asnModel.setData(filteredPurchaseOrder);
 							that.asnModel.refresh(true);
 							var asnModelData = that.getView().getModel("asnModel").getData();
-							// for(var i = 0; i < asnModelData.DocumentRows.results.length; i++){
-							// 	asnModelData.DocumentRows.results[i].ASSValue = parseFloat(asnModelData.DocumentRows.results[i].BalanceQty) * parseFloat(asnModelData.DocumentRows.results[i].UnitPrice);
-							// 	if (asnModelData.DocumentRows.results[i].PFA) {
-							// 		asnModelData.DocumentRows.results[i].ASSValue = parseFloat(asnModelData.DocumentRows.results[i].ASSValue) + parseFloat(asnModelData.DocumentRows.results[i].PFA);
-							// 	}
-							// 	if (asnModelData.DocumentRows.results[i].FFC) {
-							// 		asnModelData.DocumentRows.results[i].ASSValue = parseFloat(asnModelData.DocumentRows.results[i].ASSValue) + parseFloat(asnModelData.DocumentRows.results[i].FFC);
-							// 	}
-							// 	if (asnModelData.DocumentRows.results[i].OT1) {
-							// 		asnModelData.DocumentRows.results[i].ASSValue = parseFloat(asnModelData.DocumentRows.results[i].ASSValue) + parseFloat(asnModelData.DocumentRows.results[i].OT1);
-							// 	}
-							// }
-							that.asnModel.refresh(true);
 							//that.initializeScheduleNumber();
 						} else {
 							MessageBox.error("Purchase order not found");
@@ -104,67 +88,6 @@ sap.ui.define([
 						MessageBox.error(value.error.message.value);
 					}
 				});
-				// ,App='PO'
-				// this.oDataModel.read("/PO_ASN_HEADERSet(Po_No='" + this.Po_Num + "')?$expand=asnheadertoasnitemnav",
-				// 	null, null, false,
-				// 	function (oData, oResponse) {
-				// 		var POItems = oData.asnheadertoasnitemnav.results;
-				// 		let pkgMatQty;
-				// 		oData.asnheadertoasnitemnav.results = POItems.filter(function (item) {
-				// 			pkgMatQty = parseFloat(item.Menge) / parseFloat(item.SOQ);
-				// 			item.PkgMatQty = isNaN(pkgMatQty) ? "0" : isFinite(pkgMatQty) === false ? "0" : (Math.ceil(pkgMatQty)).toString();
-				// 			return item.Menge !== "0.00";
-				// 		});
-
-				// 		for (var i = 0; i < oData.asnheadertoasnitemnav.results.length; i++) {
-				// 			if (oData.asnheadertoasnitemnav.results[i].Meins == "EA") {
-				// 				oData.asnheadertoasnitemnav.results[i].Menge = parseInt(oData.asnheadertoasnitemnav.results[i].Menge).toString();
-				// 			}
-				// 		}
-
-				// 		that.asnModel.setData(oData);
-				// 		that.asnModel.refresh(true);
-				// 		// that.getView().byId("DP1").setDateValue(new Date());
-				// 	},
-				// 	function (oError) {
-				// 		var value = JSON.parse(oError.response.body);
-				// 		MessageBox.error(value.error.message.value);
-				// 	});
-				sap.ui.core.BusyIndicator.hide();
-
-				// Get CSRF token
-				// if (!this.header_xcsrf_token) {
-				// 	var model = this.getView().getModel();
-				// 	var oServiceUrl = model.sServiceUrl + "/";
-				// 	var that = this;
-
-				// 	sap.ui.core.BusyIndicator.show(0);
-				// 	model._request({
-				// 		requestUri: oServiceUrl,
-				// 		method: "GET",
-				// 		headers: {
-				// 			"X-Requested-With": "XMLHttpRequest",
-				// 			"Content-Type": "application/atom+xml",
-				// 			"DataServiceVersion": "2.0",
-				// 			"X-CSRF-Token": "Fetch"
-				// 		}
-				// 	}, function (data, response) {
-				// 		sap.ui.core.BusyIndicator.hide();
-				// 		that.header_xcsrf_token = response.headers["x-csrf-token"];
-				// 	});
-				// 	sap.ui.core.BusyIndicator.hide();
-				// 	var slash = window.location.href.includes("site") ? "/" : "";
-				// 	var modulePath = jQuery.sap.getModulePath("sp/fiori/purchaseorder");
-				// 	modulePath = modulePath === "." ? "" : modulePath;
-				// 	var serviceUrl = modulePath + slash + "sap/opu/odata/shiv/NW_SUPP_PORTAL_PO_APP_SRV/AsnAttachementSet";
-				// 	var site = window.location.href.includes("site");
-				// 	if (site) {
-				// 		this.getView().byId("UploadCollection").setUploadUrl(serviceUrl);
-				// 	}
-				// 	else
-				// 		this.getView().byId("UploadCollection").setUploadUrl("/sap/opu/odata/shiv/NW_SUPP_PORTAL_PO_APP_SRV/AsnAttachementSet");
-
-				// }
 				sap.ui.core.BusyIndicator.hide();
 			}
 			// this.asnModel.refresh(true); 
@@ -209,257 +132,309 @@ sap.ui.define([
 			a.click();
 			a.remove();
 		},
-		// onQuanChange: function (e) {
-
-		// 	this.calculateInvoiceAmt();
-		// 	// var data = this.asnModel.getData();
-		// 	// data.InvoiceAmt = 0;
-		// 	// var oTable = this.getView().byId("AsnCreateTable");
-		// 	// var contexts = oTable.getSelectedContexts();
-
-		// 	// if (contexts.length) {
-		// 	// 	var value = parseInt(e.getParameter("value"));
-		// 	// 	var index = e.getSource().getBinding("value").getContext().getPath().substring(e.getSource().getBinding("value").getContext().getPath()
-		// 	// 		.lastIndexOf("/") + 1, e.getSource().getBinding("value").getContext().getPath().length);
-		// 	// 	if (value > 0) { //Check whether table has any selected contexts
-		// 	// 		var items = contexts.map(function (c) {
-		// 	// 			return c.getObject();
-		// 	// 		});
-
-		// 	// 		if (items.length) {
-		// 	// 			for (var i = 0; i < items.length; i++) {
-		// 	// 				if (parseInt(index) === i) {
-		// 	// 					items[i].Menge = e.getParameter("value");
-		// 	// 				}
-		// 	// 				data.InvoiceAmt = parseInt(data.InvoiceAmt) + (parseInt(items[i].Menge) * (parseFloat(items[i].Netpr))); // + parseFloat(items[i].Tax)));
-		// 	// 				// ((parseInt(items[i].Menge) * (parseFloat(items[i].Netpr) + parseFloat(items[i].Tax)));
-		// 	// 				data.InvoiceAmt = parseFloat(data.InvoiceAmt).toFixed(2);
-
-		// 	// 				this.asnModel.refresh(true);
-		// 	// 			}
-		// 	// 		}
-
-		// 	// 	} else {
-		// 	// 		MessageBox.information("Please enter quantity for selected items");
-		// 	// 	}
-		// 	// } else {
-		// 	// 	MessageBox.information("Please select the item");
-		// 	// 	e.getSource().setValue();
-		// 	// }
-		// },
-
 		onNavBack: function () {
 			// this.router.navTo("PoMaster");
-			// this.byId("FromDateId").setValue();
-			// this.byId("ToDateId").setValue();
 			history.go(-1);
 		},
-		onAsnSave: function (event) {
+		onAsnSaveDB: function () {
 			var that = this;
 			var oModel = this.getOwnerComponent().getModel();
+
 			this.data = this.asnModel.getData();
-			var form = {
-				"UnitCode": sessionStorage.getItem("unitCode") || "P01",
-				"CreatedBy": "Manikandan",
-				"CreatedIP": "",
-				"RowDetails": []
+			var ASNHeaderData = {
+				"PNum_PoNum": this.data.PoNum,
+				"AsnNum": this.data.AsnNum,
+				"BillDate": this.data.BillDate,
+				"BillNumber": this.data.BillNumber,
+				"DocketNumber": this.data.DocketNumber,
+				"GRDate": this.data.GRDate,
+				"TransportName": this.data.TransportName,
+				"TransportMode": this.data.TransportMode,
+				"EwayBillNumber": this.data.EwayBillNumber,
+				"EwayBillDate": this.data.EwayBillDate,
+				"MillNumber": this.data.MillNumber,
+				"MillName": this.data.MillName,
+				"PDIRNumber": this.data.PDIRNumber,
+				"HeatNumber": this.data.HeatNumber,
+				"BatchNumber": this.data.BatchNumber,
+				"ManufacturingMonth": this.data.ManufacturingMonth,
+				"PlantName": this.data.PlantName,
+				"PlantCode": this.data.PlantCode,
+				"VendorCode": this.data.VendorCode
 			};
-			var oTable = this.getView().byId("AsnCreateTable");
-			var contexts = oTable.getSelectedContexts();
-			if (this.data.BillNumber) {
-				if (!this.data.BillDate) {
-					MessageBox.error("Please fill the Invoice Date");
-					return;
-				}
-			} else {
+
+			// var ASNItemData = [];
+			// var oTable = this.getView().byId("AsnCreateTable");
+			// var contexts = oTable.getSelectedContexts();
+
+			if (!ASNHeaderData.BillNumber) {
 				MessageBox.error("Please fill the Invoice Number");
+				return;
+			} else if (!ASNHeaderData.BillDate) {
+				MessageBox.error("Please fill the Invoice Date");
 				return;
 			}
 			if (this.getView().byId("UploadCollection").getItems().length <= 0) {
-				MessageBox.error("Atleast One attachment is required.");
+				MessageBox.error("Please upload invoice.");
 				return;
 			}
-			if (!contexts.length) {
-				MessageBox.error("No Item Selected");
-				return;
-			} else {
-				var items = contexts.map(function (c) {
-					return c.getObject();
-				});
-				for (var i = 0; i < items.length; i++) {
 
-					if (!items[i].BalanceQty) {
-						MessageBox.error("ASN Quantity is required for selected items");
-						sap.ui.core.BusyIndicator.hide();
+			// if (!contexts.length) {
+			// 	MessageBox.error("No Item Selected");
+			// 	return;
+			// } 
 
-						return;
-					} else {
-						if (this.data.BillDate) {
-							var date = this.data.BillDate.substring(4, 6) + "/" + this.data.BillDate.substring(6, 8) + "/" + this.data.BillDate.substring(0, 4);
-							var DateInstance = new Date(date);
-							var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-							pattern: "dd/MM/yyyy"
-							});
-							this.BillDate = dateFormat.format(DateInstance);
-							}
-							if (this.data.ManufacturingMonth) {
-								var date = this.data.ManufacturingMonth.substring(4, 6) + "/" + this.data.ManufacturingMonth.substring(6, 8) + "/" + this.data.ManufacturingMonth.substring(0, 4);
-								var DateInstance = new Date(date);
-								var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-								pattern: "dd/MM/yyyy"
-								});
-								this.ManufacturingMonth = dateFormat.format(DateInstance);
-								}
-								if(items[i].IGP === undefined){
-									items[i].IGP = "";
-								}
-								if(items[i].IGA === undefined){
-									items[i].IGA = "";
-								}
-								if(items[i].CGP === undefined){
-									items[i].CGP = "";
-								}
-								if(items[i].CGA === undefined){
-									items[i].CGA = "";
-								}
-								if(items[i].SGP === undefined){
-									items[i].SGP = "";
-								}
-								if(items[i].SGA === undefined){
-									items[i].SGA = "";
-								}
-								if(items[i].TCS === undefined){
-									items[i].TCS = "";
-								}
-								if(items[i].TCA === undefined){
-									items[i].TCA = "";
-								}
-								if(items[i].LineValue === undefined){
-									items[i].LineValue = "";
-								}
-								if(items[i].Packaging === undefined){
-									items[i].Packaging = "";
-								}
-								if(items[i].WeightPerKG === undefined){
-									items[i].WeightPerKG = "";
-								}
-								if(this.data.TransportName === undefined){
-									this.data.TransportName = "";
-								}
-								if(this.data.TransportMode === undefined){
-									this.data.TransportMode = "";
-								}
-								if(this.data.DocketNumber === undefined){
-									this.data.DocketNumber = "";
-								}
-								if(this.data.GRDate === undefined){
-									this.data.GRDate = "";
-								}
-								if(this.data.EwayBillNumber === undefined){
-									this.data.EwayBillNumber = "";
-								}
-								if(this.data.EwayBillDate === undefined){
-									this.data.EwayBillDate = "";
-								}
-								if(this.data.MillNumber === undefined){
-									this.data.MillNumber = "";
-								}
-								if(this.data.MillName === undefined){
-									this.data.MillName = "";
-								}
-								if(this.data.PDIRNumber === undefined){
-									this.data.PDIRNumber = "";
-								}
-								if(this.data.HeatNumber === undefined){
-									this.data.HeatNumber = "";
-								}
-								if(this.data.BatchNumber === undefined){
-									this.data.BatchNumber = "";
-								}
-								if(this.data.ManufacturingMonth === undefined){
-									this.ManufacturingMonth = "";
-								}
-								if(items[i].PFA === undefined){
-									items[i].PFA = "0";
-								}
-								if(items[i].FFC === undefined){
-									items[i].FFC = "0";
-								}
-								if(items[i].OT1 === undefined){
-									items[i].OT1 = "0";
-								}
-						var row = {
-							"BillLineNumber": items[i].LineNum,
-							"BillNumber": this.data.BillNumber,
-							"BillDate": this.BillDate,
-							"ScheduleNumber": "",
-							"ScheduleLineNumber": "",
-							"PONumber": items[i].PNum_PoNum,
-							"IAIVendorCode": this.data.VendorCode,
-							"IAIItemCode": items[i].ItemCode,
-							"UOM": items[i].UOM,
-							"HSNCode": items[i].HSNCode,
-							"Rate": items[i].UnitPrice,
-							"Quantity": items[i].BalanceQty,
-							"PackingAmount": items[i].PFA,
-							"Freight": items[i].FFC,
-							"OtherCharges": items[i].OT1,
-							"AssValue": items[i].ASSValue.toString(),
-							"IGST": items[i].IGP,
-							"IGA": items[i].IGA,
-							"CGST": items[i].CGP,
-							"CGA": items[i].CGA,
-							"SGST": items[i].SGP,
-							"SGA": items[i].SGA,
-							"TCS": items[i].TCS,
-							"TCA": items[i].TCA,
-							"LineValue": items[i].LineValue,
-							"TransportName": this.data.TransportName,
-							"TransportMode": this.data.TransportMode,
-							"DocketNumber": this.data.DocketNumber,
-							"GRDate": this.data.GRDate,
-							"Packaging": items[i].Packaging,
-							"WeightPerKG": items[i].WeightPerKG,
-							"EwayBillNumber": this.data.EwayBillNumber,
-							"EwayBillDate": this.data.EwayBillDate,
-							"MillNumber": this.data.MillNumber,
-							"MillName": this.data.MillName,
-							"PDIRNumber": this.data.PDIRNumber,
-							"HeatNumber": this.data.HeatNumber,
-							"BatchNumber": this.data.BatchNumber,
-							"ManufacturingMonth": this.ManufacturingMonth
-						};
-						form.RowDetails.push(row);
-					}
+			// contexts.forEach(function (context) {
+			// 	var item = context.getObject();
+			// 	if (!item.BalanceQty) {
+			// 		MessageBox.error("ASN Quantity is required for selected items");
+			// 		return;
+			// 	} else {
+			// 		item.ASSValue = item.ASSValue.toString();
+			// 		ASNItemData.push(item);
+			// 	}
+			// });
 
-				}
-				var formdatastr = JSON.stringify(form);
-				this.hardcodedURL = "";
-				if (window.location.href.includes("launchpad")) {
-					this.hardcodedURL = "https://impautosuppdev.launchpad.cfapps.ap10.hana.ondemand.com/547b58c0-9667-470f-a767-c8524482b3ed.PO.spfioripurchaseorder-0.0.1";
-				}
-				var sPath = this.hardcodedURL + `/v2/odata/v4/catalog/PostASN`;
-				$.ajax({
-					type: "POST",
-					headers: {
-						'Content-Type': 'application/json'
+			var processASNData = function () {
+				oModel.create("/ASNListHeader", ASNHeaderData, {
+					success: function (oData) {
+						MessageBox.success("Invoice submitted successfully.");
+						// Create ASN items
+						// ASNItemData.forEach(function (item) {
+						// 	oModel.create("/ASNList", item, {
+						// 		success: function (oData) {
+						// 			MessageBox.success("ASN Item created successfully.");
+						// 		},
+						// 		error: function (oError) {
+						// 			MessageBox.error("Error creating ASN Item: " + oError.message);
+						// 		}
+						// 	});
+						// });
 					},
-					url: sPath,
-					data: JSON.stringify({
-						asnData: formdatastr
-					}),
-					context: this,
-					success: function (data, textStatus, jqXHR) {
-						MessageBox.success("ASN created succesfully");
-						this.onAsnSaveDB();
-					}.bind(this),
-					error: function (error) {
-						MessageBox.error("ASN creation failed");
+					error: function (oError) {
+						MessageBox.error("Error submitting invoice: " + oError.message);
 					}
 				});
-			}
+			};
 
+			if (this._file) {
+				var reader = new FileReader();
+				reader.onload = function (e) {
+					var base64 = e.target.result.split(',')[1];
+					ASNHeaderData.Attachment = base64;
+					ASNHeaderData.AttachmentName = that._file.name;
+		
+					processASNData();
+				};
+				reader.readAsDataURL(this._file);
+			}
 		},
+		// onAsnSave: function (event) {
+		// 	var that = this;
+		// 	var oModel = this.getOwnerComponent().getModel();
+		// 	this.data = this.asnModel.getData();
+		// 	var form = {
+		// 		"UnitCode": sessionStorage.getItem("unitCode") || "P01",
+		// 		"CreatedBy": "Manikandan",
+		// 		"CreatedIP": "",
+		// 		"RowDetails": []
+		// 	};
+		// 	var oTable = this.getView().byId("AsnCreateTable");
+		// 	var contexts = oTable.getSelectedContexts();
+		// 	if (this.data.BillNumber) {
+		// 		if (!this.data.BillDate) {
+		// 			MessageBox.error("Please fill the Invoice Date");
+		// 			return;
+		// 		}
+		// 	} else {
+		// 		MessageBox.error("Please fill the Invoice Number");
+		// 		return;
+		// 	}
+		// 	if (this.getView().byId("UploadCollection").getItems().length <= 0) {
+		// 		MessageBox.error("Atleast One attachment is required.");
+		// 		return;
+		// 	}
+		// 	if (!contexts.length) {
+		// 		MessageBox.error("No Item Selected");
+		// 		return;
+		// 	} else {
+		// 		var items = contexts.map(function (c) {
+		// 			return c.getObject();
+		// 		});
+		// 		for (var i = 0; i < items.length; i++) {
+
+		// 			if (!items[i].BalanceQty) {
+		// 				MessageBox.error("ASN Quantity is required for selected items");
+		// 				sap.ui.core.BusyIndicator.hide();
+
+		// 				return;
+		// 			} else {
+		// 				if (this.data.BillDate) {
+		// 					var date = this.data.BillDate.substring(4, 6) + "/" + this.data.BillDate.substring(6, 8) + "/" + this.data.BillDate.substring(0, 4);
+		// 					var DateInstance = new Date(date);
+		// 					var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+		// 					pattern: "dd/MM/yyyy"
+		// 					});
+		// 					this.BillDate = dateFormat.format(DateInstance);
+		// 					}
+		// 					if (this.data.ManufacturingMonth) {
+		// 						var date = this.data.ManufacturingMonth.substring(4, 6) + "/" + this.data.ManufacturingMonth.substring(6, 8) + "/" + this.data.ManufacturingMonth.substring(0, 4);
+		// 						var DateInstance = new Date(date);
+		// 						var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+		// 						pattern: "dd/MM/yyyy"
+		// 						});
+		// 						this.ManufacturingMonth = dateFormat.format(DateInstance);
+		// 						}
+		// 						if(items[i].IGP === undefined){
+		// 							items[i].IGP = "";
+		// 						}
+		// 						if(items[i].IGA === undefined){
+		// 							items[i].IGA = "";
+		// 						}
+		// 						if(items[i].CGP === undefined){
+		// 							items[i].CGP = "";
+		// 						}
+		// 						if(items[i].CGA === undefined){
+		// 							items[i].CGA = "";
+		// 						}
+		// 						if(items[i].SGP === undefined){
+		// 							items[i].SGP = "";
+		// 						}
+		// 						if(items[i].SGA === undefined){
+		// 							items[i].SGA = "";
+		// 						}
+		// 						if(items[i].TCS === undefined){
+		// 							items[i].TCS = "";
+		// 						}
+		// 						if(items[i].TCA === undefined){
+		// 							items[i].TCA = "";
+		// 						}
+		// 						if(items[i].LineValue === undefined){
+		// 							items[i].LineValue = "";
+		// 						}
+		// 						if(items[i].Packaging === undefined){
+		// 							items[i].Packaging = "";
+		// 						}
+		// 						if(items[i].WeightPerKG === undefined){
+		// 							items[i].WeightPerKG = "";
+		// 						}
+		// 						if(this.data.TransportName === undefined){
+		// 							this.data.TransportName = "";
+		// 						}
+		// 						if(this.data.TransportMode === undefined){
+		// 							this.data.TransportMode = "";
+		// 						}
+		// 						if(this.data.DocketNumber === undefined){
+		// 							this.data.DocketNumber = "";
+		// 						}
+		// 						if(this.data.GRDate === undefined){
+		// 							this.data.GRDate = "";
+		// 						}
+		// 						if(this.data.EwayBillNumber === undefined){
+		// 							this.data.EwayBillNumber = "";
+		// 						}
+		// 						if(this.data.EwayBillDate === undefined){
+		// 							this.data.EwayBillDate = "";
+		// 						}
+		// 						if(this.data.MillNumber === undefined){
+		// 							this.data.MillNumber = "";
+		// 						}
+		// 						if(this.data.MillName === undefined){
+		// 							this.data.MillName = "";
+		// 						}
+		// 						if(this.data.PDIRNumber === undefined){
+		// 							this.data.PDIRNumber = "";
+		// 						}
+		// 						if(this.data.HeatNumber === undefined){
+		// 							this.data.HeatNumber = "";
+		// 						}
+		// 						if(this.data.BatchNumber === undefined){
+		// 							this.data.BatchNumber = "";
+		// 						}
+		// 						if(this.data.ManufacturingMonth === undefined){
+		// 							this.ManufacturingMonth = "";
+		// 						}
+		// 						if(items[i].PFA === undefined){
+		// 							items[i].PFA = "0";
+		// 						}
+		// 						if(items[i].FFC === undefined){
+		// 							items[i].FFC = "0";
+		// 						}
+		// 						if(items[i].OT1 === undefined){
+		// 							items[i].OT1 = "0";
+		// 						}
+		// 				var row = {
+		// 					"BillLineNumber": items[i].LineNum,
+		// 					"BillNumber": this.data.BillNumber,
+		// 					"BillDate": this.BillDate,
+		// 					"ScheduleNumber": "",
+		// 					"ScheduleLineNumber": "",
+		// 					"PONumber": items[i].PNum_PoNum,
+		// 					"IAIVendorCode": this.data.VendorCode,
+		// 					"IAIItemCode": items[i].ItemCode,
+		// 					"UOM": items[i].UOM,
+		// 					"HSNCode": items[i].HSNCode,
+		// 					"Rate": items[i].UnitPrice,
+		// 					"Quantity": items[i].BalanceQty,
+		// 					"PackingAmount": items[i].PFA,
+		// 					"Freight": items[i].FFC,
+		// 					"OtherCharges": items[i].OT1,
+		// 					"AssValue": items[i].ASSValue.toString(),
+		// 					"IGST": items[i].IGP,
+		// 					"IGA": items[i].IGA,
+		// 					"CGST": items[i].CGP,
+		// 					"CGA": items[i].CGA,
+		// 					"SGST": items[i].SGP,
+		// 					"SGA": items[i].SGA,
+		// 					"TCS": items[i].TCS,
+		// 					"TCA": items[i].TCA,
+		// 					"LineValue": items[i].LineValue,
+		// 					"TransportName": this.data.TransportName,
+		// 					"TransportMode": this.data.TransportMode,
+		// 					"DocketNumber": this.data.DocketNumber,
+		// 					"GRDate": this.data.GRDate,
+		// 					"Packaging": items[i].Packaging,
+		// 					"WeightPerKG": items[i].WeightPerKG,
+		// 					"EwayBillNumber": this.data.EwayBillNumber,
+		// 					"EwayBillDate": this.data.EwayBillDate,
+		// 					"MillNumber": this.data.MillNumber,
+		// 					"MillName": this.data.MillName,
+		// 					"PDIRNumber": this.data.PDIRNumber,
+		// 					"HeatNumber": this.data.HeatNumber,
+		// 					"BatchNumber": this.data.BatchNumber,
+		// 					"ManufacturingMonth": this.ManufacturingMonth
+		// 				};
+		// 				form.RowDetails.push(row);
+		// 			}
+
+		// 		}
+		// 		var formdatastr = JSON.stringify(form);
+		// 		this.hardcodedURL = "";
+		// 		if (window.location.href.includes("launchpad")) {
+		// 			this.hardcodedURL = "https://impautosuppdev.launchpad.cfapps.ap10.hana.ondemand.com/547b58c0-9667-470f-a767-c8524482b3ed.PO.spfioripurchaseorder-0.0.1";
+		// 		}
+		// 		var sPath = this.hardcodedURL + `/v2/odata/v4/catalog/PostASN`;
+		// 		$.ajax({
+		// 			type: "POST",
+		// 			headers: {
+		// 				'Content-Type': 'application/json'
+		// 			},
+		// 			url: sPath,
+		// 			data: JSON.stringify({
+		// 				asnData: formdatastr
+		// 			}),
+		// 			context: this,
+		// 			success: function (data, textStatus, jqXHR) {
+		// 				MessageBox.success("ASN created succesfully");
+		// 				this.onAsnSaveDB();
+		// 			}.bind(this),
+		// 			error: function (error) {
+		// 				MessageBox.error("ASN creation failed");
+		// 			}
+		// 		});
+		// 	}
+
+		// },
 
 /*
 		onAsnSaveDB: function () {
@@ -656,6 +631,7 @@ sap.ui.define([
 					var base64 = e.target.result.split(',')[1];
 					ASNHeaderData.Attachment = base64;
 					ASNHeaderData.AttachmentName = that._file.name;
+					ASNHeaderData.HasAttachment = true;
 		
 					processASNData();
 				};
