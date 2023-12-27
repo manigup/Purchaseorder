@@ -38,6 +38,8 @@
                         id="_IDGenObjectStatus1"
                         text="{path:'detailHeaderModel>/PoDate', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"
                     />
+                    <ObjectStatus text="{detailHeaderModel>/InvStatus}" state="{=${detailHeaderModel>/InvStatus} === 'Completed' ? 'Success' : 'Error' }">
+                    </ObjectStatus>
                     <!-- text="{detailHeaderModel>/PoDate}"/> -->
                     <!-- <ObjectStatus id="_IDGenObjectStatus2" text="{detailModel>/PoType}" state="Success"/> -->
                 </statuses>
@@ -141,6 +143,166 @@
                                          text="Unit Price ({detailModel>/0/Currency})"/>
                                 </Column>
                                 <Column
+                                    id="_IDGenColumn10"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                >
+                                    <Text
+                                        id="_IDGenText15"
+                                        text="ASN Qty"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn11"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                >
+                                    <Text
+                                        id="_IDGenText16"
+                                        text="Packing Amt ({detailModel>/0/Currency})"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn12"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                >
+                                    <Text
+                                        id="_IDGenText17"
+                                        text="Freight ({detailModel>/0/Currency})"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn13"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                >
+                                    <Text
+                                        id="_IDGenText18"
+                                        text="Other Charges ({detailModel>/0/Currency})"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn14"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                >
+                                    <Text
+                                        id="_IDGenText19"
+                                        text="Ass Value ({detailModel>/0/Currency})"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn15"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                >
+                                    <Text
+                                        id="_IDGenTex20"
+                                        text="IGST"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn16"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                >
+                                    <Text
+                                        id="_IDGenText21"
+                                        text="IGA"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn17"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                >
+                                    <Text
+                                        id="_IDGenText22"
+                                        text="CGST"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn18"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                >
+                                    <Text
+                                        id="_IDGenText23"
+                                        text="CGA"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColum19"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                >
+                                    <Text
+                                        id="_IDGenText24"
+                                        text="SGST / UGST"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn20"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                >
+                                    <Text
+                                        id="_IDGenText25"
+                                        text="SGA / UGA"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn21"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                >
+                                    <Text
+                                        id="_IDGenText26"
+                                        text="TCS %"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn22"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                >
+                                    <Text
+                                        id="_IDGenText27"
+                                        text="TCA"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn23"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                >
+                                    <Text
+                                        id="_IDGenText28"
+                                        text="Line Value"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn24"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                >
+                                    <Text
+                                        id="_IDGenText29"
+                                        text="Packaging"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn25"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                >
+                                    <Text
+                                        id="_IDGenText30"
+                                        text="WGT IN KG"
+                                    />
+                                </Column>
+                                <Column
                                     id="_IDGenColumn9"
                                     minScreenWidth="Tablet"
                                     demandPopin="true"
@@ -215,6 +377,71 @@
                                             text="{detailModel>UnitPrice}"
                                         />
                                         <!--press="onAmountPress"/>-->
+                                        <ObjectNumber
+                                            id="_IDGenObjectNumber4"
+                                            number="{detailModel>BalanceQty}"
+                                            unit="{detailModel>UOM}"
+                                        />
+                                        <Text
+                                            id="pkgamtId"
+                                            text="{detailModel>PFA}"
+                                        />
+                                        <Text
+                                            id="freightId"
+                                            text="{detailModel>FFC}"
+                                        />
+                                        <Text
+                                            id="othchargeId"
+                                            text="{detailModel>OT1}"
+                                        />
+                                        <Text
+                                            id="assvalId"
+                                            text="{detailModel>ASSValue}"
+                                        />
+                                        <Text
+                                            id="_IDGenText31"
+                                            text="{detailModel>IGP}"
+                                        />
+                                        <Text
+                                            id="_IDGenText32"
+                                            text="{detailModel>IGA}"
+                                        />
+                                        <Text
+                                            id="_IDGenText33"
+                                            text="{detailModel>CGP}"
+                                        />
+                                        <Text
+                                            id="_IDGenText34"
+                                            text="{detailModel>CGA}"
+                                        />
+                                        <Text
+                                            id="_IDGenText35"
+                                            text="{detailModel>SGP}"
+                                        />
+                                        <Text
+                                            id="_IDGenText20"
+                                            text="{detailModel>SGA}"
+                                        />
+                                        <Text
+                                            id="tcsId"
+                                            text="{detailModel>TCS}"
+                                        />
+                                        <Text
+                                            id="tcaId"
+                                            text="{detailModel>TCA}"
+                                        />
+                                        <Text
+                                            id="linevalId"
+                                            text="{detailModel>LineValue}"
+                                        />
+                                        <Text
+                                            id="pkgId"
+                                            text="{detailModel>Packaging}"
+                                        />
+                                        <Text
+                                            id="wgtId"
+                                            text="{detailModel>WeightPerKG}"
+                                        />
                                         <ObjectStatus
                                             id="_IDGenObjectStatus3"
                                             text="{detailModel>ConfirmStatus}" 
