@@ -1,5 +1,10 @@
 namespace my.bookshop;
 
+using {
+  cuid,
+  managed
+} from '@sap/cds/common';
+
 entity PurchaseOrders {
   key PoNum         : String;
       PoDate        : Date;
@@ -16,6 +21,7 @@ entity PurchaseOrders {
                         on asnList.PNum = $self;
       asnListHeader : Composition of many ASNList
                         on asnListHeader.PNum = $self;
+      Files         : Composition of many Files on Files.PNum = $self;
 }
 
 entity DocumentRowItems {
@@ -100,7 +106,17 @@ entity ASNListHeader {
       PlantName          : String;
       PlantCode          : String;
       VendorCode         : String;
-      Attachment         : LargeBinary;
-      @Core.ContentDisposition.Filename: AttachmentName
-      AttachmentName     : String; // Original filename of the attachment
+}
+
+entity Files : managed{
+  key PNum : Association to PurchaseOrders;
+  @Core.MediaType: mediaType
+  content: LargeBinary;
+  
+  @Core.ContentDisposition.Filename: fileName
+  @Core.IsMediaType: true
+  mediaType: String;
+  fileName: String;
+  size: Integer;
+  url: String;
 }

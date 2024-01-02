@@ -10,7 +10,7 @@ sap.ui.define([
 
 			// this.loginModel = sap.ui.getCore().getModel("loginModel");
 			// this.loginData = this.loginModel.getData();
-
+				
 			this.oDataModel = sap.ui.getCore().getModel("oDataModel");
 
 			this.getView().addStyleClass("sapUiSizeCompact");
@@ -33,8 +33,12 @@ sap.ui.define([
 			this.getView().setModel(this.dateConfirmationModel, "DateConfirmationModel");
 			this.popOverModel = new sap.ui.model.json.JSONModel();
 			//this.initializeScheduleNumber();
+			this.byId("uploadSet").attachEvent("openPressed", this.onOpenPressed, this);
 		},
 		handleRouteMatched: function (event) {
+			var oModel = this.getView().getModel();
+			var oUploadSet = this.byId("uploadSet");
+			oUploadSet.removeAllItems();
 
 			if (event.getParameter("name") === "PoAsnCreate") {
 				var that = this;
@@ -42,7 +46,7 @@ sap.ui.define([
 
 				datePicker.addDelegate({
 					onAfterRendering: function () {
-						datePicker.$().find('INPUT').attr('disabled', true).css('color', '#000000');
+						datePicker.$().find('INPUT').attr('disab1qled', true).css('color', '#000000');
 					}
 				}, datePicker);
 
@@ -101,7 +105,8 @@ sap.ui.define([
 			var oModel = this.getView().getModel();
 				oModel.read("/ASNListHeader", {
 					success: function (oData) {
-						var filteredPurchaseOrder = oData.results.find(po => po.PNum_PoNum === that.Po_Num);
+						let poNum = that.Po_Num.replace(/\//g, '-');
+						var filteredPurchaseOrder = oData.results.find(po => po.PNum_PoNum === poNum);
 						if (filteredPurchaseOrder) {
 							var asnModelData = that.getView().getModel("asnModel").getData();
 							asnModelData.BillNumber = filteredPurchaseOrder.BillNumber;
@@ -119,11 +124,13 @@ sap.ui.define([
 							asnModelData.BatchNumber = filteredPurchaseOrder.BatchNumber;
 							asnModelData.ManufacturingMonth = filteredPurchaseOrder.ManufacturingMonth;
 							that.asnModel.refresh(true);
-
+							that._fetchFilesForPoNum(poNum);
+							/*
 							var attachments = [];
 							attachments.push(filteredPurchaseOrder);
 							attachments[0].Url = this.getView().getModel().sServiceUrl + `/ASNListHeader(PNum_PoNum='${that.Po_Num}')/$value`;
 							that.detailHeaderModel.setData(attachments);
+							*/
 							that.detailHeaderModel.refresh(true);
 						} else {
 							MessageBox.error("Purchase order not found");
@@ -135,7 +142,35 @@ sap.ui.define([
 					}.bind(this)
 				});
 		},
-
+		_fetchFilesForPoNum: function (poNum) {
+			var oModel = this.getView().getModel();
+			var oUploadSet = this.byId("uploadSet");
+			oUploadSet.removeAllItems();
+		
+			oModel.read("/Files", {
+				filters: [new sap.ui.model.Filter("PNum_PoNum", sap.ui.model.FilterOperator.EQ, poNum)],
+				success: function (oData) {
+					oData.results.forEach(function(fileData) {
+						var oItem = new sap.m.upload.UploadSetItem({
+							fileName: fileData.fileName,
+							mediaType: fileData.mediaType,
+							url: fileData.url,
+							attributes: [
+								new sap.m.ObjectAttribute({ title: "Uploaded By", text: fileData.createdBy }),
+								new sap.m.ObjectAttribute({ title: "Uploaded on", text: fileData.createdAt }),
+								new sap.m.ObjectAttribute({ title: "File Size", text: fileData.size.toString() })
+							]
+						});
+	
+						oUploadSet.addItem(oItem);
+					});
+				},
+				error: function (oError) {
+					console.log("Error: "+ oError)
+				}
+			});
+		},
+		
 		onUnplannedCostChange: function (oEvent) {
 			if (oEvent.getParameter("newValue").includes("-")) {
 				MessageBox.error("Unplanned cost less than 0 is not allowed!");
@@ -185,7 +220,7 @@ sap.ui.define([
 
 			this.data = this.asnModel.getData();
 			var ASNHeaderData = {
-				"PNum_PoNum": this.data.PoNum,
+				"PNum_PoNum": this.data.PoNum.replace(/\//g, '-'),
 				"AsnNum": this.data.AsnNum,
 				"BillDate": this.data.BillDate,
 				"BillNumber": this.data.BillNumber,
@@ -217,60 +252,18 @@ sap.ui.define([
 				MessageBox.error("Please fill the Invoice Date");
 				return;
 			}
-			if (this.getView().byId("UploadCollection").getItems().length <= 0) {
+			if (this.getView().byId("uploadSet").getItems().length <= 0) {
 				MessageBox.error("Please upload invoice.");
 				return;
 			}
-
-			// if (!contexts.length) {
-			// 	MessageBox.error("No Item Selected");
-			// 	return;
-			// } 
-
-			// contexts.forEach(function (context) {
-			// 	var item = context.getObject();
-			// 	if (!item.BalanceQty) {
-			// 		MessageBox.error("ASN Quantity is required for selected items");
-			// 		return;
-			// 	} else {
-			// 		item.ASSValue = item.ASSValue.toString();
-			// 		ASNItemData.push(item);
-			// 	}
-			// });
-
-			var processASNData = function () {
 				oModel.create("/ASNListHeader", ASNHeaderData, {
 					success: function (oData) {
 						MessageBox.success("Invoice submitted successfully.");
-						// Create ASN items
-						// ASNItemData.forEach(function (item) {
-						// 	oModel.create("/ASNList", item, {
-						// 		success: function (oData) {
-						// 			MessageBox.success("ASN Item created successfully.");
-						// 		},
-						// 		error: function (oError) {
-						// 			MessageBox.error("Error creating ASN Item: " + oError.message);
-						// 		}
-						// 	});
-						// });
 					},
 					error: function (oError) {
 						MessageBox.error("Error submitting invoice: " + oError.message);
 					}
 				});
-			};
-
-			if (this._file) {
-				var reader = new FileReader();
-				reader.onload = function (e) {
-					var base64 = e.target.result.split(',')[1];
-					ASNHeaderData.Attachment = base64;
-					ASNHeaderData.AttachmentName = that._file.name;
-		
-					processASNData();
-				};
-				reader.readAsDataURL(this._file);
-			}
 		},
 		// onAsnSave: function (event) {
 		// 	var that = this;
@@ -725,7 +718,6 @@ sap.ui.define([
 			}
 
 		},
-		*/
 		onChange: function (oEvent) {
 			var oUploadCollection = oEvent.getSource();
 		
@@ -757,6 +749,109 @@ sap.ui.define([
 				value: this.asn + "/" + this.year + "/" + oEvent.getParameter("fileName")
 			});
 			oEvent.getParameters().addHeaderParameter(oCustomerHeaderSlug);
+		},
+		*/
+
+		onAfterItemAdded: function (oEvent) {
+			let item = oEvent.getParameter("item");
+			let poNum = this.Po_Num.replace(/\//g, '-');
+			
+			this._createEntity(item, poNum)
+			.then(() => {
+				this._uploadContent(item, poNum);
+			})
+			.catch((err) => {
+				console.log("Error: " + err);
+			})
+		},
+
+		onUploadCompleted: function (oEvent) {
+			var oUploadSet = this.byId("uploadSet");
+			var oUploadedItem = oEvent.getParameter("item");
+			var sUploadUrl = oUploadedItem.getUploadUrl();
+		
+			var sDownloadUrl = sUploadUrl
+			oUploadedItem.setUrl(sDownloadUrl);
+			oUploadSet.getBinding("items").refresh();
+			oUploadSet.invalidate();
+		},
+		
+		_createEntity: function (item, poNum) {
+			var data = {
+				PNum_PoNum: poNum,
+				mediaType: item.getMediaType(),
+				fileName: item.getFileName(),
+				size: item.getFileObject().size
+			};
+
+			var settings = {
+				url: "/v2/odata/v4/catalog/Files",
+				method: "POST",
+				headers: {
+					"Content-type": "application/json"
+				},
+				data: JSON.stringify(data)
+			}
+
+			return new Promise((resolve, reject) => {
+				$.ajax(settings)
+					.done(() => {
+						resolve();
+					})
+					.fail((err) => {
+						console.log("Error: " + err)
+						reject(err);
+					})
+			})				
+		},	
+		
+		_uploadContent: function (item, poNum) {
+			//var encodedPoNum = encodeURIComponent(poNum);
+			var url = `/v2/odata/v4/catalog/Files(PNum_PoNum='${poNum}')/content`
+			item.setUploadUrl(url);    
+			var oUploadSet = this.byId("uploadSet");
+			oUploadSet.setHttpRequestMethod("PUT")
+			oUploadSet.uploadItem(item);
+		},
+
+		onOpenPressed: function (oEvent) {
+			oEvent.preventDefault();
+			//var item = oEvent.getSource();
+			var item = oEvent.getParameter("item");
+			this._fileName = item.getFileName();
+			this._download(item)
+				.then((blob) => {
+					var url = window.URL.createObjectURL(blob);
+					var link = document.createElement('a');
+					link.href = url;
+					link.setAttribute('download', this._fileName);
+					document.body.appendChild(link);
+					link.click();
+					document.body.removeChild(link);						
+				})
+				.catch((err)=> {
+					console.log(err);
+				});					
+		},
+		_download: function (item) {
+			console.log("_download")
+			var settings = {
+				url: item.getUrl(),
+				method: "GET",
+				xhrFields:{
+					responseType: "blob"
+				}
+			}	
+
+			return new Promise((resolve, reject) => {
+				$.ajax(settings)
+				.done((result, textStatus, request) => {
+					resolve(result);
+				})
+				.fail((err) => {
+					reject(err);
+				})
+			});						
 		},
 
 		onSelectionChange: function (oEvent) {

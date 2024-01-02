@@ -25,6 +25,8 @@ service CatalogService {
     entity DocumentRowItems as projection on my.DocumentRowItems;
     entity ASNList as projection on my.ASNList;
     entity ASNListHeader as projection on my.ASNListHeader;
+    
+    entity Files as projection on my.Files;
 
     function getPurchaseMaterialQuantityList(UnitCode:String, PoNum: String, MaterialCode: String) returns array of PurchaseMaterialQuantityInfo;
 
