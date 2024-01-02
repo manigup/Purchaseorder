@@ -5,6 +5,7 @@
     controllerName="sp.fiori.purchaseorder.controller.PoAsnCreate"
     xmlns:l="sap.ui.layout"
     xmlns:f="sap.ui.layout.form"
+    xmlns:upload="sap.m.upload"
     class="sapUiSizeCompact"
 >
     <Page
@@ -597,31 +598,47 @@
                     id="_IDGenIconTabFilter2"
                     icon="sap-icon://attachment"
                 >
-                    <UploadCollection
-                        id="UploadCollection"
-                        maximumFilenameLength="55"
-                        items="{detailHeaderModel>/}"
-                        multiple="false"
-                        sameFilenameAllowed="false"
-                        instantUpload="false"
-                        maximumFileSize="10"
-                        noDataDescription="Drop files or use the &quot;+&quot; button for pending upload"
-                        change="onChange"
-                        fileDeleted="onFileDeleted"
-                        filenameLengthExceed="onFilenameLengthExceed"
-                        fileSizeExceed="onFileSizeExceed"
-                        typeMissmatch="onTypeMissmatch"
-                        uploadComplete="onUploadComplete"
-                        beforeUploadStarts="onBeforeUploadStarts"
-                    >
-                    <items>
-                <UploadCollectionItem
-                    fileName="{detailHeaderModel>AttachmentName}"
-                    url="{detailHeaderModel>Url}"
-                    visibleEdit="false"
-                />
-            </items>
-            </UploadCollection>
+                <upload:UploadSet
+					id="uploadSet"
+					instantUpload="false"
+					uploadEnabled="true"
+                    afterItemAdded="onAfterItemAdded"
+					uploadCompleted="onUploadCompleted"
+				>
+					
+					<upload:toolbar>
+					</upload:toolbar>
+					<upload:items>
+						<upload:UploadSetItem
+							fileName="{fileName}"
+							mediaType="{mediaType}"
+							url="{url}"
+							enabledEdit="false"
+							visibleEdit="false"
+							openPressed="onOpenPressed"
+						>
+                        
+							<upload:attributes>
+								<ObjectAttribute
+									title="Uploaded By"
+									text="{createdBy}"
+									active="false"
+								/>
+								<ObjectAttribute
+									title="Uploaded on"
+									text="{createdAt}"
+									active="false"
+								/>
+								<ObjectAttribute
+									title="File Size"
+									text="{size}"
+									active="false"
+								/>
+							</upload:attributes>
+						</upload:UploadSetItem>
+					</upload:items>
+				</upload:UploadSet>
+
                 </IconTabFilter>
             </items>
         </IconTabBar>

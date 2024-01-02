@@ -37,6 +37,10 @@ module.exports = (srv) => {
         return getPurchaseMaterialQuantityList(UnitCode, formattedPoNum, MaterialCode)
     });
 
+    srv.before('CREATE', 'Files', async(req) => {
+        req.data.url = `/v2/odata/v4/catalog/Files(PNum_PoNum='${req.data.PNum_PoNum}')/content`
+    })
+
     srv.on('GetScheduleNumber', async (req) => {
         const { UnitCode, AddressCode } = req.data;
     
@@ -94,7 +98,7 @@ async function getPurchaseOrders(AddressCode, ASNListHeader) {
             const asnSet = new Set(responseASN.map(asn => asn.PNum_PoNum));
 
             const purchaseOrders = dataArray.map(data => {
-                const hasMatchingASN = asnSet.has(data.PoNum);
+                const hasMatchingASN = asnSet.has(data.PoNum.replace(/\//g, '-'));
                 return {
                     PoNum: data.PoNum,
                     PoDate: data.PoDate,
@@ -169,56 +173,6 @@ async function getPurchaseMaterialQuantityList(UnitCode, PoNum, MaterialCode) {
         throw new Error('Unable to fetch Purchase Material Quantity List.');
     }
 }
-/*
-async function fetchASNList(unitCode, docNum) {
-    try {
-        const response = await axios({
-            method: 'get',
-            url: `https://imperialauto.co:84/IAIAPI.asmx/GetASNList?UnitCode='${unitCode}'&DocNum='${docNum}'&RequestBy='Manikandan'`,
-            headers: {
-                'Authorization': 'Bearer IncMpsaotdlKHYyyfGiVDg==',
-                'Content-Type': 'application/json'
-            },
-            data: {}
-        });
-
-        if (response.data && response.data.d) {
-            const asnData = JSON.parse(response.data.d);
-            
-            return asnData.map(item => ({
-                CustomerReferenceNumber_PoNum: item.CustomerReferenceNumber,
-                ItemCode: item.ItemCode,
-                TemRevNo: item.TemRevNo,
-                ItemUOM: item.ItemUOM,
-                HsnCode: item.HsnCode,
-                AddressCode: item.AddressCode,
-                ItemRate: item.ItemRate,
-                BalanceQty: item.BalanceQty,
-                ASSValue: item.ASSValue,
-                PFA: item.PFA,
-                FFC: item.FFC,
-                OT1: item.OT1,
-                IGP: item.IGP,
-                IGA: item.IGA,
-                CGP: item.CGP,
-                CGA: item.CGA,
-                SGP: item.SGP,
-                SGA: item.SGA,
-                UGP: item.UGP,
-                UGA: item.UGA,
-                LineValue: item.LineValue,
-                TCS: item.TCS,
-                TCA: item.TCA
-            }));
-        } else {
-            throw new Error('No data returned from the API.');
-        }
-    } catch (error) {
-        console.error('Error fetching ASN List:', error);
-        throw error;
-    }
-}
-*/
 
 async function postASN(asnData) {
     try {
