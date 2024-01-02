@@ -6,8 +6,8 @@ module.exports = (srv) => {
     const {PurchaseOrders, ASNListHeader} = srv.entities;
     
     srv.on('READ', PurchaseOrders, async (req) => {
-        const {AddressCode} = req._queryOptions
-        //const AddressCode = 'DIE-01-02'
+        //const {AddressCode} = req._queryOptions
+        const AddressCode = 'DIE-01-02'
         const results = await getPurchaseOrders(AddressCode, ASNListHeader);
         if (!results) throw new Error('Unable to fetch PurchaseOrders.');
 
@@ -36,11 +36,11 @@ module.exports = (srv) => {
         const formattedPoNum = PoNum.replace(/-/g, '/');
         return getPurchaseMaterialQuantityList(UnitCode, formattedPoNum, MaterialCode)
     });
-
+/*
     srv.before('CREATE', 'Files', async(req) => {
         req.data.url = `/v2/odata/v4/catalog/Files(PNum_PoNum='${req.data.PNum_PoNum}')/content`
     })
-
+*/
     srv.on('GetScheduleNumber', async (req) => {
         const { UnitCode, AddressCode } = req.data;
     

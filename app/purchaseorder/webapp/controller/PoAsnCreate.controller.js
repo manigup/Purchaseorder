@@ -775,7 +775,30 @@ sap.ui.define([
 			oUploadSet.getBinding("items").refresh();
 			oUploadSet.invalidate();
 		},
+		_createEntity: function (item, poNum) {
+			var oModel = this.getView().getModel();
+			var oData = {
+				PNum_PoNum: poNum,
+				mediaType: item.getMediaType(),
+				fileName: item.getFileName(),
+				size: item.getFileObject().size,
+				url: this.getView().getModel().sServiceUrl + `/Files(PNum_PoNum='${poNum}')/content`
+			};
 		
+			return new Promise((resolve, reject) => {
+				oModel.create("/Files", oData, {
+					success: function () {
+						resolve();
+					},
+					error: function (oError) {
+						console.log("Error: ", oError);
+						reject(oError);
+					}
+				});
+			});
+		},
+		
+/*		
 		_createEntity: function (item, poNum) {
 			var data = {
 				PNum_PoNum: poNum,
@@ -803,8 +826,8 @@ sap.ui.define([
 						reject(err);
 					})
 			})				
-		},	
-		
+		},
+*/		
 		_uploadContent: function (item, poNum) {
 			//var encodedPoNum = encodeURIComponent(poNum);
 			var url = `/v2/odata/v4/catalog/Files(PNum_PoNum='${poNum}')/content`
