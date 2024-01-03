@@ -47,9 +47,9 @@
             type: "GET",
             success: res => {
               if( res.login_name[0] !==  res.email){
-              sessionStorage.setItem('AddressCode', res.login_name[0]);
+              sessionStorage.setItem('AddressCodePO', res.login_name[0]);
               }else{
-                sessionStorage.setItem('AddressCode', 'DIE-01-02');
+                sessionStorage.setItem('AddressCodePO', 'DIE-01-02');
               }
               this.doRoute();
             }

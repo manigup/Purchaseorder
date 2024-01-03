@@ -68,13 +68,13 @@ sap.ui.define([
 				this.Amount = event.getParameter("arguments").Amount;
 				this.Vendor_No = event.getParameter("arguments").Vendor_No;
 				var unitCode = sessionStorage.getItem("unitCode") || "P01";
-				this.AddressCode = sessionStorage.getItem("AddressCode") || 'DIE-01-02'
+				this.AddressCodePO = sessionStorage.getItem("AddressCodePO") || 'DIE-01-02'
 				//var unitCode = "P01";
 				var oModel = this.getOwnerComponent().getModel();
 
 				this.getView().byId("AsnCreateTable").removeSelections(true);
 				//var request = `/ASNItems?unitCode=${unitCode}&docNum=${this.Po_Num}`;
-				var request = "/PurchaseOrders?$expand=DocumentRows&AddressCode=" + this.AddressCode;
+				var request = "/PurchaseOrders?$expand=DocumentRows&AddressCode=" + this.AddressCodePO;
 				oModel.read(request, {
 					success: function (oData) {
 						var filteredPurchaseOrder = oData.results.find(po => po.PoNum === that.Po_Num);
@@ -1326,13 +1326,13 @@ sap.ui.define([
 			var unitCode = sessionStorage.getItem("unitCode");
 			var modeldata = this.getView().getModel("asnModel").getData();
 			var Po_No = modeldata.PNum_PoNum;
-			this.AddressCode = Po_No.replace(/\//g, '-');
+			this.AddressCodePO = Po_No.replace(/\//g, '-');
 			var oComboBox = this.getView().byId("schnoId");
 			if (!oComboBox.getModel("ScheduleNumber")) {
-				this.GetScheduleNumber(unitCode, this.AddressCode);
+				this.GetScheduleNumber(unitCode, this.AddressCodePO);
 			}
 		},
-		GetScheduleNumber: function (UnitCode, AddressCode) {
+		GetScheduleNumber: function (UnitCode, AddressCodePO) {
 			var oComboBox = this.getView().byId("schnoId");
 			var oModel = this.getView().getModel();
 			return new Promise(function (resolve, reject) {
@@ -1340,7 +1340,7 @@ sap.ui.define([
 					method: "GET",
 					urlParameters: {
 						UnitCode: UnitCode,
-						AddressCode: AddressCode
+						AddressCode: AddressCodePO
 					},
 					success: function (oData) {
 						var scheduleNumberData = oData.results;
@@ -1362,12 +1362,12 @@ sap.ui.define([
 
 			if (sCountryKey) {
 				oStateSelect.setEnabled(true);
-				this.GetScheduleLineNumber(unitCode, this.AddressCode, sCountryKey);
+				this.GetScheduleLineNumber(unitCode, this.AddressCodePO, sCountryKey);
 			} else {
 				oStateSelect.setEnabled(false);
 			}
 		},
-		GetScheduleLineNumber: function (UnitCode, AddressCode, ScheduleNumber) {
+		GetScheduleLineNumber: function (UnitCode, AddressCodePO, ScheduleNumber) {
 			var oStateSelect = this.getView().byId("schlinenoId");
 			var oModel = this.getView().getModel();
 			return new Promise(function (resolve, reject) {
@@ -1375,7 +1375,7 @@ sap.ui.define([
 					method: "GET",
 					urlParameters: {
 						UnitCode: UnitCode,
-						AddressCode: AddressCode,
+						AddressCode: AddressCodePO,
 						ScheduleNumber: ScheduleNumber
 					},
 					success: function (oData) {
