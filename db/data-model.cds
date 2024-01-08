@@ -40,6 +40,7 @@ entity DocumentRowItems {
       ASSValue      : String;
       Packing       : String;
       Frieght       : String;
+      OtherCharges  : String;
       TCS           : String;
       SGST          : String;
       SGA           : String;
