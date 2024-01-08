@@ -22,7 +22,7 @@
 					<cells>
 						<Text id="_IDGenText5" text="{itemModel>RowNum}"/>
 						<ObjectIdentifier id="_IDGenObjectIdentifier1" text="{itemModel>DeliveryDate}"/>
-						<ObjectNumber id="_IDGenObjectNumber1" number="{itemModel>DeliveryQty}" textAlign="End"/>
+						<ObjectNumber id="_IDGenObjectNumber1" number="{itemModel>PoQty}" textAlign="End"/>
 						<ObjectNumber id="_IDGenObjectNumber2" number="{itemModel>DeliveryQty}" textAlign="End"/>
 					</cells>
 				</ColumnListItem>

@@ -46,8 +46,8 @@ sap.ui.define([
 				path: "/PurchaseOrders",
 				parameters: {
 					custom: {
-						AddressCode: this.AddressCodePO
-						//unitCode: 'P01'
+						AddressCode: this.AddressCodePO,
+						UnitCode: unitCode
 					},
 					countMode: 'None'
 				},

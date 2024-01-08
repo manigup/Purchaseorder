@@ -74,8 +74,13 @@ sap.ui.define([
 
 				this.getView().byId("AsnCreateTable").removeSelections(true);
 				//var request = `/ASNItems?unitCode=${unitCode}&docNum=${this.Po_Num}`;
-				var request = "/PurchaseOrders?$expand=DocumentRows&AddressCode=" + this.AddressCodePO;
+				var request = "/PurchaseOrders";
 				oModel.read(request, {
+					urlParameters: {
+						"$expand": "DocumentRows",
+                        AddressCode: this.AddressCodePO,
+                        UnitCode: unitCode
+                    },
 					success: function (oData) {
 						var filteredPurchaseOrder = oData.results.find(po => po.PoNum === that.Po_Num);
 						if (filteredPurchaseOrder) {

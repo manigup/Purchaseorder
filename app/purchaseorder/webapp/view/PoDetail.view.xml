@@ -147,7 +147,7 @@
                                         id="_IDGenText8"
                                          text="Unit Price ({detailModel>/0/Currency})"/>
                                 </Column>
-                                <Column
+                                <!-- <Column
                                     id="_IDGenColumn10"
                                     minScreenWidth="Tablet"
                                     demandPopin="true"
@@ -156,7 +156,7 @@
                                         id="_IDGenText15"
                                         text="ASN Qty"
                                     />
-                                </Column>
+                                </Column> -->
                                 <Column
                                     id="_IDGenColumn11"
                                     minScreenWidth="Tablet"
@@ -177,7 +177,7 @@
                                         text="Freight ({detailModel>/0/Currency})"
                                     />
                                 </Column>
-                                <Column
+                                <!-- <Column
                                     id="_IDGenColumn13"
                                     minScreenWidth="Tablet"
                                     demandPopin="true"
@@ -186,7 +186,7 @@
                                         id="_IDGenText18"
                                         text="Other Charges ({detailModel>/0/Currency})"
                                     />
-                                </Column>
+                                </Column> -->
                                 <Column
                                     id="_IDGenColumn14"
                                     minScreenWidth="Tablet"
@@ -296,7 +296,7 @@
                                         text="Line Value"
                                     />
                                 </Column>
-                                <Column
+                                <!-- <Column
                                     id="_IDGenColumn24"
                                     minScreenWidth="Tablet"
                                     demandPopin="true"
@@ -306,7 +306,7 @@
                                         wrapping="false"
                                         text="Packaging"
                                     />
-                                </Column>
+                                </Column> -->
                                 <Column
                                     id="_IDGenColumn25"
                                     minScreenWidth="Tablet"
@@ -394,22 +394,13 @@
                                             text="{detailModel>UnitPrice}"
                                         />
                                         <!--press="onAmountPress"/>-->
-                                        <ObjectNumber
-                                            id="_IDGenObjectNumber4"
-                                            number="{detailModel>BalanceQty}"
-                                            unit="{detailModel>UOM}"
-                                        />
                                         <Text
                                             id="pkgamtId"
-                                            text="{detailModel>PFA}"
+                                            text="{detailModel>Packing}"
                                         />
                                         <Text
                                             id="freightId"
-                                            text="{detailModel>FFC}"
-                                        />
-                                        <Text
-                                            id="othchargeId"
-                                            text="{detailModel>OT1}"
+                                            text="{detailModel>Frieght}"
                                         />
                                         <Text
                                             id="assvalId"
@@ -417,7 +408,7 @@
                                         />
                                         <Text
                                             id="_IDGenText31"
-                                            text="{detailModel>IGP}"
+                                            text="{detailModel>IGST}"
                                         />
                                         <Text
                                             id="_IDGenText32"
@@ -425,7 +416,7 @@
                                         />
                                         <Text
                                             id="_IDGenText33"
-                                            text="{detailModel>CGP}"
+                                            text="{detailModel>CGST}"
                                         />
                                         <Text
                                             id="_IDGenText34"
@@ -433,7 +424,7 @@
                                         />
                                         <Text
                                             id="_IDGenText35"
-                                            text="{detailModel>SGP}"
+                                            text="{detailModel>SGST}"
                                         />
                                         <Text
                                             id="_IDGenText20"
@@ -452,12 +443,8 @@
                                             text="{detailModel>LineValue}"
                                         />
                                         <Text
-                                            id="pkgId"
-                                            text="{detailModel>Packaging}"
-                                        />
-                                        <Text
                                             id="wgtId"
-                                            text="{detailModel>WeightPerKG}"
+                                            text="{detailModel>WeightInKG}"
                                         />
                                         <ObjectStatus
                                             id="_IDGenObjectStatus3"

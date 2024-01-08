@@ -57,8 +57,13 @@ sap.ui.define([
 				this.AddressCodePO = sessionStorage.getItem("AddressCodePO") || 'DIE-01-02'
 				//var unitCode = "P01";
 				// Fetch all PurchaseOrders with DocumentRows
-				var request = "/PurchaseOrders?$expand=DocumentRows&AddressCode=" + this.AddressCodePO;
+				var request = "/PurchaseOrders";
 				oModel.read(request, {
+					urlParameters: {
+						"$expand": "DocumentRows",
+                        AddressCode: this.AddressCodePO,
+                        UnitCode: unitCode
+                    },
 					success: function (oData) {
 						var filteredPurchaseOrder = oData.results.find(po => po.PoNum === that.Po_Num);
 						if (filteredPurchaseOrder) {
@@ -184,7 +189,9 @@ sap.ui.define([
 			var Po_No = PoNo.replace(/\//g, '-');
 			this.router.navTo("POItemDetails", {
 				"Po_No": Po_No,
-				"Item_No": Data.ItemCode
+				"Item_No": Data.ItemCode,
+				"Line_Num": Data.LineNum,
+
 			});
 
 		},

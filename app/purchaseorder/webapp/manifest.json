@@ -166,7 +166,7 @@
           "controlId": "app"
       },
       {
-          "pattern": "POItemDetails/{Po_No}/{Item_No}",
+          "pattern": "POItemDetails/{Po_No}/{Item_No}/{Line_Num}",
           "name": "POItemDetails",
           "view": "POItemDetails",
           "targetAggregation": "pages",
