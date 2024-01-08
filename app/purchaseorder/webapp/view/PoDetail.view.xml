@@ -182,7 +182,7 @@
                                         wrapping="false"
                                     />
                                 </Column>
-                                <!-- <Column
+                                <Column
                                     id="_IDGenColumn13"
                                     minScreenWidth="Tablet"
                                     demandPopin="true"
@@ -190,8 +190,9 @@
                                     <Text
                                         id="_IDGenText18"
                                         text="Other Charges ({detailModel>/0/Currency})"
+                                        wrapping="false"
                                     />
-                                </Column> -->
+                                </Column>
                                 <Column
                                     id="_IDGenColumn14"
                                     minScreenWidth="Tablet"
@@ -410,6 +411,11 @@
                                         <Text
                                             id="freightId"
                                             text="{detailModel>Frieght}"
+                                            wrapping="false"
+                                        />
+                                        <Text
+                                            id="othchargeId"
+                                            text="{detailModel>OtherCharges}"
                                             wrapping="false"
                                         />
                                         <Text

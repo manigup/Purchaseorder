@@ -315,7 +315,7 @@
                                         wrapping="true"
                                     />
                                 </Column>
-                                <!-- <Column
+                                <Column
                                     id="_IDGenColumn22"
                                     minScreenWidth="Tablet"
                                     demandPopin="true"
@@ -328,7 +328,7 @@
                                         text="Other Charges ({asnModel>/DocumentRows/results/0/Currency})"
                                         wrapping="true"
                                     />
-                                </Column> -->
+                                </Column>
                                 <Column
                                     id="_IDGenColumn23"
                                     minScreenWidth="Tablet"
@@ -537,10 +537,10 @@
                                             id="freightId"
                                             text="{asnModel>Frieght}"
                                         />
-                                        <!-- <Text
+                                        <Text
                                             id="othchargeId"
-                                            text=""
-                                        /> -->
+                                            text="{asnModel>OtherCharges}"
+                                        />
                                         <Text
                                             id="assvalId"
                                             text="{asnModel>ASSValue}"
