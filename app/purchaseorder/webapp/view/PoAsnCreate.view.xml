@@ -275,7 +275,7 @@
                                         wrapping="true"
                                     />
                                 </Column>
-                                <Column
+                                <!-- <Column
                                     minScreenWidth="Tablet"
                                     demandPopin="true"
                                     width="6rem"
@@ -286,7 +286,7 @@
                                         text="QTY"
                                         wrapping="true"
                                     />
-                                </Column>
+                                </Column> -->
                                 <Column
                                     id="_IDGenColumn20"
                                     minScreenWidth="Tablet"
@@ -315,7 +315,7 @@
                                         wrapping="true"
                                     />
                                 </Column>
-                                <Column
+                                <!-- <Column
                                     id="_IDGenColumn22"
                                     minScreenWidth="Tablet"
                                     demandPopin="true"
@@ -328,7 +328,7 @@
                                         text="Other Charges ({asnModel>/DocumentRows/results/0/Currency})"
                                         wrapping="true"
                                     />
-                                </Column>
+                                </Column> -->
                                 <Column
                                     id="_IDGenColumn23"
                                     minScreenWidth="Tablet"
@@ -469,7 +469,7 @@
                                         wrapping="true"
                                     />
                                 </Column>
-                                <Column
+                                <!-- <Column
                                     id="_IDGenColumn27"
                                     minScreenWidth="Tablet"
                                     demandPopin="true"
@@ -482,7 +482,7 @@
                                         text="Packaging"
                                         wrapping="true"
                                     />
-                                </Column>
+                                </Column> -->
                                 <Column
                                     id="_IDGenColumn28"
                                     minScreenWidth="Tablet"
@@ -525,29 +525,29 @@
                                             id="_IDGenText14"
                                             text="{asnModel>UnitPrice}"
                                         />
-                                        <Text
+                                        <!-- <Text
                                             id="quantityId"
-                                            text="{asnModel>BalanceQty}"
-                                        />
+                                            text=""
+                                        /> -->
                                         <Text
                                             id="pkgamtId"
-                                            text="{asnModel>PFA}"
+                                            text="{asnModel>Packing}"
                                         />
                                         <Text
                                             id="freightId"
-                                            text="{asnModel>FFC}"
+                                            text="{asnModel>Frieght}"
                                         />
-                                        <Text
+                                        <!-- <Text
                                             id="othchargeId"
-                                            text="{asnModel>OT1}"
-                                        />
+                                            text=""
+                                        /> -->
                                         <Text
                                             id="assvalId"
                                             text="{asnModel>ASSValue}"
                                         />
                                         <Text
                                             id="_IDGenText15"
-                                            text="{asnModel>IGP}"
+                                            text="{asnModel>IGST}"
                                         />
                                         <Text
                                             id="_IDGenText16"
@@ -555,7 +555,7 @@
                                         />
                                         <Text
                                             id="_IDGenText17"
-                                            text="{asnModel>CGP}"
+                                            text="{asnModel>CGST}"
                                         />
                                         <Text
                                             id="_IDGenText18"
@@ -563,7 +563,7 @@
                                         />
                                         <Text
                                             id="_IDGenText19"
-                                            text="{asnModel>SGP}"
+                                            text="{asnModel>SGST}"
                                         />
                                         <Text
                                             id="_IDGenText20"
@@ -581,13 +581,13 @@
                                             id="linevalId"
                                             text="{asnModel>LineValue}"
                                         />
-                                        <Text
+                                        <!-- <Text
                                             id="pkgId"
-                                            text="{asnModel>Packaging}"
-                                        />
+                                            text=""
+                                        /> -->
                                         <Text
                                             id="wgtId"
-                                            text="{asnModel>WeightPerKG}"
+                                            text="{asnModel>WeightInKG}"
                                         />
                                     </cells>
                                 </ColumnListItem>

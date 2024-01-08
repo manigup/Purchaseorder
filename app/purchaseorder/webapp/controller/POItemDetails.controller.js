@@ -36,6 +36,7 @@ sap.ui.define([
 			this.Po_Num = evt.getParameter("arguments").Po_No;
 			this.Schedule_No = this.Po_Num .replace(/-/g,'/');
 			this.Item_No = evt.getParameter("arguments").Item_No;
+			this.Line_Num = evt.getParameter("arguments").Line_Num;
 			// this.Uom = evt.getParameter("arguments").Uom;
 			var oModel = this.getOwnerComponent().getModel();
                 return new Promise(function(resolve, reject) {
@@ -44,7 +45,8 @@ sap.ui.define([
                         urlParameters: {
                             UnitCode: unitCode,
 							PoNum: this.Schedule_No,
-							MaterialCode: this.Item_No
+							MaterialCode: this.Item_No,
+							PoLineNum:this.Line_Num
                         },
                         success: function (oData, response) {
 							that.itemModel.setData(oData.results);
