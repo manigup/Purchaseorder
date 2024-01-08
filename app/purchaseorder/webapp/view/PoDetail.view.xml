@@ -204,6 +204,7 @@
                                 >
                                     <Text
                                         id="_IDGenTex20"
+                                        wrapping="false"
                                         text="IGST"
                                     />
                                 </Column>
@@ -214,6 +215,7 @@
                                 >
                                     <Text
                                         id="_IDGenText21"
+                                        wrapping="false"
                                         text="IGA"
                                     />
                                 </Column>
@@ -224,6 +226,7 @@
                                 >
                                     <Text
                                         id="_IDGenText22"
+                                        wrapping="false"
                                         text="CGST"
                                     />
                                 </Column>
@@ -234,6 +237,7 @@
                                 >
                                     <Text
                                         id="_IDGenText23"
+                                        wrapping="false"
                                         text="CGA"
                                     />
                                 </Column>
@@ -244,6 +248,7 @@
                                 >
                                     <Text
                                         id="_IDGenText24"
+                                        wrapping="false"
                                         text="SGST / UGST"
                                     />
                                 </Column>
@@ -254,6 +259,7 @@
                                 >
                                     <Text
                                         id="_IDGenText25"
+                                        wrapping="false"
                                         text="SGA / UGA"
                                     />
                                 </Column>
@@ -264,6 +270,7 @@
                                 >
                                     <Text
                                         id="_IDGenText26"
+                                        wrapping="false"
                                         text="TCS %"
                                     />
                                 </Column>
@@ -274,6 +281,7 @@
                                 >
                                     <Text
                                         id="_IDGenText27"
+                                        wrapping="false"
                                         text="TCA"
                                     />
                                 </Column>
@@ -284,6 +292,7 @@
                                 >
                                     <Text
                                         id="_IDGenText28"
+                                        wrapping="false"
                                         text="Line Value"
                                     />
                                 </Column>
@@ -294,6 +303,7 @@
                                 >
                                     <Text
                                         id="_IDGenText29"
+                                        wrapping="false"
                                         text="Packaging"
                                     />
                                 </Column>
@@ -304,6 +314,7 @@
                                 >
                                     <Text
                                         id="_IDGenText30"
+                                        wrapping="false"
                                         text="WGT IN KG"
                                     />
                                 </Column>
@@ -314,6 +325,7 @@
                                 >
                                     <Text
                                         id="_IDGenText9"
+                                        wrapping="false"
                                         text="Status"
                                     />
                                 </Column>

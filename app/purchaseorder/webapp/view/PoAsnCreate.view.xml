@@ -29,6 +29,7 @@
             <Button
                 id="_IDGenButton1"
                 text="Submit"
+                visible="{=${asnModel>/HasAttachments} === 'Invoice Submitted' ? false : true }"
                 icon="sap-icon://save"
                 type="Emphasized"
                 press="onAsnSaveDB"
