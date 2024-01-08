@@ -28,7 +28,7 @@ service CatalogService {
     
     entity Files as projection on my.Files;
 
-    function getPurchaseMaterialQuantityList(UnitCode:String, PoNum: String, MaterialCode: String) returns array of PurchaseMaterialQuantityInfo;
+    function getPurchaseMaterialQuantityList(UnitCode:String, PoNum: String, MaterialCode: String, PoLineNum: String) returns array of PurchaseMaterialQuantityInfo;
 
     function GetScheduleNumber(UnitCode: String, AddressCode: String) returns array of ScheduleNumberType;
     function GetScheduleLineNumber(UnitCode: String, AddressCode: String, ScheduleNumber: String) returns array of ScheduleLineNumberType;

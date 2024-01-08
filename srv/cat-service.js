@@ -6,9 +6,8 @@ module.exports = (srv) => {
     const {PurchaseOrders, ASNListHeader} = srv.entities;
     
     srv.on('READ', PurchaseOrders, async (req) => {
-        const {AddressCode} = req._queryOptions
-        //const AddressCode = 'DIE-01-02'
-        const results = await getPurchaseOrders(AddressCode, ASNListHeader);
+        const {AddressCode, UnitCode} = req._queryOptions
+        const results = await getPurchaseOrders(AddressCode, ASNListHeader, UnitCode);
         if (!results) throw new Error('Unable to fetch PurchaseOrders.');
 
         const expandDocumentRows = req.query.SELECT.columns && req.query.SELECT.columns.some(({ expand, ref }) => expand && ref[0] === "DocumentRows");
@@ -31,10 +30,10 @@ module.exports = (srv) => {
     });
 
     srv.on('getPurchaseMaterialQuantityList', async (req) => {
-        const { UnitCode, PoNum, MaterialCode } = req.data;
+        const { UnitCode, PoNum, MaterialCode, PoLineNum } = req.data;
         // Replace '-' with '/' for PoNum
         const formattedPoNum = PoNum.replace(/-/g, '/');
-        return getPurchaseMaterialQuantityList(UnitCode, formattedPoNum, MaterialCode)
+        return getPurchaseMaterialQuantityList(UnitCode, formattedPoNum, MaterialCode, PoLineNum)
     });
 /*
     srv.before('CREATE', 'Files', async(req) => {
@@ -79,11 +78,11 @@ module.exports = (srv) => {
     });
 };
 
-async function getPurchaseOrders(AddressCode, ASNListHeader) {
+async function getPurchaseOrders(AddressCode, ASNListHeader, UnitCode) {
     try {
         const response = await axios({
             method: 'get',
-            url: `https://imperialauto.co:84/IAIAPI.asmx/GetPurchaseMaterialList?AddressCode='${AddressCode}'&RequestBy='Manikandan'`,
+            url: `https://imperialauto.co:84/IAIAPI.asmx/GetPurchaseMaterialList?AddressCode='${AddressCode}'&UnitCode='${UnitCode}'&RequestBy='Manikandan'`,
             headers: {
                 'Authorization': 'Bearer IncMpsaotdlKHYyyfGiVDg==',
                 'Content-Type': 'application/json'
@@ -117,7 +116,6 @@ async function getPurchaseOrders(AddressCode, ASNListHeader) {
                 data.DocumentRows.map(row => {
                     return {
                         LineNum: row.LineNum,
-                        PoDate: data.PoDate,
                         ItemCode: row.ItemCode,
                         ItemDesc: row.ItemDesc,
                         HSNCode:  row.HSNCode,
@@ -133,7 +131,20 @@ async function getPurchaseOrders(AddressCode, ASNListHeader) {
                         PlantCode: data.PlantCode,
                         PlantName: data.PlantName,
                         ConfirmStatus: "",
-                        ASSValue:"",
+                        ASSValue:row.ASSValue,
+                        Packing       : row.Packing,
+                        Frieght       : row.Frieght,
+                        TCS           : row.TCS,
+                        SGST          : row.SGST,
+                        SGA           : row.SGA,
+                        CGST          : row.CGST,
+                        CGA           : row.CGA,
+                        IGST          : row.IGST,
+                        IGA           : row.IGA,
+                        TOTAL         : row.TOTAL,
+                        TCA           : row.TCA,
+                        LineValue     : row.LineValue,
+                        WeightInKG    : row.WeightInKG,
                         PNum_PoNum: data.PoNum  // associating with the current PurchaseOrder
                     };
                 })
@@ -150,11 +161,11 @@ async function getPurchaseOrders(AddressCode, ASNListHeader) {
     }
 }
 
-async function getPurchaseMaterialQuantityList(UnitCode, PoNum, MaterialCode) {
+async function getPurchaseMaterialQuantityList(UnitCode, PoNum, MaterialCode, PoLineNum) {
     try {
         const response = await axios({
             method: 'get',
-            url: `https://imperialauto.co:84/IAIAPI.asmx/GetPurchaseMaterialQuantityList?UnitCode='${UnitCode}'&PoNum='${PoNum}'&MaterialCode='${MaterialCode}'&RequestBy='Manikandan'`,
+            url: `https://imperialauto.co:84/IAIAPI.asmx/GetPurchaseMaterialQuantityList?UnitCode='${UnitCode}'&PoNum='${PoNum}'&MaterialCode='${MaterialCode}'&PoLineNum='${PoLineNum}'&RequestBy='Manikandan'`,
             headers: {
                 'Authorization': 'Bearer IncMpsaotdlKHYyyfGiVDg==',
                 'Content-Type': 'application/json'

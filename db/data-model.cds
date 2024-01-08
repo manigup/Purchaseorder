@@ -26,11 +26,6 @@ entity PurchaseOrders {
 
 entity DocumentRowItems {
   key UUID          : UUID;
-      PoDate        : Date;
-      VendorName    : String;
-      VendorCode    : String;
-      PlantCode     : String;
-      PlantName     : String;
       LineNum       : String;
       ItemCode      : String;
       ItemDesc      : String;
@@ -42,8 +37,20 @@ entity DocumentRowItems {
       UOM           : String;
       Currency      : String;
       Status        : String;
-      ConfirmStatus : String;
       ASSValue      : String;
+      Packing       : String;
+      Frieght       : String;
+      TCS           : String;
+      SGST          : String;
+      SGA           : String;
+      CGST          : String;
+      CGA           : String;
+      IGST          : String;
+      IGA           : String;
+      TOTAL         : String;
+      TCA           : String;
+      LineValue     : String;
+      WeightInKG    : String;
       PNum          : Association to PurchaseOrders;
 }
 
