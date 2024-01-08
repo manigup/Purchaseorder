@@ -103,6 +103,7 @@
                                     <Text
                                         id="_IDGenText3"
                                         text="HSN Code"
+                                        wrapping="false"
                                     />
                                 </Column>
                                 <!-- <Column id="_IDGenColumn4" minScreenWidth="Tablet" demandPopin="true">
@@ -116,6 +117,7 @@
                                     <Text
                                         id="_IDGenText5"
                                         text="PO Qty"
+                                        wrapping="false"
                                     />
                                 </Column>
                                 <Column
@@ -145,7 +147,8 @@
                                 >
                                     <Text
                                         id="_IDGenText8"
-                                         text="Unit Price ({detailModel>/0/Currency})"/>
+                                         text="Unit Price ({detailModel>/0/Currency})" wrapping="false"/>
+                                         
                                 </Column>
                                 <!-- <Column
                                     id="_IDGenColumn10"
@@ -165,6 +168,7 @@
                                     <Text
                                         id="_IDGenText16"
                                         text="Packing Amt ({detailModel>/0/Currency})"
+                                        wrapping="false"
                                     />
                                 </Column>
                                 <Column
@@ -175,6 +179,7 @@
                                     <Text
                                         id="_IDGenText17"
                                         text="Freight ({detailModel>/0/Currency})"
+                                        wrapping="false"
                                     />
                                 </Column>
                                 <!-- <Column
@@ -195,6 +200,7 @@
                                     <Text
                                         id="_IDGenText19"
                                         text="Ass Value ({detailModel>/0/Currency})"
+                                        wrapping="false"
                                     />
                                 </Column>
                                 <Column
@@ -369,6 +375,7 @@
                                         <Text
                                             id="_IDGenText12"
                                             text="{detailModel>HSNCode}"
+                                            wrapping="false"
                                         />
                                         <!-- <Text id="_IDGenText13" width="7em" text="{path:'detailModel>Delivery_Date', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"/> -->
                                         <ObjectNumber
@@ -392,19 +399,23 @@
                                         <Text
                                             id="_IDGenText14"
                                             text="{detailModel>UnitPrice}"
+                                            wrapping="false"
                                         />
                                         <!--press="onAmountPress"/>-->
                                         <Text
                                             id="pkgamtId"
                                             text="{detailModel>Packing}"
+                                            wrapping="false"
                                         />
                                         <Text
                                             id="freightId"
                                             text="{detailModel>Frieght}"
+                                            wrapping="false"
                                         />
                                         <Text
                                             id="assvalId"
                                             text="{detailModel>ASSValue}"
+                                            wrapping="false"
                                         />
                                         <Text
                                             id="_IDGenText31"
@@ -413,6 +424,7 @@
                                         <Text
                                             id="_IDGenText32"
                                             text="{detailModel>IGA}"
+                                            wrapping="false"
                                         />
                                         <Text
                                             id="_IDGenText33"
@@ -421,6 +433,7 @@
                                         <Text
                                             id="_IDGenText34"
                                             text="{detailModel>CGA}"
+                                            wrapping="false"
                                         />
                                         <Text
                                             id="_IDGenText35"
@@ -429,6 +442,7 @@
                                         <Text
                                             id="_IDGenText20"
                                             text="{detailModel>SGA}"
+                                            wrapping="false"
                                         />
                                         <Text
                                             id="tcsId"
@@ -437,6 +451,7 @@
                                         <Text
                                             id="tcaId"
                                             text="{detailModel>TCA}"
+                                            wrapping="false"
                                         />
                                         <Text
                                             id="linevalId"
