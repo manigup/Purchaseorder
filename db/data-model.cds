@@ -26,33 +26,34 @@ entity PurchaseOrders {
 }
 
 entity DocumentRowItems {
-  key UUID         : UUID;
-      LineNum      : String;
-      ItemCode     : String;
-      ItemDesc     : String;
-      HSNCode      : String;
-      PoQty        : Integer;
-      DeliveredQty : Decimal;
-      BalanceQty   : Decimal;
-      UnitPrice    : Decimal;
-      UOM          : String;
-      Currency     : String;
-      Status       : String;
-      ASSValue     : String;
-      Packing      : String;
-      Frieght      : String;
-      TCS          : String;
-      SGST         : String;
-      SGA          : String;
-      CGST         : String;
-      CGA          : String;
-      IGST         : String;
-      IGA          : String;
-      TOTAL        : String;
-      TCA          : String;
-      LineValue    : String;
-      WeightInKG   : String;
-      PNum         : Association to PurchaseOrders;
+  key UUID          : UUID;
+      LineNum       : String;
+      ItemCode      : String;
+      ItemDesc      : String;
+      HSNCode       : String;
+      PoQty         : Integer;
+      DeliveredQty  : Decimal;
+      BalanceQty    : Decimal;
+      UnitPrice     : Decimal;
+      UOM           : String;
+      Currency      : String;
+      Status        : String;
+      ASSValue      : String;
+      Packing       : String;
+      Frieght       : String;
+      OtherCharges  : String;
+      TCS           : String;
+      SGST          : String;
+      SGA           : String;
+      CGST          : String;
+      CGA           : String;
+      IGST          : String;
+      IGA           : String;
+      TOTAL         : String;
+      TCA           : String;
+      LineValue     : String;
+      WeightInKG    : String;
+      PNum          : Association to PurchaseOrders;
 }
 
 entity ASNList {
