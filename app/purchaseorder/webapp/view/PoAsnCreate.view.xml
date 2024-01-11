@@ -352,7 +352,7 @@
                                 >
                                     <Label
                                         id="_IDGenText2"
-                                        text="IGST"
+                                        text="IGST %"
                                         design="Bold"
                                         wrapping="true"
                                     />
@@ -366,7 +366,7 @@
                                 >
                                     <Label
                                         id="_IDGenText9"
-                                        text="IGA"
+                                        text="IGST Amt"
                                         design="Bold"
                                         wrapping="true"
                                     />
@@ -380,7 +380,7 @@
                                 >
                                     <Label
                                         id="_IDGenText3"
-                                        text="CGST"
+                                        text="CGST %"
                                         design="Bold"
                                         wrapping="true"
                                     />
@@ -394,7 +394,7 @@
                                 >
                                     <Label
                                         id="_IDGenText10"
-                                        text="CGA"
+                                        text="CGST Amt"
                                         design="Bold"
                                         wrapping="true"
                                     />
@@ -408,7 +408,7 @@
                                 >
                                     <Label
                                         id="_IDGenText4"
-                                        text="SGST / UGST"
+                                        text="SGST % / UGST %"
                                         design="Bold"
                                         wrapping="true"
                                     />
@@ -422,7 +422,7 @@
                                 >
                                     <Label
                                         id="_IDGenText11"
-                                        text="SGA / UGA"
+                                        text="SGST Amt / UGST Amt"
                                         design="Bold"
                                         wrapping="true"
                                     />
@@ -451,7 +451,7 @@
                                     <Label
                                         id="_IDGenLabel24"
                                         design="Bold"
-                                        text="TCA"
+                                        text="TCS Amt"
                                         wrapping="true"
                                     />
                                 </Column>
@@ -523,7 +523,7 @@
                                         />
                                         <Text
                                             id="_IDGenText14"
-                                            text="{asnModel>UnitPrice}"
+                                            text="{path:'asnModel>UnitPrice',formatter:'sp.fiori.purchaseorder.controller.formatter.formatAmount'}"
                                         />
                                         <!-- <Text
                                             id="quantityId"
@@ -531,19 +531,19 @@
                                         /> -->
                                         <Text
                                             id="pkgamtId"
-                                            text="{asnModel>Packing}"
+                                            text="{path:'asnModel>Packing',formatter:'sp.fiori.purchaseorder.controller.formatter.formatAmount'}"
                                         />
                                         <Text
                                             id="freightId"
-                                            text="{asnModel>Frieght}"
+                                            text="{path:'asnModel>Frieght',formatter:'sp.fiori.purchaseorder.controller.formatter.formatAmount'}"
                                         />
                                         <Text
                                             id="othchargeId"
-                                            text="{asnModel>OtherCharges}"
+                                            text="{path:'asnModel>OtherCharges',formatter:'sp.fiori.purchaseorder.controller.formatter.formatAmount'}"
                                         />
                                         <Text
                                             id="assvalId"
-                                            text="{asnModel>ASSValue}"
+                                            text="{path:'asnModel>ASSValue',formatter:'sp.fiori.purchaseorder.controller.formatter.formatAmount'}"
                                         />
                                         <Text
                                             id="_IDGenText15"
@@ -551,7 +551,7 @@
                                         />
                                         <Text
                                             id="_IDGenText16"
-                                            text="{asnModel>IGA}"
+                                            text="{path:'asnModel>IGA',formatter:'sp.fiori.purchaseorder.controller.formatter.formatAmount'}"
                                         />
                                         <Text
                                             id="_IDGenText17"
@@ -559,7 +559,7 @@
                                         />
                                         <Text
                                             id="_IDGenText18"
-                                            text="{asnModel>CGA}"
+                                            text="{path:'asnModel>CGA',formatter:'sp.fiori.purchaseorder.controller.formatter.formatAmount'}"
                                         />
                                         <Text
                                             id="_IDGenText19"
@@ -567,7 +567,7 @@
                                         />
                                         <Text
                                             id="_IDGenText20"
-                                            text="{asnModel>SGA}"
+                                            text="{path:'asnModel>SGA',formatter:'sp.fiori.purchaseorder.controller.formatter.formatAmount'}"
                                         />
                                         <Text
                                             id="tcsId"
@@ -575,11 +575,11 @@
                                         />
                                         <Text
                                             id="tcaId"
-                                            text="{asnModel>TCA}"
+                                            text="{path:'asnModel>TCA',formatter:'sp.fiori.purchaseorder.controller.formatter.formatAmount'}"
                                         />
                                         <Text
                                             id="linevalId"
-                                            text="{asnModel>LineValue}"
+                                            text="{path:'asnModel>LineValue',formatter:'sp.fiori.purchaseorder.controller.formatter.formatAmount'}"
                                         />
                                         <!-- <Text
                                             id="pkgId"
@@ -602,7 +602,7 @@
                 <upload:UploadSet
 					id="uploadSet"
 					instantUpload="false"
-					uploadEnabled="true"
+					uploadEnabled="{=${asnModel>/HasAttachments} === 'Invoice Submitted' ? false : true }"
                     afterItemAdded="onAfterItemAdded"
 					uploadCompleted="onUploadCompleted"
 				>
@@ -610,12 +610,13 @@
 					<upload:toolbar>
 					</upload:toolbar>
 					<upload:items>
-						<upload:UploadSetItem
+						<upload:UploadSetItem 
+                            id="_IDGenUploadSetItem1"
 							fileName="{fileName}"
 							mediaType="{mediaType}"
 							url="{url}"
-							enabledEdit="false"
 							visibleEdit="false"
+                            visibleRemove="false"
 							openPressed="onOpenPressed"
 						>
                         
