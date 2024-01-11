@@ -60,7 +60,6 @@
                             id="DeliveryTableId"
                             class="sapUiSizeCompact"
                             items="{detailModel>/}"
-                            itemPress="onItempress"
                             fixedLayout="false"
                         >
                             <headerToolbar>
@@ -212,7 +211,7 @@
                                     <Text
                                         id="_IDGenTex20"
                                         wrapping="false"
-                                        text="IGST"
+                                        text="IGST %"
                                     />
                                 </Column>
                                 <Column
@@ -223,7 +222,7 @@
                                     <Text
                                         id="_IDGenText21"
                                         wrapping="false"
-                                        text="IGA"
+                                        text="IGST Amt"
                                     />
                                 </Column>
                                 <Column
@@ -234,7 +233,7 @@
                                     <Text
                                         id="_IDGenText22"
                                         wrapping="false"
-                                        text="CGST"
+                                        text="CGST %"
                                     />
                                 </Column>
                                 <Column
@@ -245,7 +244,7 @@
                                     <Text
                                         id="_IDGenText23"
                                         wrapping="false"
-                                        text="CGA"
+                                        text="CGST Amt"
                                     />
                                 </Column>
                                 <Column
@@ -256,7 +255,7 @@
                                     <Text
                                         id="_IDGenText24"
                                         wrapping="false"
-                                        text="SGST / UGST"
+                                        text="SGST % / UGST %"
                                     />
                                 </Column>
                                 <Column
@@ -267,7 +266,7 @@
                                     <Text
                                         id="_IDGenText25"
                                         wrapping="false"
-                                        text="SGA / UGA"
+                                        text="SGST Amt / UGST Amt"
                                     />
                                 </Column>
                                 <Column
@@ -289,7 +288,7 @@
                                     <Text
                                         id="_IDGenText27"
                                         wrapping="false"
-                                        text="TCA"
+                                        text="TCS Amt"
                                     />
                                 </Column>
                                 <Column
@@ -339,9 +338,7 @@
                             </columns>
                             <items>
                                 <ColumnListItem
-                                    id="_IDGenColumnListItem1"
-                                    type="Navigation"
-                                >
+                                    id="_IDGenColumnListItem1">
                                     <cells>
                                         <Text
                                             id="_IDGenText10"
@@ -399,28 +396,28 @@
                                         <!-- unit="{detailModel>Uom}"/> -->
                                         <Text
                                             id="_IDGenText14"
-                                            text="{detailModel>UnitPrice}"
+                                            text="{path:'detailModel>UnitPrice',formatter:'sp.fiori.purchaseorder.controller.formatter.formatAmount'}"
                                             wrapping="false"
                                         />
                                         <!--press="onAmountPress"/>-->
                                         <Text
                                             id="pkgamtId"
-                                            text="{detailModel>Packing}"
+                                            text="{path:'detailModel>Packing',formatter:'sp.fiori.purchaseorder.controller.formatter.formatAmount'}"
                                             wrapping="false"
                                         />
                                         <Text
                                             id="freightId"
-                                            text="{detailModel>Frieght}"
+                                            text="{path:'detailModel>Frieght',formatter:'sp.fiori.purchaseorder.controller.formatter.formatAmount'}"
                                             wrapping="false"
                                         />
                                         <Text
                                             id="othchargeId"
-                                            text="{detailModel>OtherCharges}"
+                                            text="{path:'detailModel>OtherCharges',formatter:'sp.fiori.purchaseorder.controller.formatter.formatAmount'}"
                                             wrapping="false"
                                         />
                                         <Text
                                             id="assvalId"
-                                            text="{detailModel>ASSValue}"
+                                            text="{path:'detailModel>ASSValue',formatter:'sp.fiori.purchaseorder.controller.formatter.formatAmount'}"
                                             wrapping="false"
                                         />
                                         <Text
@@ -429,7 +426,7 @@
                                         />
                                         <Text
                                             id="_IDGenText32"
-                                            text="{detailModel>IGA}"
+                                            text="{path:'detailModel>IGA',formatter:'sp.fiori.purchaseorder.controller.formatter.formatAmount'}"
                                             wrapping="false"
                                         />
                                         <Text
@@ -438,7 +435,7 @@
                                         />
                                         <Text
                                             id="_IDGenText34"
-                                            text="{detailModel>CGA}"
+                                            text="{path:'detailModel>CGA',formatter:'sp.fiori.purchaseorder.controller.formatter.formatAmount'}"
                                             wrapping="false"
                                         />
                                         <Text
@@ -447,7 +444,7 @@
                                         />
                                         <Text
                                             id="_IDGenText20"
-                                            text="{detailModel>SGA}"
+                                            text="{path:'detailModel>SGA',formatter:'sp.fiori.purchaseorder.controller.formatter.formatAmount'}"
                                             wrapping="false"
                                         />
                                         <Text
@@ -456,12 +453,12 @@
                                         />
                                         <Text
                                             id="tcaId"
-                                            text="{detailModel>TCA}"
+                                            text="{path:'detailModel>TCA',formatter:'sp.fiori.purchaseorder.controller.formatter.formatAmount'}"
                                             wrapping="false"
                                         />
                                         <Text
                                             id="linevalId"
-                                            text="{detailModel>LineValue}"
+                                            text="{path:'detailModel>LineValue',formatter:'sp.fiori.purchaseorder.controller.formatter.formatAmount'}"
                                         />
                                         <Text
                                             id="wgtId"

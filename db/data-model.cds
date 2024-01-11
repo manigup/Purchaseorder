@@ -6,22 +6,23 @@ using {
 } from '@sap/cds/common';
 
 entity PurchaseOrders {
-  key PoNum         : String;
-      PoDate        : Date;
-      VendorCode    : String;
-      VendorName    : String;
-      PlantCode     : String;
-      PlantName     : String;
-      ValidFrom     : String;
-      ValidTo       : String;
-      HasAttachments: String;
-      DocumentRows  : Composition of many DocumentRowItems
-                        on DocumentRows.PNum = $self;
-      asnList       : Composition of many ASNList
-                        on asnList.PNum = $self;
-      asnListHeader : Composition of many ASNList
-                        on asnListHeader.PNum = $self;
-      Files         : Composition of many Files on Files.PNum = $self;
+  key PoNum          : String;
+      PoDate         : Date;
+      VendorCode     : String;
+      VendorName     : String;
+      PlantCode      : String;
+      PlantName      : String;
+      ValidFrom      : String;
+      ValidTo        : String;
+      HasAttachments : String;
+      DocumentRows   : Composition of many DocumentRowItems
+                         on DocumentRows.PNum = $self;
+      asnList        : Composition of many ASNList
+                         on asnList.PNum = $self;
+      asnListHeader  : Composition of many ASNList
+                         on asnListHeader.PNum = $self;
+      Files          : Composition of many Files
+                         on Files.PNum = $self;
 }
 
 entity DocumentRowItems {
@@ -61,26 +62,26 @@ entity ASNList {
       ItemCode      : String;
       ItemDesc      : String;
       LineNum       : String;
-      PoDate       : Date;
+      PoDate        : Date;
       UOM           : String;
       HSNCode       : String;
       UnitPrice     : String;
       BalanceQty    : String;
       DeliveredQty  : Decimal;
       ASSValue      : String;
-      PFA           : String;
-      FFC           : String;
-      OT1           : String;
-      IGP           : String;
+      Packing       : String;
+      Frieght       : String;
+      TOTAL         : String;
+      IGST          : String;
       IGA           : String;
-      CGP           : String;
+      CGST          : String;
       CGA           : String;
-      SGP           : String;
+      SGST          : String;
       SGA           : String;
       UGP           : String;
       UGA           : String;
       Packaging     : String;
-      WeightPerKG   : String;
+      WeightInKG    : String;
       LineValue     : String;
       TCS           : String;
       TCA           : String;
@@ -116,15 +117,16 @@ entity ASNListHeader {
       VendorCode         : String;
 }
 
-entity Files : managed{
-  key PNum : Association to PurchaseOrders;
-  @Core.MediaType: mediaType
-  content: LargeBinary;
-  
-  @Core.ContentDisposition.Filename: fileName
-  @Core.IsMediaType: true
-  mediaType: String;
-  fileName: String;
-  size: Integer;
-  url: String;
+entity Files : managed {
+  key PNum      : Association to PurchaseOrders;
+
+      @Core.MediaType                  : mediaType
+      content   : LargeBinary;
+
+      @Core.ContentDisposition.Filename: fileName
+      @Core.IsMediaType                : true
+      mediaType : String;
+      fileName  : String;
+      size      : Integer;
+      url       : String;
 }
