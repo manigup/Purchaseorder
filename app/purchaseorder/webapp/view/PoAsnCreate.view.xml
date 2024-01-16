@@ -10,7 +10,7 @@
 >
     <Page
         id="_IDGenPage1"
-        title="Create ASN"
+        title="Submit Invoice"
         titleAlignment="Center"
         showNavButton="true"
         navButtonPress="onNavBack"
@@ -427,7 +427,7 @@
                                         wrapping="true"
                                     />
                                 </Column>
-                                <Column
+                                <!-- <Column
                                     id="_IDGenColumn16"
                                     minScreenWidth="Tablet"
                                     demandPopin="true"
@@ -454,7 +454,7 @@
                                         text="TCS Amt"
                                         wrapping="true"
                                     />
-                                </Column>
+                                </Column> -->
                                 <Column
                                     id="_IDGenColumn25"
                                     minScreenWidth="Tablet"
@@ -569,14 +569,14 @@
                                             id="_IDGenText20"
                                             text="{path:'asnModel>SGA',formatter:'sp.fiori.purchaseorder.controller.formatter.formatAmount'}"
                                         />
-                                        <Text
+                                        <!-- <Text
                                             id="tcsId"
                                             text="{asnModel>TCS}"
                                         />
                                         <Text
                                             id="tcaId"
                                             text="{path:'asnModel>TCA',formatter:'sp.fiori.purchaseorder.controller.formatter.formatAmount'}"
-                                        />
+                                        /> -->
                                         <Text
                                             id="linevalId"
                                             text="{path:'asnModel>LineValue',formatter:'sp.fiori.purchaseorder.controller.formatter.formatAmount'}"
