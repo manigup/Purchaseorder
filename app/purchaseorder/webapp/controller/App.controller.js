@@ -49,7 +49,7 @@
               if( res.login_name[0] !==  res.email){
               sessionStorage.setItem('AddressCodePO', res.login_name[0]);
               }else{
-                sessionStorage.setItem('AddressCodePO', 'DIE-01-02');
+                sessionStorage.setItem('AddressCodePO', 'SAT-01-01');
               }
               this.doRoute();
             }

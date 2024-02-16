@@ -68,7 +68,7 @@ sap.ui.define([
 				this.Amount = event.getParameter("arguments").Amount;
 				this.Vendor_No = event.getParameter("arguments").Vendor_No;
 				var unitCode = sessionStorage.getItem("unitCode") || "P01";
-				this.AddressCodePO = sessionStorage.getItem("AddressCodePO") || 'DIE-01-02'
+				this.AddressCodePO = sessionStorage.getItem("AddressCodePO") || 'SAT-01-01'
 				//var unitCode = "P01";
 				var oModel = this.getOwnerComponent().getModel();
 
