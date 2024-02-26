@@ -92,19 +92,20 @@
                     displayFormat="long"
                     enabled="false"
                 />
-                <Label text="GRR/Docket No" />
+                <Label text="GRR/Docket No" visible="false"/>
                 <Input
                     type="Text"
                     value="{asnModel>/DocketNumber}"
-                    width="185px"
+                    width="185px" visible="false"
                 />
-                <Label text="GRR/Docket Date" />
+                <Label text="GRR/Docket Date" visible="false" />
                 <DatePicker
                     value="{asnModel>/GRDate}"
                     width="185px"
                     valueFormat="yyyyMMdd"
                     displayFormat="long"
                     enabled="true"
+                    visible="false"
                 />
                 <Label text="Transport Name" />
                 <Input
@@ -132,47 +133,50 @@
                     displayFormat="long"
                     enabled="true"
                 />
-                <Label text="Mill T.C. No" />
+                <Label text="Mill T.C. No" visible="false"/>
                 <Input
                     type="Text"
                     value="{asnModel>/MillNumber}"
-                    width="185px"
+                    width="185px" visible="false"
                 />
-                <Label text="Mill Name" />
+                <Label text="Mill Name" visible="false"/>
                 <Input
                     type="Text"
                     value="{asnModel>/MillName}"
-                    width="185px"
+                    width="185px" visible="false"
                 />
                 <Label
                     id="_IDGenLabel4"
                     text="PDIR No"
+                    visible="false" 
                 />
                 <Input
                     id="_IDGenInput4"
                     type="Text"
                     value="{asnModel>/PDIRNumber}"
-                    width="185px"
+                    width="185px" visible="false"
                 />
                 <Label
                     id="_IDGenLabel18"
                     text="Heat No"
+                    visible="false"
                 />
                 <Input
                     id="_IDGenInput8"
                     type="Text"
                     value="{asnModel>/HeatNumber}"
-                    width="185px"
+                    width="185px" visible="false"
                 />
                 <Label
                     id="_IDGenLabel19"
                     text="Batch Code"
+                    visible="false"
                 />
                 <Input
                     id="_IDGenInput9"
                     type="Text"
                     value="{asnModel>/BatchNumber}"
-                    width="185px"
+                    width="185px" visible="false"
                 />
                 <Label text="Manf. Month" />
                 <DatePicker
