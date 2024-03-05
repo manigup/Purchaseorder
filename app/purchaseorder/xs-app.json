@@ -8,8 +8,8 @@
       "service": "sap-approuter-userapi"
     },
     {
-      "source": "^/v2/(.*)$",
-      "target": "/v2/$1",
+      "source": "^/po/(.*)$",
+      "target": "/po/$1",
       "destination": "PURCHASEORDER-srv-api",
       "authenticationType": "xsuaa",
       "csrfProtection": false
