@@ -54,7 +54,7 @@ sap.ui.define([
 				var PoNum = event.getParameter("arguments").Po_No;
 				this.Po_Num = PoNum.replace(/-/g, '/');
 				var unitCode = sessionStorage.getItem("unitCode") || "P01";
-				this.AddressCodePO = sessionStorage.getItem("AddressCodePO") || 'SAT-01-01'
+				this.AddressCodePO = sessionStorage.getItem("AddressCodePO") || 'ATE-01-01'
 				//var unitCode = "P01";
 				// Fetch all PurchaseOrders with DocumentRows
 				var request = "/PurchaseOrders";
