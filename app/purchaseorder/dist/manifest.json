@@ -1,0 +1,188 @@
+{
+    "_version": "1.58.0",
+    "sap.app": {
+        "id": "sp.fiori.purchaseorder",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "0.0.1"
+        },
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "resources": "resources.json",
+        "sourceTemplate": {
+            "id": "@sap/generator-fiori:basic",
+            "version": "1.11.2",
+            "toolsId": "8cc46fef-d7b5-4cab-a5be-0252f320a5b8"
+        },
+        "dataSources": {
+            "mainService": {
+                "uri": "po/odata/v4/catalog/",
+                "type": "OData",
+                "settings": {
+                    "defaultCountMode": "None",
+                    "annotations": [],
+                    "localUri": "localService/metadata.xml",
+                    "odataVersion": "2.0"
+                }
+            }
+        },
+        "crossNavigation": {
+            "inbounds": {
+                "po-manage": {
+                    "semanticObject": "po",
+                    "action": "manage",
+                    "title": "{{flpTitle}}",
+                    "subTitle": "{{flpSubtitle}}",
+                    "icon": "sap-icon://my-sales-order",
+                    "signature": {
+                        "parameters": {},
+                        "additionalParameters": "allowed"
+                    }
+                }
+            }
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "flexEnabled": true,
+        "dependencies": {
+            "minUI5Version": "1.119.1",
+            "libs": {
+                "sap.m": {},
+                "sap.ui.core": {},
+                "sap.f": {},
+                "sap.suite.ui.generic.template": {},
+                "sap.ui.comp": {},
+                "sap.ui.generic.app": {},
+                "sap.ui.table": {},
+                "sap.ushell": {}
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "defaultCountMode": "None",
+                    "bundleName": "sp.fiori.purchaseorder.i18n.i18n"
+                }
+            },
+            "": {
+                "dataSource": "mainService",
+                "preload": true,
+                "settings": {
+                    "defaultCountMode": "None",
+                    "synchronizationMode": "None",
+                    "operationMode": "Server",
+                    "autoExpandSelect": true,
+                    "earlyRequests": true
+                }
+            }
+        },
+        "resources": {
+            "css": [
+                {
+                    "uri": "css/style.css"
+                }
+            ]
+        },
+        "routing": {
+            "config": {
+                "routerClass": "sap.m.routing.Router",
+                "viewType": "XML",
+                "async": true,
+                "viewPath": "sp.fiori.purchaseorder.view",
+                "controlAggregation": "pages"
+            },
+            "routes": [
+                {
+                    "pattern": "",
+                    "name": "PoSplit",
+                    "view": "PoSplit",
+                    "targetAggregation": "pages",
+                    "controlId": "app",
+                    "subroutes": [
+                        {
+                            "pattern": "",
+                            "name": "PoMaster",
+                            "view": "PoMaster",
+                            "targetControl": "splitAppId",
+                            "targetAggregation": "masterPages",
+                            "subroutes": [
+                                {
+                                    "pattern": "NoData",
+                                    "name": "NoData",
+                                    "view": "NoData",
+                                    "targetAggregation": "detailPages"
+                                },
+                                {
+                                    "pattern": "Detail/{Po_No}",
+                                    "name": "PoDetail",
+                                    "view": "PoDetail",
+                                    "targetAggregation": "detailPages"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "pattern": "AsnCreate/{Po_No}/:Amount:",
+                    "name": "PoAsnCreate",
+                    "view": "PoAsnCreate",
+                    "targetAggregation": "pages",
+                    "controlId": "app"
+                },
+                {
+                    "pattern": "AsnCreate/{Po_No}/{Asn_No}/:Amount:",
+                    "name": "PoAsnEdit",
+                    "view": "PoAsnEdit",
+                    "targetAggregation": "pages",
+                    "controlId": "app"
+                },
+                {
+                    "pattern": "Confirmation/{Po_No}",
+                    "name": "PoConfirmation",
+                    "view": "PoConfirmation",
+                    "targetAggregation": "pages",
+                    "controlId": "app"
+                },
+                {
+                    "pattern": "POItemDetails/{Po_No}/{Item_No}/{Line_Num}",
+                    "name": "POItemDetails",
+                    "view": "POItemDetails",
+                    "targetAggregation": "pages",
+                    "controlId": "app"
+                }
+            ]
+        },
+        "rootView": {
+            "viewName": "sp.fiori.purchaseorder.view.App",
+            "type": "XML",
+            "async": true,
+            "id": "App"
+        }
+    },
+    "sap.cloud": {
+        "public": true,
+        "service": "PO"
+    }
+}

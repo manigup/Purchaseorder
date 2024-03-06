@@ -1,0 +1,42 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<Popover id="_IDGenPopover1" showHeader="false" class="sapUiContentPadding" placement="Top">
+		<Table id="tblPricePopover" inset="false" fixedLayout="false">
+			<columns>
+				<Column id="hsvId">
+					<Text id="_IDGenText1" text="HSN/SAC"/>
+				</Column>
+				<Column id="_IDGenColumn1">
+					<Text id="_IDGenText2" text="IGST"/>
+				</Column>
+				<Column id="_IDGenColumn4">
+					<Text id="_IDGenText9" text="IGA"/>
+				</Column>
+				<Column id="_IDGenColumn2">
+					<Text id="_IDGenText3" text="CGST"/>
+				</Column>
+				<Column id="_IDGenColumn5">
+					<Text id="_IDGenText10" text="CGA"/>
+				</Column>
+				<Column id="_IDGenColumn3">
+					<Text id="_IDGenText4" text="SGST / UGST"/>
+				</Column>
+				<Column id="_IDGenColumn6">
+					<Text id="_IDGenText11" text="SGA / UGA"/>
+				</Column>
+			</columns>
+			<items>
+				<ColumnListItem id="_IDGenColumnListItem1">
+					<cells>
+						<Text id="_IDGenText5" text="{/HsnCode}"/>
+						<Text id="_IDGenText6" text="{/IGP}"/>
+						<Text id="_IDGenText7" text="{/IGA}"/>
+						<Text id="_IDGenText8" text="{/CGP}"/>
+						<Text id="_IDGenText12" text="{/CGA}"/>
+						<Text id="_IDGenText13" text="{/SGP}"/>
+						<Text id="_IDGenText14" text="{/SGA}"/>
+					</cells>
+				</ColumnListItem>
+			</items>
+		</Table>
+	</Popover>
+</core:FragmentDefinition>

@@ -3,11 +3,19 @@ const axios = require('axios');
 
 module.exports = (srv) => {
 
-    const {PurchaseOrders, ASNListHeader} = srv.entities;
-    
+    const { PurchaseOrders, ASNListHeader, DocumentRowItems } = srv.entities;
+
+    srv.on("stageDocumentRows", async function (req) {
+
+        const parseData = JSON.parse(req.data.data);
+        let sInsertQuery = INSERT.into(DocumentRowItems).entries(parseData);
+        await cds.tx(req).run(sInsertQuery).catch((err) => console.log(err.message));
+    });
+
     srv.on('READ', PurchaseOrders, async (req) => {
-        const {AddressCode, UnitCode} = req._queryOptions
-        const results = await getPurchaseOrders(AddressCode, ASNListHeader, UnitCode);
+        const { AddressCode, UnitCode } = req._queryOptions;
+        const Po_Num = req._queryOptions.Po_Num || "";
+        const results = await getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRowItems, UnitCode);
         if (!results) throw new Error('Unable to fetch PurchaseOrders.');
 
         const expandDocumentRows = req.query.SELECT.columns && req.query.SELECT.columns.some(({ expand, ref }) => expand && ref[0] === "DocumentRows");
@@ -26,7 +34,7 @@ module.exports = (srv) => {
             );
         }
 
-       return results.purchaseOrders;
+        return results.purchaseOrders;
     });
 
     srv.on('getPurchaseMaterialQuantityList', async (req) => {
@@ -35,14 +43,14 @@ module.exports = (srv) => {
         const formattedPoNum = PoNum.replace(/-/g, '/');
         return getPurchaseMaterialQuantityList(UnitCode, formattedPoNum, MaterialCode, PoLineNum)
     });
-/*
-    srv.before('CREATE', 'Files', async(req) => {
-        req.data.url = `/v2/odata/v4/catalog/Files(PNum_PoNum='${req.data.PNum_PoNum}')/content`
-    })
-*/
+    /*
+        srv.before('CREATE', 'Files', async(req) => {
+            req.data.url = `/v2/odata/v4/catalog/Files(PNum_PoNum='${req.data.PNum_PoNum}')/content`
+        })
+    */
     srv.on('GetScheduleNumber', async (req) => {
         const { UnitCode, AddressCode } = req.data;
-    
+
         try {
             const scheduleNumber = await fetchScheduleNumber(UnitCode, AddressCode);
             return scheduleNumber;
@@ -51,10 +59,10 @@ module.exports = (srv) => {
             throw new Error('Failed to retrieve schedule number.');
         }
     });
-    
+
     srv.on('GetScheduleLineNumber', async (req) => {
         const { UnitCode, AddressCode, ScheduleNumber } = req.data;
-    
+
         try {
             const scheduleLineNumber = await fetchScheduleLineNumber(UnitCode, AddressCode, ScheduleNumber);
             return scheduleLineNumber;
@@ -62,7 +70,7 @@ module.exports = (srv) => {
             console.error('Error in GetScheduleLineNumber:', error);
             throw new Error('Failed to retrieve schedule line number.');
         }
-    });    
+    });
 
     srv.on('PostASN', async (req) => {
         const asnDataString = req.data.asnData;
@@ -78,7 +86,7 @@ module.exports = (srv) => {
     });
 };
 
-async function getPurchaseOrders(AddressCode, ASNListHeader, UnitCode) {
+async function getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRowItems, UnitCode) {
     try {
         const response = await axios({
             method: 'get',
@@ -90,7 +98,7 @@ async function getPurchaseOrders(AddressCode, ASNListHeader, UnitCode) {
             data: {}
         });
 
-        const responseASN = await SELECT.from(ASNListHeader).columns('PNum_PoNum')
+        const responseASN = await SELECT.from(ASNListHeader).columns('PNum_PoNum');
 
         if (response.data && response.data.d) {
             const dataArray = JSON.parse(response.data.d);
@@ -111,14 +119,29 @@ async function getPurchaseOrders(AddressCode, ASNListHeader, UnitCode) {
                 };
             });
 
+            let itemRecord = [], filter, supplierRate, rateAggreed;
+            if (Po_Num) {
+                itemRecord = await SELECT.from(DocumentRowItems).where({ PNum_PoNum: Po_Num });
+            }
+
             // Extracting DocumentRows details
             const documentRows = dataArray.flatMap(data =>
                 data.DocumentRows.map(row => {
+
+                    filter = itemRecord.filter(item => item.ItemCode === row.ItemCode);
+                    if (filter.length > 0) {
+                        rateAggreed = filter[0].RateAggreed;
+                        supplierRate = filter[0].SupplierRate;
+                    } else {
+                        rateAggreed = true;
+                        supplierRate = "";
+                    }
+
                     return {
                         LineNum: row.LineNum,
                         ItemCode: row.ItemCode,
                         ItemDesc: row.ItemDesc,
-                        HSNCode:  row.HSNCode,
+                        HSNCode: row.HSNCode,
                         PoQty: parseInt(row.PoQty),
                         DeliveredQty: parseFloat(row.DeliveredQty),
                         BalanceQty: parseFloat(row.BalanceQty),
@@ -131,21 +154,23 @@ async function getPurchaseOrders(AddressCode, ASNListHeader, UnitCode) {
                         PlantCode: data.PlantCode,
                         PlantName: data.PlantName,
                         ConfirmStatus: "",
-                        ASSValue:   row.ASSValue,
-                        Packing       : row.Packing,
-                        Frieght       : row.Frieght,
-                        OtherCharges  : row.OtherCharges,
-                        TCS           : row.TCS,
-                        SGST          : row.SGST,
-                        SGA           : row.SGA,
-                        CGST          : row.CGST,
-                        CGA           : row.CGA,
-                        IGST          : row.IGST,
-                        IGA           : row.IGA,
-                        TOTAL         : row.TOTAL,
-                        TCA           : row.TCA,
-                        LineValue     : row.LineValue,
-                        WeightInKG    : row.WeightInKG,
+                        ASSValue: row.ASSValue,
+                        Packing: row.Packing,
+                        Frieght: row.Frieght,
+                        OtherCharges: row.OtherCharges,
+                        TCS: row.TCS,
+                        SGST: row.SGST,
+                        SGA: row.SGA,
+                        CGST: row.CGST,
+                        CGA: row.CGA,
+                        IGST: row.IGST,
+                        IGA: row.IGA,
+                        TOTAL: row.TOTAL,
+                        TCA: row.TCA,
+                        LineValue: row.LineValue,
+                        WeightInKG: row.WeightInKG,
+                        RateAggreed: rateAggreed,
+                        SupplierRate: supplierRate,
                         PNum_PoNum: data.PoNum  // associating with the current PurchaseOrder
                     };
                 })
@@ -247,4 +272,5 @@ async function fetchScheduleLineNumber(UnitCode, AddressCode, ScheduleNumber) {
         throw error;
     }
 }
+
 

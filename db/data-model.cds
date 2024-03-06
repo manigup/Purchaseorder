@@ -1,9 +1,6 @@
 namespace my.bookshop;
 
-using {
-  cuid,
-  managed
-} from '@sap/cds/common';
+using {managed} from '@sap/cds/common';
 
 entity PurchaseOrders {
   key PoNum          : String;
@@ -26,9 +23,8 @@ entity PurchaseOrders {
 }
 
 entity DocumentRowItems {
-  key UUID         : UUID;
       LineNum      : String;
-      ItemCode     : String;
+  key ItemCode     : String;
       ItemDesc     : String;
       HSNCode      : String;
       PoQty        : Integer;
@@ -53,7 +49,9 @@ entity DocumentRowItems {
       TCA          : String;
       LineValue    : String;
       WeightInKG   : String;
-      PNum         : Association to PurchaseOrders;
+  key PNum         : Association to PurchaseOrders;
+      RateAggreed  : Boolean default true;
+      SupplierRate : Integer;
 }
 
 entity ASNList {
@@ -116,6 +114,9 @@ entity ASNListHeader {
       PlantName          : String;
       PlantCode          : String;
       VendorCode         : String;
+      TotalInvNetAmnt    : Integer;
+      TotalGstAmnt       : Integer;
+      RateStatus         : String;
 }
 
 entity Files : managed {
