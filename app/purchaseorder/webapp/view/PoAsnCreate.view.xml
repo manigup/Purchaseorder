@@ -289,10 +289,14 @@
                         >
                             <columns>
                                 <Column
+                                    id="_IDGenColumn289"
+                                    width="5rem"
+                                />
+                                <Column
                                     id="_IDGenColumn210"
                                     minScreenWidth="Tablet"
                                     demandPopin="true"
-                                    width="6rem"
+                                    width="4rem"
                                     hAlign="Center"
                                 >
                                     <Label
@@ -369,6 +373,34 @@
                                         id="_IDGenLabel36"
                                         design="Bold"
                                         text="Rate ({asnModel>/DocumentRows/results/0/Currency})"
+                                        wrapping="true"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn212"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                    width="5rem"
+                                    hAlign="Center"
+                                >
+                                    <Label
+                                        id="_IDGenLabel312"
+                                        design="Bold"
+                                        text="Rate Agreed"
+                                        wrapping="true"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn222"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                    width="10rem"
+                                    hAlign="Center"
+                                >
+                                    <Label
+                                        id="_IDGenLabel322"
+                                        design="Bold"
+                                        text="Rate as per Supplier"
                                         wrapping="true"
                                     />
                                 </Column>
@@ -596,38 +628,16 @@
                                         wrapping="true"
                                     />
                                 </Column>
-                                <Column
-                                    id="_IDGenColumn212"
-                                    minScreenWidth="Tablet"
-                                    demandPopin="true"
-                                    width="5rem"
-                                    hAlign="Center"
-                                >
-                                    <Label
-                                        id="_IDGenLabel312"
-                                        design="Bold"
-                                        text="Rate Aggreed"
-                                        wrapping="true"
-                                    />
-                                </Column>
-                                <Column
-                                    id="_IDGenColumn222"
-                                    minScreenWidth="Tablet"
-                                    demandPopin="true"
-                                    width="10rem"
-                                    hAlign="Center"
-                                >
-                                    <Label
-                                        id="_IDGenLabel322"
-                                        design="Bold"
-                                        text="Rate as per Supplier"
-                                        wrapping="true"
-                                    />
-                                </Column>
                             </columns>
                             <items>
                                 <ColumnListItem id="_IDGenColumnListItem1">
                                     <cells>
+                                        <ObjectStatus
+                                            id="_IDGenObjectStatus1"
+                                            text="{= ${asnModel>SupplierRate} > 0 ? 'Rate Mismatch' : 'Rate Matched'}"
+                                            icon="{= ${asnModel>SupplierRate} > 0 ? 'sap-icon://alert' : 'sap-icon://sys-enter-2'}"
+                                            state="{= ${asnModel>SupplierRate} > 0 ? 'Warning' : 'Success'}"
+                                        />
                                         <Text
                                             id="_IDGenText1"
                                             text="{asnModel>LineNum}"
@@ -651,6 +661,17 @@
                                         <Text
                                             id="_IDGenText14"
                                             text="{path:'asnModel>UnitPrice',formatter:'sp.fiori.purchaseorder.controller.formatter.formatAmount'}"
+                                        />
+                                        <CheckBox
+                                            id="_IDGenCheckBox1"
+                                            selected="{asnModel>RateAgreed}"
+                                            select="onRateAgreedChange"
+                                        />
+                                        <Input
+                                            id="_IDGenInput111"
+                                            type="Number"
+                                            value="{asnModel>SupplierRate}"
+                                            enabled="{= ${asnModel>RateAgreed} === false}"
                                         />
                                         <Text
                                             id="_IDGenText21"
@@ -715,16 +736,6 @@
                                         <Text
                                             id="wgtId"
                                             text="{asnModel>WeightInKG}"
-                                        />
-                                        <CheckBox
-                                            id="_IDGenCheckBox1"
-                                            selected="{asnModel>RateAggreed}"
-                                        />
-                                        <Input
-                                            id="_IDGenInput111"
-                                            type="Number"
-                                            value="{asnModel>SupplierRate}"
-                                            enabled="{= ${asnModel>RateAggreed} === false}"
                                         />
                                     </cells>
                                 </ColumnListItem>

@@ -119,7 +119,7 @@ async function getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRow
                 };
             });
 
-            let itemRecord = [], filter, supplierRate, rateAggreed;
+            let itemRecord = [], filter, supplierRate, rateAgreed;
             if (Po_Num) {
                 itemRecord = await SELECT.from(DocumentRowItems).where({ PNum_PoNum: Po_Num });
             }
@@ -130,10 +130,10 @@ async function getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRow
 
                     filter = itemRecord.filter(item => item.ItemCode === row.ItemCode);
                     if (filter.length > 0) {
-                        rateAggreed = filter[0].RateAggreed;
+                        rateAgreed = filter[0].RateAgreed;
                         supplierRate = filter[0].SupplierRate;
                     } else {
-                        rateAggreed = true;
+                        rateAgreed = true;
                         supplierRate = "";
                     }
 
@@ -169,7 +169,7 @@ async function getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRow
                         TCA: row.TCA,
                         LineValue: row.LineValue,
                         WeightInKG: row.WeightInKG,
-                        RateAggreed: rateAggreed,
+                        RateAgreed: rateAgreed,
                         SupplierRate: supplierRate,
                         PNum_PoNum: data.PoNum  // associating with the current PurchaseOrder
                     };

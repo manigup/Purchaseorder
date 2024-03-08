@@ -34,11 +34,6 @@ sap.ui.define([
 			this.popOverModel = new sap.ui.model.json.JSONModel();
 			//this.initializeScheduleNumber();
 			this.byId("uploadSet").attachEvent("openPressed", this.onOpenPressed, this);
-
-			this.byId("rateOk").setSelected(true);
-
-			this.modulePath = jQuery.sap.getModulePath("sp/fiori/purchaseorder");
-			this.modulePath = this.modulePath === "." ? "" : this.modulePath;
 		},
 		handleRouteMatched: function (event) {
 			var oModel = this.getView().getModel();
@@ -46,6 +41,15 @@ sap.ui.define([
 			oUploadSet.removeAllItems();
 
 			if (event.getParameter("name") === "PoAsnCreate") {
+
+				this.byId("rateOk").setSelected(true);
+
+				this.modulePath = jQuery.sap.getModulePath("sp/fiori/purchaseorder");
+				this.modulePath = this.modulePath === "." ? "" : this.modulePath;
+
+				this.byId("totalInvNetAmnt").setValueState("None");
+				this.byId("totalGstAmnt").setValueState("None");
+
 				var that = this;
 				var datePicker = this.getView().byId("DP1");
 
@@ -90,7 +94,6 @@ sap.ui.define([
 					success: function (oData) {
 						var filteredPurchaseOrder = oData.results.find(po => po.PoNum === that.Po_Num);
 						if (filteredPurchaseOrder) {
-							// filteredPurchaseOrder.DocumentRows.results.forEach(item => item.RateAggreed = true);
 							that.asnModel.setData(filteredPurchaseOrder);
 							that.asnModel.refresh(true);
 							var asnModelData = that.getView().getModel("asnModel").getData();
@@ -213,7 +216,7 @@ sap.ui.define([
 				"VendorCode": this.data.VendorCode,
 				"TotalInvNetAmnt": this.data.TotalInvNetAmnt,
 				"TotalGstAmnt": this.data.TotalGstAmnt,
-				"RateStatus": this.data.DocumentRows.results.every(item => item.RateAggreed === true) ? "Rate Matched" : "Rate Un-Matched"
+				"RateStatus": this.data.DocumentRows.results.every(item => item.RateAgreed === true) ? "Rate Matched" : "Rate Un-Matched"
 			};
 
 			// var ASNItemData = [];
@@ -389,8 +392,16 @@ sap.ui.define([
 		onRateOkChange: function (evt) {
 			const state = evt.getParameter("selected");
 			this.asnModel.getData().DocumentRows.results.forEach(item => {
-				item.RateAggreed = state;
+				item.RateAgreed = state;
 			});
+			this.asnModel.refresh(true);
+		},
+
+		onRateAgreedChange: function (evt) {
+			const state = evt.getParameter("selected");
+			if (state) {
+				evt.getSource().getBindingContext("asnModel").getObject().SupplierRate = 0;
+			}
 			this.asnModel.refresh(true);
 		},
 
@@ -406,13 +417,13 @@ sap.ui.define([
 			if (totalInvNetAmnt === parseFloat(totalInvNetAmntCtr.getValue())) {
 				totalInvNetAmntCtr.setValueState("Success");
 			} else {
-				totalInvNetAmntCtr.setValueState("Error");
+				totalInvNetAmntCtr.setValueState("Warning").setValueStateText("Amount Mismatch");
 			}
 
 			if (totalGstAmnt === parseFloat(totalGstAmntCtr.getValue())) {
 				totalGstAmntCtr.setValueState("Success");
 			} else {
-				totalGstAmntCtr.setValueState("Error");
+				totalGstAmntCtr.setValueState("Warning").setValueStateText("Amount Mismatch");
 			}
 		}
 	});

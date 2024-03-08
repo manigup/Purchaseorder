@@ -50,7 +50,7 @@ entity DocumentRowItems {
       LineValue    : String;
       WeightInKG   : String;
   key PNum         : Association to PurchaseOrders;
-      RateAggreed  : Boolean default true;
+      RateAgreed   : Boolean default true;
       SupplierRate : Integer;
 }
 
