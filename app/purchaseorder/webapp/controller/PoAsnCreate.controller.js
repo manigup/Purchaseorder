@@ -302,12 +302,16 @@ sap.ui.define([
 		},
 		_createEntity: function (item, poNum) {
 			var oModel = this.getView().getModel();
+			this.hardcodedURL = "";
+				if (window.location.href.includes("site")) {
+					this.hardcodedURL = jQuery.sap.getModulePath("sp.fiori.purchaseorder");
+				}
 			var oData = {
 				PNum_PoNum: poNum,
 				mediaType: item.getMediaType(),
 				fileName: item.getFileName(),
 				size: item.getFileObject().size,
-				url: "https://impautosuppdev.launchpad.cfapps.ap10.hana.ondemand.com/547b58c0-9667-470f-a767-c8524482b3ed.PO.spfioripurchaseorder-0.0.1" + `/po/odata/v4/catalog/Files(PNum_PoNum='${poNum}')/content`
+				url: this.hardcodedURL + `/po/odata/v4/catalog/Files(PNum_PoNum='${poNum}')/content`
 				//url: this.getView().getModel().sServiceUrl + `/Files(PNum_PoNum='${poNum}')/content`
 
 			};
@@ -328,7 +332,11 @@ sap.ui.define([
 
 		_uploadContent: function (item, poNum) {
 			//var encodedPoNum = encodeURIComponent(poNum);
-			var url = "https://impautosuppdev.launchpad.cfapps.ap10.hana.ondemand.com/547b58c0-9667-470f-a767-c8524482b3ed.PO.spfioripurchaseorder-0.0.1" + `/po/odata/v4/catalog/Files(PNum_PoNum='${poNum}')/content`
+			this.hardcodedURL = "";
+				if (window.location.href.includes("site")) {
+					this.hardcodedURL = jQuery.sap.getModulePath("sp.fiori.purchaseorder");
+				}
+			var url = this.hardcodedURL + `/po/odata/v4/catalog/Files(PNum_PoNum='${poNum}')/content`
 			item.setUploadUrl(url);
 			var oUploadSet = this.byId("uploadSet");
 			oUploadSet.setHttpRequestMethod("PUT")
