@@ -1,4 +1,4 @@
-namespace my.bookshop;
+namespace my.purchaseorder;
 
 using {managed} from '@sap/cds/common';
 

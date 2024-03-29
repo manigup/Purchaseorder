@@ -1,4 +1,4 @@
-using my.bookshop as my from '../db/data-model';
+using my.purchaseorder as my from '../db/data-model';
 
 type PurchaseMaterialQuantityInfo {
     RowNum       : Integer;
