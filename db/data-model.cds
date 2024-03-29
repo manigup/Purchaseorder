@@ -92,6 +92,7 @@ entity ASNList {
       PoQty         : Integer;
       VendorCode    : String;
       VendorName    : String;
+      MatExpDate    : String;
 }
 
 entity ASNListHeader {

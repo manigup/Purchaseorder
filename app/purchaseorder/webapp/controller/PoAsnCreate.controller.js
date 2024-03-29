@@ -42,7 +42,7 @@ sap.ui.define([
 
 			if (event.getParameter("name") === "PoAsnCreate") {
 
-				this.byId("rateOk").setSelected(true);
+				//this.byId("rateOk").setSelected(true);
 
 				this.modulePath = jQuery.sap.getModulePath("sp/fiori/purchaseorder");
 				this.modulePath = this.modulePath === "." ? "" : this.modulePath;
@@ -215,8 +215,8 @@ sap.ui.define([
 				"PlantCode": this.data.PlantCode,
 				"VendorCode": this.data.VendorCode,
 				"TotalInvNetAmnt": this.data.TotalInvNetAmnt,
-				"TotalGstAmnt": this.data.TotalGstAmnt,
-				"RateStatus": this.data.DocumentRows.results.every(item => item.RateAgreed === true) ? "Rate Matched" : "Rate Un-Matched"
+				"TotalGstAmnt": this.data.TotalGstAmnt
+				//"RateStatus": this.data.DocumentRows.results.every(item => item.RateAgreed === true) ? "Rate Matched" : "Rate Un-Matched"
 			};
 
 			// var ASNItemData = [];

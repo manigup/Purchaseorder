@@ -51,6 +51,12 @@
                 />
             </attributes>
         </ObjectHeader>
+        <MessageStrip
+            id="_IDGenMessageStrip1"
+            type="Information"
+            class="sapUiTinyMargin"
+            text="Please enter manufacturing date under Remarks column for perishable materials."
+        />
         <f:SimpleForm
             id="AsnFormId"
             editable="true"
@@ -250,6 +256,7 @@
                 <Label
                     id="_IDGenLabel30"
                     text="Manf. Month"
+                     visible="false"
                 />
                 <DatePicker
                     id="_IDGenDatePicker3"
@@ -258,15 +265,16 @@
                     valueFormat="yyyyMMdd"
                     displayFormat="long"
                     enabled="true"
+                     visible="false"
                 />
-                <Label
+                <!-- <Label
                     id="_IDGenLabel313"
                     text="Rate ok for all items"
                 />
                 <CheckBox
                     id="rateOk"
                     select="onRateOkChange"
-                />
+                /> -->
             </f:content>
         </f:SimpleForm>
         <IconTabBar id="_IDGenIconTabBar1">
@@ -288,10 +296,10 @@
                             items="{asnModel>/DocumentRows/results}"
                         >
                             <columns>
-                                <Column
+                                <!-- <Column
                                     id="_IDGenColumn289"
                                     width="5rem"
-                                />
+                                /> -->
                                 <Column
                                     id="_IDGenColumn210"
                                     minScreenWidth="Tablet"
@@ -376,7 +384,7 @@
                                         wrapping="true"
                                     />
                                 </Column>
-                                <Column
+                                <!-- <Column
                                     id="_IDGenColumn212"
                                     minScreenWidth="Tablet"
                                     demandPopin="true"
@@ -403,7 +411,7 @@
                                         text="Rate as per Supplier"
                                         wrapping="true"
                                     />
-                                </Column>
+                                </Column> -->
                                 <Column
                                     id="_IDGenColumn211"
                                     minScreenWidth="Tablet"
@@ -628,16 +636,30 @@
                                         wrapping="true"
                                     />
                                 </Column>
+                                <Column
+                                    id="_IDGenColumn222"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                    width="10rem"
+                                    hAlign="Center"
+                                >
+                                    <Label
+                                        id="_IDGenLabel322"
+                                        design="Bold"
+                                        text="Remarks"
+                                        wrapping="true"
+                                    />
+                                </Column>
                             </columns>
                             <items>
                                 <ColumnListItem id="_IDGenColumnListItem1">
                                     <cells>
-                                        <ObjectStatus
+                                        <!-- <ObjectStatus
                                             id="_IDGenObjectStatus1"
                                             text="{= ${asnModel>SupplierRate} > 0 ? 'Rate Mismatch' : 'Rate Matched'}"
                                             icon="{= ${asnModel>SupplierRate} > 0 ? 'sap-icon://alert' : 'sap-icon://sys-enter-2'}"
                                             state="{= ${asnModel>SupplierRate} > 0 ? 'Warning' : 'Success'}"
-                                        />
+                                        /> -->
                                         <Text
                                             id="_IDGenText1"
                                             text="{asnModel>LineNum}"
@@ -662,7 +684,7 @@
                                             id="_IDGenText14"
                                             text="{path:'asnModel>UnitPrice',formatter:'sp.fiori.purchaseorder.controller.formatter.formatAmount'}"
                                         />
-                                        <CheckBox
+                                        <!-- <CheckBox
                                             id="_IDGenCheckBox1"
                                             selected="{asnModel>RateAgreed}"
                                             select="onRateAgreedChange"
@@ -672,7 +694,7 @@
                                             type="Number"
                                             value="{asnModel>SupplierRate}"
                                             enabled="{= ${asnModel>RateAgreed} === false}"
-                                        />
+                                        /> -->
                                         <Text
                                             id="_IDGenText21"
                                             text="{asnModel>PoQty}"
@@ -736,6 +758,11 @@
                                         <Text
                                             id="wgtId"
                                             text="{asnModel>WeightInKG}"
+                                        />
+                                        <DatePicker
+                                            id="_IDGenDatePicker4"
+                                            value="{asnModel>MatExpDate}"
+                                            valueFormat="yyyyMMdd"
                                         />
                                     </cells>
                                 </ColumnListItem>
