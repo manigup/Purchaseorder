@@ -26,7 +26,7 @@ sap.ui.define([
 			}
 			var that = this;
 			var unitCode = sessionStorage.getItem("unitCode") || "P01";
-			this.AddressCodePO = sessionStorage.getItem("AddressCodePO") || 'ATE-01-01';
+			this.AddressCodePO = sessionStorage.getItem("AddressCodePO") || 'JSE-01-01';
 			if (that.flagModel.getData().confirmPressFlag) {
 				var selectedList = this.getView().byId("masterListId").getSelectedItem();
 				this.getView().byId("searchFieldId").setValue("");
