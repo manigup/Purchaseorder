@@ -16,7 +16,7 @@ module.exports = (srv) => {
         const { AddressCode, UnitCode } = req._queryOptions;
         const Po_Num = req._queryOptions.Po_Num || "";
         const results = await getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRowItems, UnitCode);
-        if (!results) throw new Error('Unable to fetch PurchaseOrders.');
+        if (results.error) req.reject(500, results.error);
 
         const expandDocumentRows = req.query.SELECT.columns && req.query.SELECT.columns.some(({ expand, ref }) => expand && ref[0] === "DocumentRows");
         if (expandDocumentRows) {
@@ -180,6 +180,10 @@ async function getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRow
                 purchaseOrders: purchaseOrders,
                 documentRows: documentRows
             };
+        }else {
+            return {
+                error: response.data.ErrorDescription
+            }
         }
     } catch (error) {
         console.error('Error in API call:', error);
