@@ -418,7 +418,7 @@ sap.ui.define([
 			this.byId("AsnCreateTable").getItems().forEach(item => {
 				obj = item.getBindingContext("asnModel").getObject();
 				totalInvNetAmnt += parseFloat(obj.PoQty) * parseFloat(obj.UnitPrice);
-				totalGstAmnt += parseFloat(obj.IGST) + parseFloat(obj.CGST) + parseFloat(obj.SGST);
+				totalGstAmnt += ((parseFloat(obj.IGST) + parseFloat(obj.CGST) + parseFloat(obj.SGST)) * parseFloat(obj.PoQty) * parseFloat(obj.UnitPrice)) / 100;
 			});
 			const totalInvNetAmntCtr = this.byId("totalInvNetAmnt"),
 				totalGstAmntCtr = this.byId("totalGstAmnt")
