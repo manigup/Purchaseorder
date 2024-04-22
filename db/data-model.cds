@@ -116,7 +116,11 @@ entity ASNListHeader {
       PlantCode          : String;
       VendorCode         : String;
       TotalInvNetAmnt    : Integer;
-      TotalGstAmnt       : Integer;
+      TotalCGstAmnt      : Integer;
+      TotalSGstAmnt      : Integer;
+      TotalIGstAmnt      : Integer;
+      TotalAmnt          : Integer;
+      TransporterID      : String;
       RateStatus         : String;
 }
 

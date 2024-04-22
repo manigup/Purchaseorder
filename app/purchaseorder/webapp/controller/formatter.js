@@ -124,5 +124,15 @@ sp.fiori.purchaseorder.controller.formatter = {
 			return true;
 		}
 		return false;
-	}
+	},
+	addStatColor: function (status) {
+        if(status === "Invoice Submitted") {
+			this.addStyleClass("statSuccess");
+			this.removeStyleClass("statWarning");
+		}else{
+			this.addStyleClass("statWarning");
+			this.removeStyleClass("statSuccess");
+		}
+        return status;
+    },
 };

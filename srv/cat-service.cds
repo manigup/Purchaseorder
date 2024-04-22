@@ -19,6 +19,9 @@ type ScheduleLineNumberType {
     Schedulelinenumber : String;
 };
 
+type TransType {
+    TransCode: String;
+};
 
 service CatalogService {
     entity PurchaseOrders   as projection on my.PurchaseOrders;
@@ -29,6 +32,7 @@ service CatalogService {
     function getPurchaseMaterialQuantityList(UnitCode : String, PoNum : String, MaterialCode : String, PoLineNum : String) returns array of PurchaseMaterialQuantityInfo;
     function GetScheduleNumber(UnitCode : String, AddressCode : String)                                                    returns array of ScheduleNumberType;
     function GetScheduleLineNumber(UnitCode : String, AddressCode : String, ScheduleNumber : String)                       returns array of ScheduleLineNumberType;
+    function GetTransportModeList() returns array of TransType;
     action   PostASN(asnData : String)                                                                                     returns String;
     action   stageDocumentRows(data : String)                                                                           returns String;
 }

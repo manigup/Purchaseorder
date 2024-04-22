@@ -28,10 +28,16 @@ module.exports = (srv) => {
         // Checking for search parameter
         const searchVal = req._queryOptions && req._queryOptions.$search;
         if (searchVal) {
-            const cleanedSearchVal = searchVal.trim().replace(/"/g, '');
+            let cleanedSearchVal = searchVal.trim().replace(/"/g, '');
+            if(cleanedSearchVal === 'Invoice Submitted' || cleanedSearchVal === 'Invoice Submission Pending'){
+                results.purchaseOrders = results.purchaseOrders.filter(po =>
+                    (po.HasAttachments === cleanedSearchVal)
+                );
+            }else{
             results.purchaseOrders = results.purchaseOrders.filter(po =>
                 po.PoNum.includes(cleanedSearchVal)
             );
+            }
         }
 
         return results.purchaseOrders;
@@ -70,6 +76,11 @@ module.exports = (srv) => {
             console.error('Error in GetScheduleLineNumber:', error);
             throw new Error('Failed to retrieve schedule line number.');
         }
+    });
+
+    //GetTransportModeListAPI
+    srv.on('GetTransportModeList', async (req) => {
+        return GetTransportModeList()
     });
 
     srv.on('PostASN', async (req) => {
@@ -119,23 +130,23 @@ async function getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRow
                 };
             });
 
-            let itemRecord = [], filter, supplierRate, rateAgreed;
-            if (Po_Num) {
-                itemRecord = await SELECT.from(DocumentRowItems).where({ PNum_PoNum: Po_Num });
-            }
+            // let itemRecord = [], filter, supplierRate, rateAgreed;
+            // if (Po_Num) {
+            //     itemRecord = await SELECT.from(DocumentRowItems).where({ PNum_PoNum: Po_Num });
+            // }
 
             // Extracting DocumentRows details
             const documentRows = dataArray.flatMap(data =>
                 data.DocumentRows.map(row => {
 
-                    filter = itemRecord.filter(item => item.ItemCode === row.ItemCode);
-                    if (filter.length > 0) {
-                        rateAgreed = filter[0].RateAgreed;
-                        supplierRate = filter[0].SupplierRate;
-                    } else {
-                        rateAgreed = true;
-                        supplierRate = "";
-                    }
+                    // filter = itemRecord.filter(item => item.ItemCode === row.ItemCode);
+                    // if (filter.length > 0) {
+                    //     rateAgreed = filter[0].RateAgreed;
+                    //     supplierRate = filter[0].SupplierRate;
+                    // } else {
+                    //     rateAgreed = true;
+                    //     supplierRate = "";
+                    // }
 
                     return {
                         LineNum: row.LineNum,
@@ -169,8 +180,8 @@ async function getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRow
                         TCA: row.TCA,
                         LineValue: row.LineValue,
                         WeightInKG: row.WeightInKG,
-                        RateAgreed: rateAgreed,
-                        SupplierRate: supplierRate,
+                        RateAgreed: true,
+                        SupplierRate: 0,
                         PNum_PoNum: data.PoNum  // associating with the current PurchaseOrder
                     };
                 })
@@ -188,6 +199,29 @@ async function getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRow
     } catch (error) {
         console.error('Error in API call:', error);
         throw error;
+    }
+}
+
+async function GetTransportModeList() {
+    try {
+        const response = await axios({
+            method: 'get',
+            url: `https://imperialauto.co:84/IAIAPI.asmx/GetTransportModeList?RequestBy='MA017'`,
+            headers: {
+                'Authorization': 'Bearer ibeMppBlZOk=',
+                'Content-Type': 'application/json'
+            },
+            data: {}
+        });
+
+        const transportData = JSON.parse(response.data.d);
+        return transportData.map(item => ({
+            TransCode: item.TransportMode
+        }));
+
+    } catch (error) {
+        console.error("Error fetching transport mode data:", error);
+        //throw new Error("Failed to fetch account data");
     }
 }
 

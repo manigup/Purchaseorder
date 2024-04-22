@@ -44,16 +44,35 @@
                                 id="_IDGenObjectAttribute2"
                                 text="{PlantName}"
                             />
-                        </attributes>
-                        <firstStatus>
-                            <ObjectStatus
-                                id="_IDGenObjectStatus1"
+                            <ObjectAttribute
+                                id="_IDGenObjectAttribute3"
                                 text="{path:'PoDate', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"
                             />
-                        </firstStatus>
+                            <ObjectAttribute
+                                id="_IDGenObjectAttribute4"
+                                text="{path:'HasAttachments',formatter:'sp.fiori.purchaseorder.controller.formatter.addStatColor'}"
+                                />
+                        </attributes>
+                        <!-- <firstStatus>
+                            <ObjectStatus
+                                id="_IDGenObjectStatus4"
+                                text="{HasAttachments}"
+                                
+                                state="{=${HasAttachments} === 'Invoice Submitted' ? 'Success' : 'Warning' }"
+                            />
+                        </firstStatus> -->
                     </ObjectListItem>
                 </items>
             </List>
         </content>
+        <footer>
+			<Bar id="_IDGenBar1">
+				<contentLeft>
+                    <Button id="statFilterId" visible="true" text="Status" press="onStatusValueHelp" type="Emphasized"/>  
+					<Button id="platFilterId" visible="true" text="Plant" press="onPlantValueHelp" type="Emphasized"/>
+					<Label id="plantFilterId" design="Bold"/>
+					</contentLeft>
+			</Bar>
+		</footer>
     </Page>
 </mvc:View>

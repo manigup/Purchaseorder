@@ -40,10 +40,10 @@ sap.ui.define([
 
 			this.getView().addStyleClass("sapUiSizeCompact");
 
-			this.getView().byId("ObjectId").onAfterRendering = function () {
-				sap.m.ObjectHeader.prototype.onAfterRendering.apply(this, arguments);
-				this.$().find('.sapMOHTitleDiv').find('.sapMText').css('color', "#af2323");
-			};
+			// this.getView().byId("ObjectId").onAfterRendering = function () {
+			// 	sap.m.ObjectHeader.prototype.onAfterRendering.apply(this, arguments);
+			// 	this.$().find('.sapMOHTitleDiv').find('.sapMText').css('color', "#af2323");
+			// };
 		},
 
 		handleRouteMatched: function (event) {

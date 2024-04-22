@@ -62,8 +62,8 @@
             editable="true"
             layout="ColumnLayout"
             columnsM="2"
-            columnsL="2"
-            columnsXL="4"
+            columnsL="3"
+            columnsXL="3"
         >
             <f:content>
                 <Label
@@ -72,8 +72,8 @@
                 />
                 <Text
                     id="AddressCodeid"
-                    text="{asnModel>/VendorCode}"
-                    width="185px"
+                    text="{asnModel>/VendorCode}{asnModel>/VendorName}"
+                    width="20rem"
                 />
                 <Label
                     id="_IDGenLabel1"
@@ -84,9 +84,8 @@
                     id="_IDGenInput1"
                     type="Text"
                     value="{asnModel>/BillNumber}"
-                    width="185px"
+                    width="20rem"
                     maxLength="16"
-                    change="onInvNoChange"
                 />
                 <Label
                     id="_IDGenLabel2"
@@ -96,34 +95,96 @@
                 <DatePicker
                     id="DP1"
                     value="{asnModel>/BillDate}"
-                    width="185px"
+                    width="20rem"
                     valueFormat="yyyyMMdd"
                     displayFormat="long"
-                    enabled="false"
                 />
                 <Label
-                    id="_IDGenLabel220"
-                    text="Total Invoice Net Amount"
+                    id="_IDGenLabel26"
+                    text="EWAY Bill No"
+                />
+                <Input
+                    type="Number"
+                    id="ewayBillNumberId"
+                    value="{path:'asnModel>/EwayBillNumber',type:'sap.ui.model.type.String',constraints:{minLength:12,maxLength:12}}"
+                    width="20rem"
+                />
+                <Label
+                    id="_IDGenLabel27"
+                    text="EWAY Bill Date"
+                />
+                <DatePicker
+                    id="_IDGenDatePicker2"
+                    value="{asnModel>/EwayBillDate}"
+                    width="20rem"
+                    valueFormat="yyyyMMdd"
+                    displayFormat="long"
+                    enabled="true"
+                />
+                <Label
+                    id="_IDGenLabel221"
+                    text="Ass. value"
                     required="true"
                 />
                 <Input
                     id="totalInvNetAmnt"
                     value="{asnModel>/TotalInvNetAmnt}"
-                    width="185px"
+                    width="20rem"
                     type="Number"
-                    change="onTotalChange"
+                    change="onAmtChange"
+                    enabled="false"
                 />
                 <Label
                     id="_IDGenLabel310"
-                    text="Total GST Amount"
+                    text="Total CGST Amount"
                     required="true"
                 />
                 <Input
-                    id="totalGstAmnt"
+                    id="totalCGstAmnt"
                     type="Number"
-                    value="{asnModel>/TotalGstAmnt}"
-                    width="185px"
-                    change="onTotalChange"
+                    value="{asnModel>/TotalCGstAmnt}"
+                    width="20rem"
+                    change="onAmtChange"
+                    enabled="false"
+                />
+                <Label
+                    id="_IDGenLabel38"
+                    text="Total SGST Amount"
+                    required="true"
+                />
+                <Input
+                    id="totalSGstAmnt"
+                    type="Number"
+                    value="{asnModel>/TotalSGstAmnt}"
+                    width="20rem"
+                    change="onAmtChange"
+                    enabled="false"
+                />
+                <Label
+                    id="_IDGenLabel39"
+                    text="Total IGST Amount"
+                    required="true"
+                />
+                <Input
+                    id="totalIGstAmnt"
+                    type="Number"
+                    value="{asnModel>/TotalIGstAmnt}"
+                    width="20rem"
+                    change="onAmtChange"
+                    enabled="false"
+                />
+                <Label
+                    id="_IDGenLabel40"
+                    text="Total Amount"
+                    required="true"
+                />
+                <Input
+                    id="totalAmnt"
+                    type="Number"
+                    value="{asnModel>/TotalAmnt}"
+                    width="20rem"
+                    change="onAmtChange"
+                    enabled="false"
                 />
                 <!-- <Label
                     id="_IDGenLabel220"
@@ -134,7 +195,7 @@
                     id="_IDGenInput10"
                     type="Text"
                     value="{asnModel>/DocketNumber}"
-                    width="185px"
+                    width="20rem"
                     visible="false"
                 />
                 <Label
@@ -145,7 +206,7 @@
                 <DatePicker
                     id="_IDGenDatePicker1"
                     value="{asnModel>/GRDate}"
-                    width="185px"
+                    width="20rem"
                     valueFormat="yyyyMMdd"
                     displayFormat="long"
                     enabled="true"
@@ -159,39 +220,32 @@
                     id="_IDGenInput11"
                     type="Text"
                     value="{asnModel>/TransportName}"
-                    width="185px"
+                    width="20rem"
                 />
                 <Label
                     id="_IDGenLabel250"
                     text="Transport Mode"
                 />
-                <Input
-                    id="_IDGenInput12"
-                    type="Text"
-                    value="{asnModel>/TransportMode}"
-                    width="185px"
-                />
+                <ComboBox
+                    id="transId"
+                    items="{transport>/items}"
+                    selectedKey="{asnModel>/TransportMode}"
+                    width="20rem"
+                >
+                    <core:Item
+                        key="{transport>TransCode}"
+                        text="{transport>TransCode}"
+                    />
+                </ComboBox>
                 <Label
-                    id="_IDGenLabel26"
-                    text="EWAY Bill No"
+                    id="_IDGenLabel37"
+                    text="Transporter ID"
                 />
                 <Input
-                    id="_IDGenInput13"
+                    id="_IDGenInput28"
                     type="Text"
-                    value="{asnModel>/EwayBillNumber}"
-                    width="185px"
-                />
-                <Label
-                    id="_IDGenLabel27"
-                    text="EWAY Bill Date"
-                />
-                <DatePicker
-                    id="_IDGenDatePicker2"
-                    value="{asnModel>/EwayBillDate}"
-                    width="185px"
-                    valueFormat="yyyyMMdd"
-                    displayFormat="long"
-                    enabled="true"
+                    value="{asnModel>/TransporterID}"
+                    width="20rem"
                 />
                 <Label
                     id="_IDGenLabel280"
@@ -202,7 +256,7 @@
                     id="_IDGenInput14"
                     type="Text"
                     value="{asnModel>/MillNumber}"
-                    width="185px"
+                    width="20rem"
                     visible="false"
                 />
                 <Label
@@ -214,7 +268,7 @@
                     id="_IDGenInput15"
                     type="Text"
                     value="{asnModel>/MillName}"
-                    width="185px"
+                    width="20rem"
                     visible="false"
                 />
                 <Label
@@ -226,7 +280,7 @@
                     id="_IDGenInput4"
                     type="Text"
                     value="{asnModel>/PDIRNumber}"
-                    width="185px"
+                    width="20rem"
                     visible="false"
                 />
                 <Label
@@ -238,7 +292,7 @@
                     id="_IDGenInput8"
                     type="Text"
                     value="{asnModel>/HeatNumber}"
-                    width="185px"
+                    width="20rem"
                     visible="false"
                 />
                 <Label
@@ -250,7 +304,7 @@
                     id="_IDGenInput9"
                     type="Text"
                     value="{asnModel>/BatchNumber}"
-                    width="185px"
+                    width="20rem"
                     visible="false"
                 />
                 <Label
@@ -261,7 +315,7 @@
                 <DatePicker
                     id="_IDGenDatePicker3"
                     value="{asnModel>/ManufacturingMonth}"
-                    width="185px"
+                    width="20rem"
                     valueFormat="yyyyMMdd"
                     displayFormat="long"
                     enabled="true"
@@ -288,12 +342,13 @@
                         horizontal="true"
                         vertical="true"
                     >
-                        <!-- mode="MultiSelect"
-                            rememberSelections="true"
-                            selectionChange="onRowSelect" -->
+                        
                         <Table
                             id="AsnCreateTable"
                             items="{asnModel>/DocumentRows/results}"
+                            mode="MultiSelect"
+                            rememberSelections="true"
+                            selectionChange="onRowSelect"
                         >
                             <columns>
                                 <!-- <Column

@@ -1,1 +1,6 @@
-/* Enter your custom styles here */
+.statSuccess  {
+    color: rgb(73, 183, 18) !important;
+}
+.statWarning {
+    color: red !important;
+}
