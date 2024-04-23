@@ -86,14 +86,15 @@ sap.ui.define([
 		},
 
 		onListItemPress: function (oEvent) {
-
+			var unitCode = sessionStorage.getItem("unitCode") || "P01";
 			if (this.getView().byId("masterListId").getMode() == "MultiSelect") {
 				return;
 			}
 			var PoNo = oEvent.getParameter("listItem").getProperty("title");
 			var PoNum = PoNo.replace(/\//g, '-');
 			this.router.navTo("PoDetail", {
-				"Po_No": PoNum
+				"Po_No": PoNum,
+				"UnitCode": unitCode
 			});
 		},
 
