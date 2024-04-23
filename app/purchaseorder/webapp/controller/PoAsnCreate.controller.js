@@ -80,7 +80,7 @@ sap.ui.define([
 				//this.Po_Num = "19/01P/03/00001";
 				this.Amount = event.getParameter("arguments").Amount;
 				this.Vendor_No = event.getParameter("arguments").Vendor_No;
-				var unitCode = sessionStorage.getItem("unitCode") || "P01";
+				var unitCode = event.getParameter("arguments").UnitCode || "P01";
 				this.AddressCodePO = sessionStorage.getItem("AddressCodePO") || 'JSE-01-01'
 				//var unitCode = "P01";
 				var oModel = this.getOwnerComponent().getModel();
@@ -440,27 +440,6 @@ sap.ui.define([
 			this.asnModel.refresh(true);
 		},
 
-		onTotalChange: function () {
-			let obj, totalInvNetAmnt = 0, totalGstAmnt = 0;
-			this.byId("AsnCreateTable").getItems().forEach(item => {
-				obj = item.getBindingContext("asnModel").getObject();
-				totalInvNetAmnt += parseFloat(obj.PoQty) * parseFloat(obj.UnitPrice);
-				totalGstAmnt += ((parseFloat(obj.IGST) + parseFloat(obj.CGST) + parseFloat(obj.SGST)) * parseFloat(obj.PoQty) * parseFloat(obj.UnitPrice)) / 100;
-			});
-			const totalInvNetAmntCtr = this.byId("totalInvNetAmnt"),
-				totalGstAmntCtr = this.byId("totalGstAmnt")
-			if (totalInvNetAmnt === parseFloat(totalInvNetAmntCtr.getValue())) {
-				totalInvNetAmntCtr.setValueState("Success");
-			} else {
-				totalInvNetAmntCtr.setValueState("Warning").setValueStateText("Amount Mismatch");
-			}
-
-			if (totalGstAmnt === parseFloat(totalGstAmntCtr.getValue())) {
-				totalGstAmntCtr.setValueState("Success");
-			} else {
-				totalGstAmntCtr.setValueState("Warning").setValueStateText("Amount Mismatch");
-			}
-		},
 		onRowSelect: function () {
 			let obj, totalInvNetAmnt = 0, totalCGstAmnt = 0, totalSGstAmnt = 0, totalIGstAmnt = 0, totalAmnt = 0;
 			this.byId("AsnCreateTable").getSelectedItems().forEach(item => {

@@ -122,6 +122,7 @@ entity ASNListHeader {
       TotalAmnt          : Integer;
       TransporterID      : String;
       RateStatus         : String;
+      TotalWeight        : String;
 }
 
 entity Files : managed {

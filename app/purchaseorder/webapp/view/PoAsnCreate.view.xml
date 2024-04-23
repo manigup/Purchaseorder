@@ -248,6 +248,16 @@
                     width="20rem"
                 />
                 <Label
+                    id="_IDGenLabel43"
+                    text="Total weight"
+                />
+                <Input
+                    id="_IDGenInput43"
+                    type="Text"
+                    value="{asnModel>/TotalWeight}"
+                    width="20rem"
+                />
+                <Label
                     id="_IDGenLabel280"
                     text="Mill T.C. No"
                     visible="false"

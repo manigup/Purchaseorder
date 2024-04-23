@@ -53,7 +53,7 @@ sap.ui.define([
 
 				var PoNum = event.getParameter("arguments").Po_No;
 				this.Po_Num = PoNum.replace(/-/g, '/');
-				var unitCode = sessionStorage.getItem("unitCode") || "P01";
+				this.unitCode = event.getParameter("arguments").UnitCode || "P01";
 				this.AddressCodePO = sessionStorage.getItem("AddressCodePO") || 'JSE-01-01'
 				//var unitCode = "P01";
 				// Fetch all PurchaseOrders with DocumentRows
@@ -62,7 +62,7 @@ sap.ui.define([
 					urlParameters: {
 						"$expand": "DocumentRows",
                         AddressCode: this.AddressCodePO,
-                        UnitCode: unitCode
+                        UnitCode: this.unitCode
                     },
 					success: function (oData) {
 						var filteredPurchaseOrder = oData.results.find(po => po.PoNum === that.Po_Num);
@@ -127,6 +127,7 @@ sap.ui.define([
 			var Po_No = that.Po_Num.replace(/\//g, '-');
 			this.router.navTo("PoAsnCreate", {
 				"Po_No": Po_No,
+				"UnitCode": this.unitCode,
 				"Amount": that.detailModel.getData().Amount
 				// "Vendor_No": that.detailModel.getData().Vendor_No
 

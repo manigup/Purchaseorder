@@ -66,12 +66,14 @@ sap.ui.define([
 
 				if (selectedItem) {
 					list.setSelectedItem(selectedItem, true);
+					var unitCode = sessionStorage.getItem("unitCode") || "P01";
 					var PoNo = selectedItem.getBindingContext().getProperty("PoNum");
 					var Po_No = PoNo.replace(/\//g, '-');
 					// var path = selectedItem.getBindingContext().getPath();
 					// var VendorNum = that.getView().getModel().getProperty(path).Vendor_No;
 					that.router.navTo("PoDetail", {
-						"Po_No": Po_No
+						"Po_No": Po_No,
+						"UnitCode": unitCode
 					});
 					sap.ui.core.BusyIndicator.hide();
 				} else {
@@ -107,7 +109,8 @@ sap.ui.define([
 						path: "/PurchaseOrders?search=" + sValue,
 						parameters: {
 							custom: {
-								unitCode: unitCode
+								AddressCode: this.AddressCodePO,
+								UnitCode: unitCode
 							}
 						},
 						template: this._listTemp
@@ -117,7 +120,8 @@ sap.ui.define([
 						path: "/PurchaseOrders",
 						parameters: {
 							custom: {
-								unitCode: unitCode
+								AddressCode: this.AddressCodePO,
+								UnitCode: unitCode
 							},
 						},
 						template: this._listTemp
@@ -134,6 +138,20 @@ sap.ui.define([
 			} else {
 				this.getView().byId("masterListId").setMode("SingleSelectMaster");
 			}
+		},
+		onFilter: function () {
+			if (!this.filterFragment) {
+				this.filterFragment = sap.ui.xmlfragment("sp.fiori.purchaseorder.fragment.filterFragment", this);
+				this.filterFragment.setModel(this.filterModel, "filterModel");
+
+			}
+			this.filterVisibleModel = new sap.ui.model.json.JSONModel({
+				Werks: true,
+				Status: true,
+			});
+
+			this.filterFragment.setModel(this.filterVisibleModel, "FilterVisibleModel");
+			this.filterFragment.open();
 		},
 		onPlantValueHelp: function () {
 			if (!this.PlantF4Frag) {
@@ -153,63 +171,117 @@ sap.ui.define([
 		handlePlantClose: function (oEvent) {
 			var data = oEvent.getParameter("selectedItem").getProperty("title");
 			this.desc = oEvent.getParameter("selectedItem").getProperty("description");
-			sessionStorage.setItem("unitCode", data);
+			this.filterModel.getData().Werks = data;
+			this.filterModel.refresh("true");
+			//sessionStorage.setItem("unitCode", data);
 			this.PlantF4Frag.destroy();
 			this.PlantF4Frag = "";
-			this.getData();
+			//this.getData();
 		},
 
 		handlePlantCancel: function () {
 			this.PlantF4Frag.destroy();
 			this.PlantF4Frag = "";
 		},
-		onStatusValueHelp: function () {
-			if (!this.StatusF4Frag) {
-				this.StatusF4Frag = sap.ui.xmlfragment("sp.fiori.purchaseorder.fragment.StatusFrag", this);
-				this.StatusF4Temp = sap.ui.getCore().byId("statusTempId").clone();
+		// onStatusValueHelp: function () {
+		// 	if (!this.StatusF4Frag) {
+		// 		this.StatusF4Frag = sap.ui.xmlfragment("sp.fiori.purchaseorder.fragment.StatusFrag", this);
+		// 		this.StatusF4Temp = sap.ui.getCore().byId("statusTempId").clone();
+		// 	}
+		// 	var statusData = [
+		// 		{
+		// 			status: "Invoice Submitted"
+		// 		},{
+		// 			status: "Invoice Submission Pending"
+		// 		}
+		// 	];
+		// 	this.StatusF4Frag.setModel(new JSONModel(statusData), "statusModel");
+		// 	this.getView().addDependent(this.StatusF4Frag);
+		// 	// sap.ui.getCore().byId("plantF4Id").bindAggregation("items", {
+		// 	// 	path: this.plantModel,
+		// 	// 	template: this.PlantF4Temp
+		// 	// });
+		// 	sap.ui.getCore().byId("statusF4Id")._searchField.setVisible(false);
+		// 	this.StatusF4Frag.open();
+		// },
+
+		// handleStatusClose: function (oEvent) {
+		// 	var data = oEvent.getParameter("selectedItem").getProperty("title");
+		// 	this.StatusF4Frag.destroy();
+		// 	this.StatusF4Frag = "";
+		// 	var unitCode = sessionStorage.getItem("unitCode");
+		// 	this.getView().byId("masterListId").bindItems({
+		// 		path: "/PurchaseOrders?search=" + data,
+		// 		parameters: {
+		// 			custom: {
+		// 				AddressCode: this.AddressCodePO,
+		// 				UnitCode: unitCode
+		// 			}
+		// 		},
+		// 		template: this._listTemp
+		// 	});
+		// 	this._getFirstItem();
+		// },
+
+		// handleStatusCancel: function () {
+		// 	this.StatusF4Frag.destroy();
+		// 	this.StatusF4Frag = "";
+		// },
+		onFilterSubmit: function () {
+			var data = this.filterModel.getData();
+			
+			this.AddressCodePO = sessionStorage.getItem("AddressCodePO") || 'JSE-01-01';
+			var Status = data.Status;
+			var unitCode = data.Werks;
+			
+			if (!unitCode) {
+				unitCode = sessionStorage.getItem("unitCode") || "P01";
 			}
-			var statusData = [
-				{
-					status: "Invoice Submitted"
-				},{
-					status: "Invoice Submission Pending"
-				}
-			];
-			this.StatusF4Frag.setModel(new JSONModel(statusData), "statusModel");
-			this.getView().addDependent(this.StatusF4Frag);
-			// sap.ui.getCore().byId("plantF4Id").bindAggregation("items", {
-			// 	path: this.plantModel,
-			// 	template: this.PlantF4Temp
-			// });
-			sap.ui.getCore().byId("statusF4Id")._searchField.setVisible(false);
-			this.StatusF4Frag.open();
-		},
-
-		handleStatusClose: function (oEvent) {
-			var data = oEvent.getParameter("selectedItem").getProperty("title");
-			this.StatusF4Frag.destroy();
-			this.StatusF4Frag = "";
-			var unitCode = sessionStorage.getItem("unitCode");
-			this.getView().byId("masterListId").bindItems({
-				path: "/PurchaseOrders?search=" + data,
-				parameters: {
-					custom: {
-						unitCode: unitCode
-					}
-				},
-				template: this._listTemp
-			});
-			this._getFirstItem();
-		},
-
-		handleStatusCancel: function () {
-			this.StatusF4Frag.destroy();
-			this.StatusF4Frag = "";
-		},
-		getData: function () {
-			var unitCode = sessionStorage.getItem("unitCode") || "P01";
+			
+			if (!Status) {
+				this.getView().byId("masterListId").bindItems({
+					path: "/PurchaseOrders",
+					parameters: {
+						custom: {
+							AddressCode: this.AddressCodePO,
+							UnitCode: unitCode
+						},
+						countMode: 'None'
+					},
+					template: this._listTemp
+				});
+			} else {
+				this.getView().byId("masterListId").bindItems({
+					path: "/PurchaseOrders?search=" + Status,
+					parameters: {
+						custom: {
+							AddressCode: this.AddressCodePO,
+							UnitCode: unitCode
+						}
+					},
+					template: this._listTemp
+				});
+			}
+			if(unitCode && this.desc){
 			this.PlantFilter = unitCode + "(" + this.desc + ")";
 			this.getView().byId("plantFilterId").setText(this.PlantFilter);
+			}
+			this.getView().byId("clearFilterId").setVisible(true);
+			// this.filterModel.setData({});
+			this.filterFragment.close();
+			this.filterFragment.destroy();
+			this.filterFragment = "";
+			this._getFirstItem();
+		},
+		onFilterCancel: function () {
+			this.filterFragment.close();
+			this.filterFragment.destroy();
+			this.filterFragment = "";
+		},
+		onFilterClear: function () {
+			this.getView().byId("clearFilterId").setVisible(false);
+			this.getView().byId("plantFilterId").setText("");
+			var unitCode = sessionStorage.getItem("unitCode") || "P01";
 			this.AddressCodePO = sessionStorage.getItem("AddressCodePO") || 'JSE-01-01';
 			this.getView().byId("masterListId").bindItems({
 				path: "/PurchaseOrders",
