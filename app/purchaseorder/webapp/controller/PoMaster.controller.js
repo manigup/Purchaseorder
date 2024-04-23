@@ -86,14 +86,15 @@ sap.ui.define([
 		},
 
 		onListItemPress: function (oEvent) {
-
+			var unitCode = sessionStorage.getItem("unitCode") || "P01";
 			if (this.getView().byId("masterListId").getMode() == "MultiSelect") {
 				return;
 			}
 			var PoNo = oEvent.getParameter("listItem").getProperty("title");
 			var PoNum = PoNo.replace(/\//g, '-');
 			this.router.navTo("PoDetail", {
-				"Po_No": PoNum
+				"Po_No": PoNum,
+				"UnitCode": unitCode
 			});
 		},
 
@@ -262,7 +263,7 @@ sap.ui.define([
 					template: this._listTemp
 				});
 			}
-			if(unitCode && this.desc){
+			if(data.Werks){
 			this.PlantFilter = unitCode + "(" + this.desc + ")";
 			this.getView().byId("plantFilterId").setText(this.PlantFilter);
 			}
