@@ -262,7 +262,7 @@ sap.ui.define([
 					template: this._listTemp
 				});
 			}
-			if(unitCode && this.desc){
+			if(data.Werks){
 			this.PlantFilter = unitCode + "(" + this.desc + ")";
 			this.getView().byId("plantFilterId").setText(this.PlantFilter);
 			}
