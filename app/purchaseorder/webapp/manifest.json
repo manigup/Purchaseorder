@@ -135,7 +135,7 @@
                           "targetAggregation": "detailPages"
                       },
                       {
-                          "pattern": "Detail/{Po_No}",
+                          "pattern": "Detail/{Po_No}/{UnitCode}",
                           "name": "PoDetail",
                           "view": "PoDetail",
                           "targetAggregation": "detailPages"
@@ -145,7 +145,7 @@
           ]
       },
       {
-          "pattern": "AsnCreate/{Po_No}/:Amount:",
+          "pattern": "AsnCreate/{Po_No}/{UnitCode}/:Amount:",
           "name": "PoAsnCreate",
           "view": "PoAsnCreate",
           "targetAggregation": "pages",

@@ -68,8 +68,8 @@
         <footer>
 			<Bar id="_IDGenBar1">
 				<contentLeft>
-                    <Button id="statFilterId" visible="true" text="Status" press="onStatusValueHelp" type="Emphasized"/>  
-					<Button id="platFilterId" visible="true" text="Plant" press="onPlantValueHelp" type="Emphasized"/>
+                    <Button id="FilterId" visible="true" icon="sap-icon://filter" press="onFilter" type="Emphasized"/>
+					<Button id="clearFilterId" visible="false" icon="sap-icon://clear-filter" press="onFilterClear" type="Emphasized"/>
 					<Label id="plantFilterId" design="Bold"/>
 					</contentLeft>
 			</Bar>

@@ -130,23 +130,23 @@ async function getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRow
                 };
             });
 
-            // let itemRecord = [], filter, supplierRate, rateAgreed;
-            // if (Po_Num) {
-            //     itemRecord = await SELECT.from(DocumentRowItems).where({ PNum_PoNum: Po_Num });
-            // }
+            let itemRecord = [], filter, supplierRate, rateAgreed;
+            if (Po_Num) {
+                itemRecord = await SELECT.from(DocumentRowItems).where({ PNum_PoNum: Po_Num });
+            }
 
             // Extracting DocumentRows details
             const documentRows = dataArray.flatMap(data =>
                 data.DocumentRows.map(row => {
 
-                    // filter = itemRecord.filter(item => item.ItemCode === row.ItemCode);
-                    // if (filter.length > 0) {
-                    //     rateAgreed = filter[0].RateAgreed;
-                    //     supplierRate = filter[0].SupplierRate;
-                    // } else {
-                    //     rateAgreed = true;
-                    //     supplierRate = "";
-                    // }
+                    filter = itemRecord.filter(item => item.ItemCode === row.ItemCode);
+                    if (filter.length > 0) {
+                        rateAgreed = filter[0].RateAgreed;
+                        supplierRate = filter[0].SupplierRate;
+                    } else {
+                        rateAgreed = true;
+                        supplierRate = "";
+                    }
 
                     return {
                         LineNum: row.LineNum,
