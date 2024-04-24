@@ -48,19 +48,19 @@
                                 id="_IDGenObjectAttribute3"
                                 text="{path:'PoDate', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"
                             />
-                            <ObjectAttribute
+                            <!-- <ObjectAttribute
                                 id="_IDGenObjectAttribute4"
                                 text="{path:'HasAttachments',formatter:'sp.fiori.purchaseorder.controller.formatter.addStatColor'}"
-                                />
+                                /> -->
                         </attributes>
-                        <!-- <firstStatus>
+                        <firstStatus>
                             <ObjectStatus
                                 id="_IDGenObjectStatus4"
                                 text="{HasAttachments}"
-                                
+                                class="objStatus"
                                 state="{=${HasAttachments} === 'Invoice Submitted' ? 'Success' : 'Warning' }"
                             />
-                        </firstStatus> -->
+                        </firstStatus>
                     </ObjectListItem>
                 </items>
             </List>
