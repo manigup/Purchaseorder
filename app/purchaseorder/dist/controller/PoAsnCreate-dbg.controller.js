@@ -42,13 +42,17 @@ sap.ui.define([
 
 			if (event.getParameter("name") === "PoAsnCreate") {
 
-				this.byId("rateOk").setSelected(true);
+				//this.byId("rateOk").setSelected(true);
 
 				this.modulePath = jQuery.sap.getModulePath("sp/fiori/purchaseorder");
 				this.modulePath = this.modulePath === "." ? "" : this.modulePath;
 
 				this.byId("totalInvNetAmnt").setValueState("None");
-				this.byId("totalGstAmnt").setValueState("None");
+				this.byId("totalCGstAmnt").setValueState("None");
+				this.byId("totalSGstAmnt").setValueState("None");
+				this.byId("totalIGstAmnt").setValueState("None");
+				this.byId("totalAmnt").setValueState("None");
+				this.byId("ewayBillNumberId").setValueState("None");
 
 				var that = this;
 				var datePicker = this.getView().byId("DP1");
@@ -76,8 +80,8 @@ sap.ui.define([
 				//this.Po_Num = "19/01P/03/00001";
 				this.Amount = event.getParameter("arguments").Amount;
 				this.Vendor_No = event.getParameter("arguments").Vendor_No;
-				var unitCode = sessionStorage.getItem("unitCode") || "P01";
-				this.AddressCodePO = sessionStorage.getItem("AddressCodePO") || 'ATE-01-01'
+				var unitCode = event.getParameter("arguments").UnitCode || "P01";
+				this.AddressCodePO = sessionStorage.getItem("AddressCodePO") || 'JSE-01-01'
 				//var unitCode = "P01";
 				var oModel = this.getOwnerComponent().getModel();
 
@@ -100,6 +104,7 @@ sap.ui.define([
 							if (asnModelData.HasAttachments === "Invoice Submitted") {
 								that.getHeaderDetails();
 							}
+							that.GetTransportModeList();
 							//that.initializeScheduleNumber();
 						} else {
 							MessageBox.error("Purchase order not found");
@@ -113,6 +118,24 @@ sap.ui.define([
 				sap.ui.core.BusyIndicator.hide();
 			}
 			// this.asnModel.refresh(true); 
+		},
+		GetTransportModeList: function () {
+			var oModel = this.getView().getModel();
+			return new Promise(function (resolve, reject) {
+				oModel.callFunction("/GetTransportModeList", {
+					method: "GET",
+					success: function (oData, response) {
+						var transportData = oData.results;
+						var oTransportModel = new sap.ui.model.json.JSONModel();
+						oTransportModel.setData({ items: transportData });
+						this.getView().setModel(oTransportModel, "transport");
+						resolve();
+					}.bind(this),
+					error: function (oError) {
+						reject(new Error("Failed to fetch transport data."));
+					}
+				});
+			}.bind(this));
 		},
 		getHeaderDetails: function () {
 			var that = this;
@@ -137,6 +160,12 @@ sap.ui.define([
 						asnModelData.HeatNumber = filteredPurchaseOrder.HeatNumber;
 						asnModelData.BatchNumber = filteredPurchaseOrder.BatchNumber;
 						asnModelData.ManufacturingMonth = filteredPurchaseOrder.ManufacturingMonth;
+						asnModelData.TotalInvNetAmnt = filteredPurchaseOrder.TotalInvNetAmnt;
+						asnModelData.TotalCGstAmnt = filteredPurchaseOrder.TotalCGstAmnt;
+						asnModelData.TotalSGstAmnt = filteredPurchaseOrder.TotalSGstAmnt;
+						asnModelData.TotalIGstAmnt = filteredPurchaseOrder.TotalIGstAmnt;
+						asnModelData.TotalAmnt = filteredPurchaseOrder.TotalAmnt;
+						asnModelData.TransporterID = filteredPurchaseOrder.TransporterID;
 						that.asnModel.refresh(true);
 						that._fetchFilesForPoNum(poNum);
 						/*
@@ -191,6 +220,7 @@ sap.ui.define([
 		},
 		onAsnSaveDB: function () {
 			// var that = this;
+			if(this.validateFields()){
 			var oModel = this.getOwnerComponent().getModel();
 
 			this.data = this.asnModel.getData();
@@ -215,13 +245,17 @@ sap.ui.define([
 				"PlantCode": this.data.PlantCode,
 				"VendorCode": this.data.VendorCode,
 				"TotalInvNetAmnt": this.data.TotalInvNetAmnt,
-				"TotalGstAmnt": this.data.TotalGstAmnt,
-				"RateStatus": this.data.DocumentRows.results.every(item => item.RateAgreed === true) ? "Rate Matched" : "Rate Un-Matched"
+				"TotalCGstAmnt": this.data.TotalCGstAmnt,
+				"TotalSGstAmnt": this.data.TotalSGstAmnt,
+				"TotalIGstAmnt": this.data.TotalIGstAmnt,
+				"TotalAmnt": this.data.TotalAmnt,
+				"TransporterID": this.data.TransporterID
+				//"RateStatus": this.data.DocumentRows.results.every(item => item.RateAgreed === true) ? "Rate Matched" : "Rate Un-Matched"
 			};
 
 			// var ASNItemData = [];
-			// var oTable = this.getView().byId("AsnCreateTable");
-			// var contexts = oTable.getSelectedContexts();
+			var oTable = this.getView().byId("AsnCreateTable");
+			var contexts = oTable.getSelectedContexts();
 
 			if (!ASNHeaderData.BillNumber) {
 				MessageBox.error("Please fill the Invoice Number");
@@ -230,15 +264,12 @@ sap.ui.define([
 				MessageBox.error("Please fill the Invoice Date");
 				return;
 			}
-			if (!ASNHeaderData.TotalInvNetAmnt) {
-				MessageBox.error("Please fill Total Invoice Net Amount");
-				return;
-			} else if (!ASNHeaderData.TotalGstAmnt) {
-				MessageBox.error("Please fill Total GST Amount");
-				return;
-			}
 			if (this.getView().byId("uploadSet").getItems().length <= 0) {
 				MessageBox.error("Please upload invoice.");
+				return;
+			}
+			if (!contexts.length) {
+				MessageBox.error("No Item Selected");
 				return;
 			}
 
@@ -269,6 +300,11 @@ sap.ui.define([
 					MessageBox.error("Error submitting invoice: " + oError.message);
 				}
 			});
+		}else{
+				MessageBox.error("Please fill correct Eway Bill Number");
+				return;
+				
+		}
 		},
 
 
@@ -302,12 +338,16 @@ sap.ui.define([
 		},
 		_createEntity: function (item, poNum) {
 			var oModel = this.getView().getModel();
+			this.hardcodedURL = "";
+				if (window.location.href.includes("site")) {
+					this.hardcodedURL = jQuery.sap.getModulePath("sp.fiori.purchaseorder");
+				}
 			var oData = {
 				PNum_PoNum: poNum,
 				mediaType: item.getMediaType(),
 				fileName: item.getFileName(),
 				size: item.getFileObject().size,
-				url: "https://impautosuppdev.launchpad.cfapps.ap10.hana.ondemand.com/547b58c0-9667-470f-a767-c8524482b3ed.PO.spfioripurchaseorder-0.0.1" + `/po/odata/v4/catalog/Files(PNum_PoNum='${poNum}')/content`
+				url: this.hardcodedURL + `/po/odata/v4/catalog/Files(PNum_PoNum='${poNum}')/content`
 				//url: this.getView().getModel().sServiceUrl + `/Files(PNum_PoNum='${poNum}')/content`
 
 			};
@@ -328,7 +368,11 @@ sap.ui.define([
 
 		_uploadContent: function (item, poNum) {
 			//var encodedPoNum = encodeURIComponent(poNum);
-			var url = "https://impautosuppdev.launchpad.cfapps.ap10.hana.ondemand.com/547b58c0-9667-470f-a767-c8524482b3ed.PO.spfioripurchaseorder-0.0.1" + `/po/odata/v4/catalog/Files(PNum_PoNum='${poNum}')/content`
+			this.hardcodedURL = "";
+				if (window.location.href.includes("site")) {
+					this.hardcodedURL = jQuery.sap.getModulePath("sp.fiori.purchaseorder");
+				}
+			var url = this.hardcodedURL + `/po/odata/v4/catalog/Files(PNum_PoNum='${poNum}')/content`
 			item.setUploadUrl(url);
 			var oUploadSet = this.byId("uploadSet");
 			oUploadSet.setHttpRequestMethod("PUT")
@@ -379,15 +423,6 @@ sap.ui.define([
 		onTypeMissmatch: function (oEvent) {
 			MessageBox.error("Only PDF files are allowed.");
 		},
-		onInvNoChange: function (oEvent) {
-
-			if (oEvent.getParameter("value") === "") {
-				this.getView().byId("DP1").setEnabled(false);
-				this.getView().byId("DP1").setValue("");
-			} else {
-				this.getView().byId("DP1").setEnabled(true);
-			}
-		},
 
 		onRateOkChange: function (evt) {
 			const state = evt.getParameter("selected");
@@ -405,27 +440,87 @@ sap.ui.define([
 			this.asnModel.refresh(true);
 		},
 
-		onTotalChange: function () {
-			let obj, totalInvNetAmnt = 0, totalGstAmnt = 0;
-			this.byId("AsnCreateTable").getItems().forEach(item => {
+		onRowSelect: function () {
+			let obj, totalInvNetAmnt = 0, totalCGstAmnt = 0, totalSGstAmnt = 0, totalIGstAmnt = 0, totalAmnt = 0;
+			this.byId("AsnCreateTable").getSelectedItems().forEach(item => {
 				obj = item.getBindingContext("asnModel").getObject();
 				totalInvNetAmnt += parseFloat(obj.PoQty) * parseFloat(obj.UnitPrice);
-				totalGstAmnt += parseFloat(obj.IGST) + parseFloat(obj.CGST) + parseFloat(obj.SGST);
+				if(parseFloat(obj.CGST) !== 0){
+					totalCGstAmnt += (parseFloat(obj.CGST) * parseFloat(obj.PoQty) * parseFloat(obj.UnitPrice)) / 100;
+				}if(parseFloat(obj.SGST) !== 0){
+					totalSGstAmnt += (parseFloat(obj.SGST) * parseFloat(obj.PoQty) * parseFloat(obj.UnitPrice)) / 100;
+				}if(parseFloat(obj.IGST) !== 0){
+					totalIGstAmnt += (parseFloat(obj.IGST) * parseFloat(obj.PoQty) * parseFloat(obj.UnitPrice)) / 100;
+				}
+				totalAmnt = totalInvNetAmnt + totalCGstAmnt + totalSGstAmnt + totalIGstAmnt;
 			});
 			const totalInvNetAmntCtr = this.byId("totalInvNetAmnt"),
-				totalGstAmntCtr = this.byId("totalGstAmnt")
+				totalCGstAmntCtr = this.byId("totalCGstAmnt"),
+				totalSGstAmntCtr = this.byId("totalSGstAmnt"),
+				totalIGstAmntCtr = this.byId("totalIGstAmnt"),
+				totalAmntCtr = this.byId("totalAmnt");
+			totalInvNetAmntCtr.setValue(parseFloat(this.formatAmnt(totalInvNetAmnt)));
+			totalCGstAmntCtr.setValue(parseFloat(this.formatAmnt(totalCGstAmnt)));
+			totalSGstAmntCtr.setValue(parseFloat(this.formatAmnt(totalSGstAmnt)));
+			totalIGstAmntCtr.setValue(parseFloat(this.formatAmnt(totalIGstAmnt)));
+			totalAmntCtr.setValue(parseFloat(this.formatAmnt(totalAmnt)));
 			if (totalInvNetAmnt === parseFloat(totalInvNetAmntCtr.getValue())) {
-				totalInvNetAmntCtr.setValueState("Success");
+				totalInvNetAmntCtr.setValueState("Success").setValueStateText("Amount Matched");
 			} else {
 				totalInvNetAmntCtr.setValueState("Warning").setValueStateText("Amount Mismatch");
 			}
 
-			if (totalGstAmnt === parseFloat(totalGstAmntCtr.getValue())) {
-				totalGstAmntCtr.setValueState("Success");
+			if (totalCGstAmnt === parseFloat(totalCGstAmntCtr.getValue())) {
+				totalCGstAmntCtr.setValueState("Success").setValueStateText("Amount Matched");
 			} else {
-				totalGstAmntCtr.setValueState("Warning").setValueStateText("Amount Mismatch");
+				totalCGstAmntCtr.setValueState("Warning").setValueStateText("Amount Mismatch");
+			}
+
+			if (totalSGstAmnt === parseFloat(totalSGstAmntCtr.getValue())) {
+				totalSGstAmntCtr.setValueState("Success").setValueStateText("Amount Matched");
+			} else {
+				totalSGstAmntCtr.setValueState("Warning").setValueStateText("Amount Mismatch");
+			}
+
+			if (totalIGstAmnt === parseFloat(totalIGstAmntCtr.getValue())) {
+				totalIGstAmntCtr.setValueState("Success").setValueStateText("Amount Matched");
+			} else {
+				totalIGstAmntCtr.setValueState("Warning").setValueStateText("Amount Mismatch");
+			}
+
+			if (totalAmnt === parseFloat(totalAmntCtr.getValue())) {
+				totalAmntCtr.setValueState("Success").setValueStateText("Amount Matched");
+			} else {
+				totalAmntCtr.setValueState("Warning").setValueStateText("Amount Mismatch");
+			}
+		},
+		validateFields: function () {
+			var bValidationError = true, oInput = this.getView().byId("ewayBillNumberId"), oBinding = oInput.getBinding("value");
+			if(oInput.getValue()){
+			try {
+				oBinding.getType().validateValue(oInput.getValue());
+				oInput.setValueState("None");
+				bValidationError = true;
+			} catch (oException) {
+				oInput.setValueState("Error");
+				bValidationError = false;
 			}
 		}
+			return bValidationError;
+		},
+		formatAmnt: function (oAmount) {
+			if (oAmount) {
+				var oFormat = sap.ui.core.format.NumberFormat.getFloatInstance({
+					"groupingEnabled": false,
+					"groupingSeparator": '',
+					"groupingSize": 0,
+					"decimalSeparator": ".",
+					"decimals": 2
+				});
+				return oFormat.format(oAmount);
+			}
+			return "0.00";
+		},
 	});
 
 });

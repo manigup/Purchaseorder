@@ -28,6 +28,8 @@ entity DocumentRowItems {
       ItemDesc     : String;
       HSNCode      : String;
       PoQty        : Integer;
+      InvQty       : Integer;
+      InvBalQty    : Integer;
       DeliveredQty : Decimal;
       BalanceQty   : Decimal;
       UnitPrice    : Decimal;
@@ -123,6 +125,21 @@ entity ASNListHeader {
       TransporterID      : String;
       RateStatus         : String;
       TotalWeight        : String;
+}
+
+entity InvHeaderList {
+  key REF_INV      : String;
+  key Item_Code    : String;
+  key Po_Num       : String;
+      INVOICE_DATE : String;
+      INVOICE_AMT  : Integer;
+      IGST_AMT     : Integer;
+      CGST_AMT     : Integer;
+      SGST_AMT     : Integer;
+      INV_DELETE   : Boolean;
+      Po_Qty       : Integer;
+      Inv_Qty      : Integer;
+      InvBal_Qty   : Integer;
 }
 
 entity Files : managed {

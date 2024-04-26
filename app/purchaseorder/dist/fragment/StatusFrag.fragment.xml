@@ -1,0 +1,5 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<SelectDialog id="statusF4Id" items="{statusModel>/}" noDataText="No Status" title="Select Status" titleAlignment="Center" confirm="handleStatusClose" cancel="handleStatusCancel">
+		<StandardListItem id="statusTempId" title="{statusModel>status}"/>
+	</SelectDialog>
+</core:FragmentDefinition>

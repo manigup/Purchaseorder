@@ -1,5 +1,5 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
-	<SelectDialog id="plantF4Id" noDataText="No Plant" title="Select Plant" titleAlignment="Center" confirm="handlePlantClose" cancel="handlePlantCancel">
-		<StandardListItem id="plantTempId" title="{Werks}" description="{Name1}"/>
+	<SelectDialog id="plantF4Id" items="{plantModel>/}" noDataText="No Plant" title="Select Plant" titleAlignment="Center" confirm="handlePlantClose" cancel="handlePlantCancel">
+		<StandardListItem id="plantTempId" title="{plantModel>code}" description="{plantModel>unitDescription}"/>
 	</SelectDialog>
 </core:FragmentDefinition>

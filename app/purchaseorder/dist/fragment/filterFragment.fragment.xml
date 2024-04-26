@@ -4,10 +4,16 @@
 		<f:SimpleForm id="_IDGenSimpleForm1" editable="true" layout="ResponsiveGridLayout" labelSpanXL="3" labelSpanL="3" labelSpanM="3" labelSpanS="12"
 			adjustLabelSpan="false" emptySpanXL="4" emptySpanL="4" emptySpanM="4" emptySpanS="0" columnsXL="1" columnsL="1" columnsM="1"
 			singleContainerFullSize="false">
-			<Label id="_IDGenLabel1" design="Bold" text="Material"/>
-			<Input id="_IDGenInput1" value="{filterModel>/Matnr}" valueHelpRequest="onMaterialValueHelp" showValueHelp="true"></Input>
-			<Label id="_IDGenLabel2" design="Bold" text="Plant"/>
-			<Input id="_IDGenInput2" value="{filterModel>/Werks}" valueHelpRequest="onPlantValueHelp" showValueHelp="true"></Input>
+			<Label id="_IDGenLabel1" design="Bold" text="Plant"/>
+			<Input id="_IDGenInput1" visible="{FilterVisibleModel>/Werks}" value="{filterModel>/Werks}" valueHelpRequest="onPlantValueHelp" showValueHelp="true"/>
+			<Label id="_IDGenLabel2"  design="Bold" text="Status"/>
+			<Select id="filterSelectId" visible="{FilterVisibleModel>/Status}" selectedKey="{filterModel>/Status}" forceSelection="true">
+				<items>
+					<core:Item id="_IDGenItem1" key="" text="Select"/>
+					<core:Item id="_IDGenItem2" key="Invoice Submitted" text="Invoice Submitted"/>
+					<core:Item id="_IDGenItem3" key="Invoice Submission Pending" text="Invoice Submission Pending"/>
+				</items>
+			</Select>
 		</f:SimpleForm>
 	</content>
 	<beginButton>

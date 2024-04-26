@@ -1,5 +1,5 @@
 const cds = require('@sap/cds');
-const axios = require('axios');
+// const axios = require('axios');
 
 module.exports = (srv) => {
 
@@ -15,7 +15,7 @@ module.exports = (srv) => {
     srv.on('READ', PurchaseOrders, async (req) => {
         const { AddressCode, UnitCode } = req._queryOptions;
         const Po_Num = req._queryOptions.Po_Num || "";
-        const results = await getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRowItems, UnitCode);
+        const results = await getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRowItems, UnitCode, req.headers.loginid);
         if (results.error) req.reject(500, results.error);
 
         const expandDocumentRows = req.query.SELECT.columns && req.query.SELECT.columns.some(({ expand, ref }) => expand && ref[0] === "DocumentRows");
@@ -29,14 +29,14 @@ module.exports = (srv) => {
         const searchVal = req._queryOptions && req._queryOptions.$search;
         if (searchVal) {
             let cleanedSearchVal = searchVal.trim().replace(/"/g, '');
-            if(cleanedSearchVal === 'Invoice Submitted' || cleanedSearchVal === 'Invoice Submission Pending'){
+            if (cleanedSearchVal === 'Invoice Submitted' || cleanedSearchVal === 'Invoice Submission Pending') {
                 results.purchaseOrders = results.purchaseOrders.filter(po =>
                     (po.HasAttachments === cleanedSearchVal)
                 );
-            }else{
-            results.purchaseOrders = results.purchaseOrders.filter(po =>
-                po.PoNum.includes(cleanedSearchVal)
-            );
+            } else {
+                results.purchaseOrders = results.purchaseOrders.filter(po =>
+                    po.PoNum.includes(cleanedSearchVal)
+                );
             }
         }
 
@@ -47,72 +47,72 @@ module.exports = (srv) => {
         const { UnitCode, PoNum, MaterialCode, PoLineNum } = req.data;
         // Replace '-' with '/' for PoNum
         const formattedPoNum = PoNum.replace(/-/g, '/');
-        return getPurchaseMaterialQuantityList(UnitCode, formattedPoNum, MaterialCode, PoLineNum)
+        return getPurchaseMaterialQuantityList(UnitCode, formattedPoNum, MaterialCode, PoLineNum, req.headers.loginid)
     });
     /*
         srv.before('CREATE', 'Files', async(req) => {
             req.data.url = `/v2/odata/v4/catalog/Files(PNum_PoNum='${req.data.PNum_PoNum}')/content`
         })
     */
-    srv.on('GetScheduleNumber', async (req) => {
-        const { UnitCode, AddressCode } = req.data;
+    // srv.on('GetScheduleNumber', async (req) => {
+    //     const { UnitCode, AddressCode } = req.data;
 
-        try {
-            const scheduleNumber = await fetchScheduleNumber(UnitCode, AddressCode);
-            return scheduleNumber;
-        } catch (error) {
-            console.error('Error in GetScheduleNumber:', error);
-            throw new Error('Failed to retrieve schedule number.');
-        }
-    });
+    //     try {
+    //         const scheduleNumber = await fetchScheduleNumber(UnitCode, AddressCode);
+    //         return scheduleNumber;
+    //     } catch (error) {
+    //         console.error('Error in GetScheduleNumber:', error);
+    //         throw new Error('Failed to retrieve schedule number.');
+    //     }
+    // });
 
-    srv.on('GetScheduleLineNumber', async (req) => {
-        const { UnitCode, AddressCode, ScheduleNumber } = req.data;
+    // srv.on('GetScheduleLineNumber', async (req) => {
+    //     const { UnitCode, AddressCode, ScheduleNumber } = req.data;
 
-        try {
-            const scheduleLineNumber = await fetchScheduleLineNumber(UnitCode, AddressCode, ScheduleNumber);
-            return scheduleLineNumber;
-        } catch (error) {
-            console.error('Error in GetScheduleLineNumber:', error);
-            throw new Error('Failed to retrieve schedule line number.');
-        }
-    });
+    //     try {
+    //         const scheduleLineNumber = await fetchScheduleLineNumber(UnitCode, AddressCode, ScheduleNumber);
+    //         return scheduleLineNumber;
+    //     } catch (error) {
+    //         console.error('Error in GetScheduleLineNumber:', error);
+    //         throw new Error('Failed to retrieve schedule line number.');
+    //     }
+    // });
 
     //GetTransportModeListAPI
     srv.on('GetTransportModeList', async (req) => {
-        return GetTransportModeList()
+        return GetTransportModeList(req.user.id)
     });
 
-    srv.on('PostASN', async (req) => {
-        const asnDataString = req.data.asnData;
-        const asnDataParsed = JSON.parse(asnDataString);
-        const asnDataFormatted = JSON.stringify(asnDataParsed, null, 2);
-        try {
-            const response = await postASN(asnDataFormatted);
-            return response;
-        } catch (error) {
-            console.error('Error in PostASN API call:', error);
-            throw new Error(`Error posting ASN: ${error.message}`);
-        }
-    });
+    // srv.on('PostASN', async (req) => {
+    //     const asnDataString = req.data.asnData;
+    //     const asnDataParsed = JSON.parse(asnDataString);
+    //     const asnDataFormatted = JSON.stringify(asnDataParsed, null, 2);
+    //     try {
+    //         const response = await postASN(asnDataFormatted);
+    //         return response;
+    //     } catch (error) {
+    //         console.error('Error in PostASN API call:', error);
+    //         throw new Error(`Error posting ASN: ${error.message}`);
+    //     }
+    // });
 };
 
-async function getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRowItems, UnitCode) {
+async function getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRowItems, UnitCode, user) {
     try {
-        const response = await axios({
-            method: 'get',
-            url: `https://imperialauto.co:84/IAIAPI.asmx/GetPurchaseMaterialList?AddressCode='${AddressCode}'&UnitCode='${UnitCode}'&RequestBy='Manikandan'`,
-            headers: {
-                'Authorization': 'Bearer IncMpsaotdlKHYyyfGiVDg==',
-                'Content-Type': 'application/json'
-            },
-            data: {}
-        });
+        const token = await generateToken(user),
+            legApi = await cds.connect.to('Legacy'),
+            response = await legApi.send({
+                query: `GET GetPurchaseMaterialList?AddressCode='${AddressCode}'&UnitCode='${UnitCode}'&RequestBy='${user}'`,
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+            });
 
         const responseASN = await SELECT.from(ASNListHeader).columns('PNum_PoNum');
 
-        if (response.data && response.data.d) {
-            const dataArray = JSON.parse(response.data.d);
+        if (response.d) {
+            const dataArray = JSON.parse(response.d);
             const asnSet = new Set(responseASN.map(asn => asn.PNum_PoNum));
 
             const purchaseOrders = dataArray.map(data => {
@@ -135,6 +135,8 @@ async function getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRow
                 itemRecord = await SELECT.from(DocumentRowItems).where({ PNum_PoNum: Po_Num });
             }
 
+            let poQty = 0, invBalQty = 0, invQty = 0;
+
             // Extracting DocumentRows details
             const documentRows = dataArray.flatMap(data =>
                 data.DocumentRows.map(row => {
@@ -148,14 +150,21 @@ async function getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRow
                         supplierRate = "";
                     }
 
+                    if (Po_Num) {
+                        poQty = parseInt(row.PoQty);
+                        invQty = parseInt(row.InvQty) || 0;
+                        invBalQty = poQty - invQty;
+                    }
                     return {
                         LineNum: row.LineNum,
                         ItemCode: row.ItemCode,
                         ItemDesc: row.ItemDesc,
                         HSNCode: row.HSNCode,
-                        PoQty: parseInt(row.PoQty),
-                        DeliveredQty: parseFloat(row.DeliveredQty),
+                        PoQty: poQty,
+                        InvQty: invQty,
+                        InvBalQty: invBalQty,
                         BalanceQty: parseFloat(row.BalanceQty),
+                        DeliveredQty: parseFloat(row.DeliveredQty),
                         UnitPrice: parseFloat(row.UnitPrice),
                         UOM: row.UOM,
                         Currency: row.Currency,
@@ -180,8 +189,8 @@ async function getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRow
                         TCA: row.TCA,
                         LineValue: row.LineValue,
                         WeightInKG: row.WeightInKG,
-                        RateAgreed: true,
-                        SupplierRate: 0,
+                        RateAgreed: rateAgreed,
+                        SupplierRate: supplierRate,
                         PNum_PoNum: data.PoNum  // associating with the current PurchaseOrder
                     };
                 })
@@ -191,9 +200,9 @@ async function getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRow
                 purchaseOrders: purchaseOrders,
                 documentRows: documentRows
             };
-        }else {
+        } else {
             return {
-                error: response.data.ErrorDescription
+                error: response.Result
             }
         }
     } catch (error) {
@@ -202,43 +211,43 @@ async function getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRow
     }
 }
 
-async function GetTransportModeList() {
+async function GetTransportModeList(user) {
     try {
-        const response = await axios({
-            method: 'get',
-            url: `https://imperialauto.co:84/IAIAPI.asmx/GetTransportModeList?RequestBy='MA017'`,
-            headers: {
-                'Authorization': 'Bearer ibeMppBlZOk=',
-                'Content-Type': 'application/json'
-            },
-            data: {}
-        });
+        const token = await generateToken(user),
+            legApi = await cds.connect.to('Legacy'),
+            response = await legApi.send({
+                query: `GET GetTransportModeList?RequestBy='${user}'`,
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+            });
 
-        const transportData = JSON.parse(response.data.d);
+        const transportData = JSON.parse(response.d);
         return transportData.map(item => ({
             TransCode: item.TransportMode
         }));
 
     } catch (error) {
         console.error("Error fetching transport mode data:", error);
-        //throw new Error("Failed to fetch account data");
+        throw new Error("Failed to fetch account data");
     }
 }
 
-async function getPurchaseMaterialQuantityList(UnitCode, PoNum, MaterialCode, PoLineNum) {
+async function getPurchaseMaterialQuantityList(UnitCode, PoNum, MaterialCode, PoLineNum, user) {
     try {
-        const response = await axios({
-            method: 'get',
-            url: `https://imperialauto.co:84/IAIAPI.asmx/GetPurchaseMaterialQuantityList?UnitCode='${UnitCode}'&PoNum='${PoNum}'&MaterialCode='${MaterialCode}'&PoLineNum='${PoLineNum}'&RequestBy='Manikandan'`,
-            headers: {
-                'Authorization': 'Bearer IncMpsaotdlKHYyyfGiVDg==',
-                'Content-Type': 'application/json'
-            },
-            data: {}
-        });
+        const token = await generateToken(user),
+            legApi = await cds.connect.to('Legacy'),
+            response = await legApi.send({
+                query: `GET GetPurchaseMaterialQuantityList?UnitCode='${UnitCode}'&PoNum='${PoNum}'&MaterialCode='${MaterialCode}'&PoLineNum='${PoLineNum}'&RequestBy='${user}'`,
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+            });
 
-        if (response.data && response.data.d) {
-            return JSON.parse(response.data.d);
+        if (response.d) {
+            return JSON.parse(response.d);
         } else {
             console.error('Error parsing response:', response.data);
             throw new Error('Error parsing the response from the API.');
@@ -249,65 +258,92 @@ async function getPurchaseMaterialQuantityList(UnitCode, PoNum, MaterialCode, Po
     }
 }
 
-async function postASN(asnData) {
-    try {
-        const response = await axios({
-            method: 'post',
-            url: 'https://imperialauto.co:84/IAIAPI.asmx/PostASN',
-            headers: {
-                'Authorization': 'Bearer IncMpsaotdlKHYyyfGiVDg==',
-                'Content-Type': 'application/json'
-            },
-            data: asnData
-        });
+// async function postASN(asnData) {
+//     try {
+//         const token = await generateToken(user),
+//             legApi = await cds.connect.to('Legacy'),
+//             response = await legApi.send({
+//                 query: `POST PostASN`,
+//                 data: asnData,
+//                 headers: {
+//                     'Authorization': `Bearer ${token}`,
+//                     'Content-Type': 'application/json'
+//                 },
+//             });
 
-        if (response.data && response.data.SuccessCode) {
-            return "ASN Posted Successfully: " + response.data.Result;
+//         if (response.d && response.d.SuccessCode) {
+//             return "ASN Posted Successfully: " + response.d.Result;
+//         } else {
+//             throw new Error(response.d.ErrorDescription || 'Unknown error occurred');
+//         }
+//     } catch (error) {
+//         console.error('Error in postASN:', error);
+//         throw error;
+//     }
+// }
+
+// async function fetchScheduleNumber(UnitCode, AddressCode) {
+//     const formattedScheduleNumber = ScheduleNumber.replace(/-/g, '/');
+//     try {
+//         const response = await axios.get(`https://imperialauto.co:84/IAIAPI.asmx/GetScheduleNumber?UnitCode='${UnitCode}'&AddressCode='${formattedScheduleNumber}'&RequestBy='Manikandan'`, {
+//             headers: {
+//                 'Authorization': 'Bearer IncMpsaotdlKHYyyfGiVDg==',
+//                 'Content-Type': 'application/json'
+//             }
+//         });
+
+//         const scheduleNumbers = JSON.parse(response.data.d).map(item => ({
+//             Schedulenumber: item.Schedulenumber
+//         }));
+//         return scheduleNumbers;
+//     } catch (error) {
+//         console.error('Error in fetchScheduleNumber:', error);
+//         throw error;
+//     }
+// }
+
+// async function fetchScheduleLineNumber(UnitCode, AddressCode, ScheduleNumber) {
+//     // Replace hyphens with slashes in ScheduleNumber
+//     const formattedScheduleNumber = ScheduleNumber.replace(/-/g, '/');
+//     try {
+//         const response = await axios.get(`https://imperialauto.co:84/IAIAPI.asmx/GetScheduleLineNumber?UnitCode='${UnitCode}'&AddressCode='${AddressCode}'&ScheduleNumber='${formattedScheduleNumber}'&RequestBy='Manikandan'`, {
+//             headers: {
+//                 'Authorization': 'Bearer IncMpsaotdlKHYyyfGiVDg==',
+//                 'Content-Type': 'application/json'
+//             }
+//         });
+//         const scheduleLineNumbers = JSON.parse(response.data.d).map(item => ({
+//             Schedulelinenumber: item.Schedulelinenumber
+//         }));
+//         return scheduleLineNumbers;
+//     } catch (error) {
+//         console.error('Error in fetchScheduleLineNumber:', error);
+//         throw error;
+//     }
+// }
+
+async function generateToken(username) {
+    try {
+        const legApi = await cds.connect.to('Legacy'),
+            response = await legApi.send({
+                query: `POST GenerateToken`,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                    "InputKey": username
+                }
+            });
+
+        if (response.d) {
+            return response.d;
         } else {
-            throw new Error(response.data.ErrorDescription || 'Unknown error occurred');
+            console.error('Error parsing token response:', response.data);
+            throw new Error('Error parsing the token response from the API.');
         }
     } catch (error) {
-        console.error('Error in postASN:', error);
-        throw error;
-    }
-}
-
-async function fetchScheduleNumber(UnitCode, AddressCode) {
-    const formattedScheduleNumber = ScheduleNumber.replace(/-/g, '/');
-    try {
-        const response = await axios.get(`https://imperialauto.co:84/IAIAPI.asmx/GetScheduleNumber?UnitCode='${UnitCode}'&AddressCode='${formattedScheduleNumber}'&RequestBy='Manikandan'`, {
-            headers: {
-                'Authorization': 'Bearer IncMpsaotdlKHYyyfGiVDg==',
-                'Content-Type': 'application/json'
-            }
-        });
-        const scheduleNumbers = JSON.parse(response.data.d).map(item => ({
-            Schedulenumber: item.Schedulenumber
-        }));
-        return scheduleNumbers;
-    } catch (error) {
-        console.error('Error in fetchScheduleNumber:', error);
-        throw error;
-    }
-}
-
-async function fetchScheduleLineNumber(UnitCode, AddressCode, ScheduleNumber) {
-    // Replace hyphens with slashes in ScheduleNumber
-    const formattedScheduleNumber = ScheduleNumber.replace(/-/g, '/');
-    try {
-        const response = await axios.get(`https://imperialauto.co:84/IAIAPI.asmx/GetScheduleLineNumber?UnitCode='${UnitCode}'&AddressCode='${AddressCode}'&ScheduleNumber='${formattedScheduleNumber}'&RequestBy='Manikandan'`, {
-            headers: {
-                'Authorization': 'Bearer IncMpsaotdlKHYyyfGiVDg==',
-                'Content-Type': 'application/json'
-            }
-        });
-        const scheduleLineNumbers = JSON.parse(response.data.d).map(item => ({
-            Schedulelinenumber: item.Schedulelinenumber
-        }));
-        return scheduleLineNumbers;
-    } catch (error) {
-        console.error('Error in fetchScheduleLineNumber:', error);
-        throw error;
+        console.error('Error generating token:', error);
+        throw new Error('Unable to generate token.');
     }
 }
 

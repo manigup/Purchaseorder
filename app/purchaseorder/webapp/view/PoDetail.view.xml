@@ -292,7 +292,7 @@
                                         text="TCS Amt"
                                     />
                                 </Column> -->
-                            
+
                                     <!-- <Column
                                     id="_IDGenColumn24"
                                     minScreenWidth="Tablet"
@@ -304,7 +304,7 @@
                                         text="Packaging"
                                     />
                                 </Column> -->
-                                   
+
                                     <Column
                                         id="_IDGenColumn9"
                                         minScreenWidth="Tablet"
@@ -424,7 +424,7 @@
                                             text="{path:'detailModel>TCA',formatter:'sp.fiori.purchaseorder.controller.formatter.formatAmount'}"
                                             wrapping="false"
                                         /> -->
-                                            
+
                                             <ObjectStatus
                                                 id="_IDGenObjectStatus3"
                                                 text="{detailModel>ConfirmStatus}"
@@ -435,6 +435,171 @@
                                 </items>
                             </Table>
                         </ScrollContainer>
+                    </IconTabFilter>
+                    <IconTabFilter
+                        id="_IDGenIconTabFilter2"
+                        icon="sap-icon://list"
+                        text="Invoice List"
+                    >
+                        <Table
+                            id="invList"
+                            class="sapUiSizeCompact"
+                        >
+                            <columns>
+                                <Column
+                                    id="_IDGenColumn11"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                >
+                                    <Text
+                                        id="_IDGenText811"
+                                        text="S.No"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn12"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                >
+                                    <Text
+                                        id="_IDGenText24"
+                                        text="Invocie Number"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn13"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                >
+                                    <Text
+                                        id="_IDGenText13"
+                                        text="Invoice Date"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn14"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                >
+                                    <Text
+                                        id="_IDGenText"
+                                        text="Total Invoice"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn15"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                >
+                                    <Text
+                                        id="_IDGenText23"
+                                        text="IGST"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn16"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                >
+                                    <Text
+                                        id="_IDGenText16"
+                                        text="CGST"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn17"
+                                    minScreenWidth="Tablet"
+                                    width="6rem"
+                                    demandPopin="true"
+                                >
+                                    <Text
+                                        id="_IDGenText17"
+                                        text="SGST"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn18"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                >
+                                    <Text
+                                        id="_IDGenText18"
+                                        text="Attachemnts"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn19"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                >
+                                    <Text
+                                        id="_IDGenText19"
+                                        text="Status"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn145"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                >
+                                    <Text
+                                        id="_IDGenText134"
+                                        text="Action"
+                                    />
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem id="invListTmp">
+                                    <cells>
+                                        <Text
+                                            id="_IDGenText111"
+                                            text="{SNo}"
+                                        />
+                                        <Text
+                                            id="_IDGenText67"
+                                            text="{REF_INV}"
+                                        />
+                                        <Text
+                                            id="_IDGenText121"
+                                            text="{path:'INVOICE_DATE', formatter:'sp.fiori.invoiceupload.controller.formatter.formatDate'}"
+                                        />
+                                        <Text
+                                            id="_IDGenText131"
+                                            text="{INVOICE_AMT}"
+                                        />
+                                        <Text
+                                            id="_IDGenText141"
+                                            text="{IGST_AMT}"
+                                        />
+                                        <Text
+                                            id="_IDGenText151"
+                                            text="{CGST_AMT}"
+                                        />
+                                        <Text
+                                            id="_IDGenText161"
+                                            text="{SGST_AMT}"
+                                        />
+                                        <Link
+                                            id="_IDGenLink2"
+                                            text="View"
+                                            emphasized="true"
+                                            press="onAttachmentsPress"
+                                        />
+                                        <ObjectStatus
+                                            id="_IDGenObjectStatus4"
+                                            text="{= ${INV_DELETE} === 'X' ? 'Deleted' : ''}"
+                                            state="Error"
+                                        />
+                                        <Button
+                                            id="_IDGenButton2"
+                                            icon="sap-icon://decline"
+                                            visible="{= ${INV_DELETE} !== 'X'}"
+                                            press="onDeletePress"
+                                        />
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
                     </IconTabFilter>
                     <!--<IconTabFilter icon="sap-icon://inspection" text="T&amp;C"></IconTabFilter>-->
                     <!--<IconTabFilter icon="sap-icon://copy" text="PDF">-->

@@ -220,91 +220,117 @@ sap.ui.define([
 		},
 		onAsnSaveDB: function () {
 			// var that = this;
-			if(this.validateFields()){
-			var oModel = this.getOwnerComponent().getModel();
+			if (this.validateFields()) {
+				var oModel = this.getOwnerComponent().getModel();
 
-			this.data = this.asnModel.getData();
-			var ASNHeaderData = {
-				"PNum_PoNum": this.data.PoNum.replace(/\//g, '-'),
-				"AsnNum": this.data.AsnNum,
-				"BillDate": this.data.BillDate,
-				"BillNumber": this.data.BillNumber,
-				"DocketNumber": this.data.DocketNumber,
-				"GRDate": this.data.GRDate,
-				"TransportName": this.data.TransportName,
-				"TransportMode": this.data.TransportMode,
-				"EwayBillNumber": this.data.EwayBillNumber,
-				"EwayBillDate": this.data.EwayBillDate,
-				"MillNumber": this.data.MillNumber,
-				"MillName": this.data.MillName,
-				"PDIRNumber": this.data.PDIRNumber,
-				"HeatNumber": this.data.HeatNumber,
-				"BatchNumber": this.data.BatchNumber,
-				"ManufacturingMonth": this.data.ManufacturingMonth,
-				"PlantName": this.data.PlantName,
-				"PlantCode": this.data.PlantCode,
-				"VendorCode": this.data.VendorCode,
-				"TotalInvNetAmnt": this.data.TotalInvNetAmnt,
-				"TotalCGstAmnt": this.data.TotalCGstAmnt,
-				"TotalSGstAmnt": this.data.TotalSGstAmnt,
-				"TotalIGstAmnt": this.data.TotalIGstAmnt,
-				"TotalAmnt": this.data.TotalAmnt,
-				"TransporterID": this.data.TransporterID
-				//"RateStatus": this.data.DocumentRows.results.every(item => item.RateAgreed === true) ? "Rate Matched" : "Rate Un-Matched"
-			};
+				this.data = this.asnModel.getData();
+				var ASNHeaderData = {
+					"PNum_PoNum": this.data.PoNum.replace(/\//g, '-'),
+					"AsnNum": this.data.AsnNum,
+					"BillDate": this.data.BillDate,
+					"BillNumber": this.data.BillNumber,
+					"DocketNumber": this.data.DocketNumber,
+					"GRDate": this.data.GRDate,
+					"TransportName": this.data.TransportName,
+					"TransportMode": this.data.TransportMode,
+					"EwayBillNumber": this.data.EwayBillNumber,
+					"EwayBillDate": this.data.EwayBillDate,
+					"MillNumber": this.data.MillNumber,
+					"MillName": this.data.MillName,
+					"PDIRNumber": this.data.PDIRNumber,
+					"HeatNumber": this.data.HeatNumber,
+					"BatchNumber": this.data.BatchNumber,
+					"ManufacturingMonth": this.data.ManufacturingMonth,
+					"PlantName": this.data.PlantName,
+					"PlantCode": this.data.PlantCode,
+					"VendorCode": this.data.VendorCode,
+					"TotalInvNetAmnt": this.data.TotalInvNetAmnt,
+					"TotalCGstAmnt": this.data.TotalCGstAmnt,
+					"TotalSGstAmnt": this.data.TotalSGstAmnt,
+					"TotalIGstAmnt": this.data.TotalIGstAmnt,
+					"TotalAmnt": this.data.TotalAmnt,
+					"TransporterID": this.data.TransporterID
+					//"RateStatus": this.data.DocumentRows.results.every(item => item.RateAgreed === true) ? "Rate Matched" : "Rate Un-Matched"
+				};
 
-			// var ASNItemData = [];
-			var oTable = this.getView().byId("AsnCreateTable");
-			var contexts = oTable.getSelectedContexts();
+				// var ASNItemData = [];
+				var oTable = this.getView().byId("AsnCreateTable");
+				var contexts = oTable.getSelectedContexts();
 
-			if (!ASNHeaderData.BillNumber) {
-				MessageBox.error("Please fill the Invoice Number");
-				return;
-			} else if (!ASNHeaderData.BillDate) {
-				MessageBox.error("Please fill the Invoice Date");
-				return;
-			}
-			if (this.getView().byId("uploadSet").getItems().length <= 0) {
-				MessageBox.error("Please upload invoice.");
-				return;
-			}
-			if (!contexts.length) {
-				MessageBox.error("No Item Selected");
-				return;
-			}
-
-			oModel.create("/ASNListHeader", ASNHeaderData, {
-				success: () => {
-					const payload = JSON.stringify(this.data.DocumentRows.results.map(item => {
-						delete item.__metadata;
-						return item;
-					}));
-					const settings = {
-						async: true,
-						url: this.modulePath + "/po/odata/v4/catalog/stageDocumentRows",
-						method: "POST",
-						headers: {
-							"content-type": "application/json"
-						},
-						processData: false,
-						data: JSON.stringify({ data: payload })
-					};
-					$.ajax(settings)
-						.done(() => {
-							MessageBox.success("Invoice submitted successfully.", {
-								onClose: () => sp.fiori.purchaseorder.controller.formatter.onNavBack()
-							});
-						});
-				},
-				error: function (oError) {
-					MessageBox.error("Error submitting invoice: " + oError.message);
+				if (!ASNHeaderData.BillNumber) {
+					MessageBox.error("Please fill the Invoice Number");
+					return;
+				} else if (!ASNHeaderData.BillDate) {
+					MessageBox.error("Please fill the Invoice Date");
+					return;
 				}
-			});
-		}else{
+				if (this.getView().byId("uploadSet").getItems().length <= 0) {
+					MessageBox.error("Please upload invoice.");
+					return;
+				}
+				if (!contexts.length) {
+					MessageBox.error("No Item Selected");
+					return;
+				}
+
+				oModel.create("/ASNListHeader", ASNHeaderData, {
+					success: () => {
+						// const payload = JSON.stringify(this.data.DocumentRows.results.map(item => {
+						// 	delete item.__metadata;
+						// 	item.InvQty = item.InvBalQty;
+						// 	return item;
+						// }));
+						let obj, invListPayload = [];
+						const payload = this.byId("AsnCreateTable").getSelectedItems().map(item => {
+							invListPayload.push({
+								REF_INV: this.data.BillNumber,
+								Item_Code: item.ItemCode,
+								Po_Num: item.PNum_PoNum,
+								INVOICE_DATE: this.data.BillDate,
+								INVOICE_AMT: this.data.TotalAmnt,
+								IGST_AMT: this.data.TotalInvNetAmnt,
+								CGST_AMT: this.data.TotalCGstAmnt,
+								SGST_AMT: this.data.TotalSGstAmnt,
+								INV_DELETE: true,
+								Po_Qty: item.PoQty,
+								Inv_Qty: item.InvQty,
+								InvBal_Qty: item.InvBalQty,
+							});
+							obj = item.getBindingContext().getObject();
+							delete obj.__metadata;
+							obj.InvQty = obj.InvBalQty;
+							return obj;
+						});
+						const settings = {
+							async: true,
+							url: this.modulePath + "/po/odata/v4/catalog/stageDocumentRows",
+							method: "POST",
+							headers: {
+								"content-type": "application/json"
+							},
+							processData: false,
+							data: JSON.stringify({ data: payload })
+						};
+						$.ajax(settings)
+							.done(() => {
+								oModel.create("/InvHeaderList", invListPayload, {
+									success: () => {
+										MessageBox.success("Invoice submitted successfully.", {
+											onClose: () => sp.fiori.purchaseorder.controller.formatter.onNavBack()
+										});
+									}
+								});
+							});
+					},
+					error: function (oError) {
+						MessageBox.error("Error submitting invoice: " + oError.message);
+					}
+				});
+			} else {
 				MessageBox.error("Please fill correct Eway Bill Number");
 				return;
-				
-		}
+
+			}
 		},
 
 
@@ -339,9 +365,9 @@ sap.ui.define([
 		_createEntity: function (item, poNum) {
 			var oModel = this.getView().getModel();
 			this.hardcodedURL = "";
-				if (window.location.href.includes("site")) {
-					this.hardcodedURL = jQuery.sap.getModulePath("sp.fiori.purchaseorder");
-				}
+			if (window.location.href.includes("site")) {
+				this.hardcodedURL = jQuery.sap.getModulePath("sp.fiori.purchaseorder");
+			}
 			var oData = {
 				PNum_PoNum: poNum,
 				mediaType: item.getMediaType(),
@@ -369,9 +395,9 @@ sap.ui.define([
 		_uploadContent: function (item, poNum) {
 			//var encodedPoNum = encodeURIComponent(poNum);
 			this.hardcodedURL = "";
-				if (window.location.href.includes("site")) {
-					this.hardcodedURL = jQuery.sap.getModulePath("sp.fiori.purchaseorder");
-				}
+			if (window.location.href.includes("site")) {
+				this.hardcodedURL = jQuery.sap.getModulePath("sp.fiori.purchaseorder");
+			}
 			var url = this.hardcodedURL + `/po/odata/v4/catalog/Files(PNum_PoNum='${poNum}')/content`
 			item.setUploadUrl(url);
 			var oUploadSet = this.byId("uploadSet");
@@ -445,11 +471,11 @@ sap.ui.define([
 			this.byId("AsnCreateTable").getSelectedItems().forEach(item => {
 				obj = item.getBindingContext("asnModel").getObject();
 				totalInvNetAmnt += parseFloat(obj.PoQty) * parseFloat(obj.UnitPrice);
-				if(parseFloat(obj.CGST) !== 0){
+				if (parseFloat(obj.CGST) !== 0) {
 					totalCGstAmnt += (parseFloat(obj.CGST) * parseFloat(obj.PoQty) * parseFloat(obj.UnitPrice)) / 100;
-				}if(parseFloat(obj.SGST) !== 0){
+				} if (parseFloat(obj.SGST) !== 0) {
 					totalSGstAmnt += (parseFloat(obj.SGST) * parseFloat(obj.PoQty) * parseFloat(obj.UnitPrice)) / 100;
-				}if(parseFloat(obj.IGST) !== 0){
+				} if (parseFloat(obj.IGST) !== 0) {
 					totalIGstAmnt += (parseFloat(obj.IGST) * parseFloat(obj.PoQty) * parseFloat(obj.UnitPrice)) / 100;
 				}
 				totalAmnt = totalInvNetAmnt + totalCGstAmnt + totalSGstAmnt + totalIGstAmnt;
@@ -496,16 +522,16 @@ sap.ui.define([
 		},
 		validateFields: function () {
 			var bValidationError = true, oInput = this.getView().byId("ewayBillNumberId"), oBinding = oInput.getBinding("value");
-			if(oInput.getValue()){
-			try {
-				oBinding.getType().validateValue(oInput.getValue());
-				oInput.setValueState("None");
-				bValidationError = true;
-			} catch (oException) {
-				oInput.setValueState("Error");
-				bValidationError = false;
+			if (oInput.getValue()) {
+				try {
+					oBinding.getType().validateValue(oInput.getValue());
+					oInput.setValueState("None");
+					bValidationError = true;
+				} catch (oException) {
+					oInput.setValueState("Error");
+					bValidationError = false;
+				}
 			}
-		}
 			return bValidationError;
 		},
 		formatAmnt: function (oAmount) {
