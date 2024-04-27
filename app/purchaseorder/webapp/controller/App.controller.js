@@ -46,7 +46,7 @@ sap.ui.define([
           url: modulePath + slash + "user-api/attributes",
           type: "GET",
           success: res => {
-            if (!sessionStorage.setItem('AddressCodePO')) {
+            if (!sessionStorage.getItem('AddressCodePO')) {
               sessionStorage.setItem('AddressCodePO', res.login_name[0]);
             }
             sap.ui.getCore().getModel("oDataModel").setHeaders({

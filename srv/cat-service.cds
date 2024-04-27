@@ -36,4 +36,5 @@ service CatalogService {
     function GetTransportModeList()                                                                                        returns array of TransType;
     // action   PostASN(asnData : String)                                                                                     returns String;
     action   stageDocumentRows(data : String)                                                                              returns String;
+    action   stageInvHeaderList(data : String)                                                                             returns String;
 }

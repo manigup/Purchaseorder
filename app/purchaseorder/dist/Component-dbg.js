@@ -66,8 +66,8 @@ sap.ui.define([
                     }
                 });
                 // enable routing
-                HashChanger.getInstance().replaceHash("");
-                this.getRouter().initialize();
+                // HashChanger.getInstance().replaceHash("");
+                // this.getRouter().initialize();
 
                 // set the device model
                 this.setModel(models.createDeviceModel(), "device");

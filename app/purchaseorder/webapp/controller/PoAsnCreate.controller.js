@@ -255,7 +255,7 @@ sap.ui.define([
 
 				// var ASNItemData = [];
 				var oTable = this.getView().byId("AsnCreateTable");
-				var contexts = oTable.getSelectedContexts();
+				var contexts = oTable.getSelectedItems();
 
 				if (!ASNHeaderData.BillNumber) {
 					MessageBox.error("Please fill the Invoice Number");
@@ -264,7 +264,7 @@ sap.ui.define([
 					MessageBox.error("Please fill the Invoice Date");
 					return;
 				}
-				if (this.getView().byId("uploadSet").getItems().length <= 0) {
+				if (this.getView().byId("uploadSet").getIncompleteItems().length <= 0) {
 					MessageBox.error("Please upload invoice.");
 					return;
 				}
@@ -280,28 +280,32 @@ sap.ui.define([
 						// 	item.InvQty = item.InvBalQty;
 						// 	return item;
 						// }));
-						let obj, invListPayload = [];
-						const payload = this.byId("AsnCreateTable").getSelectedItems().map(item => {
+						let obj, poQty, invQty, invBalQty, invListPayload = [];
+						const payload = JSON.stringify(contexts.map(item => {
+							obj = item.getBindingContext("asnModel").getObject();
+							poQty = parseInt(obj.PoQty);
+							invQty = parseInt(obj.InvBalQty);
+							invBalQty = poQty - invQty;
 							invListPayload.push({
 								REF_INV: this.data.BillNumber,
-								Item_Code: item.ItemCode,
-								Po_Num: item.PNum_PoNum,
+								Item_Code: obj.ItemCode,
+								Po_Num: obj.PNum_PoNum,
 								INVOICE_DATE: this.data.BillDate,
 								INVOICE_AMT: this.data.TotalAmnt,
 								IGST_AMT: this.data.TotalInvNetAmnt,
 								CGST_AMT: this.data.TotalCGstAmnt,
 								SGST_AMT: this.data.TotalSGstAmnt,
 								INV_DELETE: true,
-								Po_Qty: item.PoQty,
-								Inv_Qty: item.InvQty,
-								InvBal_Qty: item.InvBalQty,
+								Po_Qty: poQty,
+								Inv_Qty: invQty,
+								InvBal_Qty: invBalQty
 							});
-							obj = item.getBindingContext().getObject();
 							delete obj.__metadata;
-							obj.InvQty = obj.InvBalQty;
+							obj.InvQty = invQty;
+							obj.InvBalQty = invBalQty;
 							return obj;
-						});
-						const settings = {
+						}));
+						let settings = {
 							async: true,
 							url: this.modulePath + "/po/odata/v4/catalog/stageDocumentRows",
 							method: "POST",
@@ -313,23 +317,28 @@ sap.ui.define([
 						};
 						$.ajax(settings)
 							.done(() => {
-								oModel.create("/InvHeaderList", invListPayload, {
-									success: () => {
+								settings = {
+									async: true,
+									url: this.modulePath + "/po/odata/v4/catalog/stageInvHeaderList",
+									method: "POST",
+									headers: {
+										"content-type": "application/json"
+									},
+									processData: false,
+									data: JSON.stringify({ data: JSON.stringify(invListPayload) })
+								};
+								$.ajax(settings)
+									.done(() => {
 										MessageBox.success("Invoice submitted successfully.", {
 											onClose: () => sp.fiori.purchaseorder.controller.formatter.onNavBack()
 										});
-									}
-								});
+									});
 							});
-					},
-					error: function (oError) {
-						MessageBox.error("Error submitting invoice: " + oError.message);
 					}
 				});
 			} else {
 				MessageBox.error("Please fill correct Eway Bill Number");
 				return;
-
 			}
 		},
 

@@ -40,6 +40,8 @@ sap.ui.define([
 
 			this.getView().addStyleClass("sapUiSizeCompact");
 
+			this.tblTemp = this.byId("invListTmp").clone();
+
 			// this.getView().byId("ObjectId").onAfterRendering = function () {
 			// 	sap.m.ObjectHeader.prototype.onAfterRendering.apply(this, arguments);
 			// 	this.$().find('.sapMOHTitleDiv').find('.sapMText').css('color', "#af2323");
@@ -61,9 +63,9 @@ sap.ui.define([
 				oModel.read(request, {
 					urlParameters: {
 						"$expand": "DocumentRows",
-                        AddressCode: this.AddressCodePO,
-                        UnitCode: this.unitCode
-                    },
+						AddressCode: this.AddressCodePO,
+						UnitCode: this.unitCode
+					},
 					success: function (oData) {
 						var filteredPurchaseOrder = oData.results.find(po => po.PoNum === that.Po_Num);
 						if (filteredPurchaseOrder) {
@@ -73,12 +75,12 @@ sap.ui.define([
 							that.detailModel.setData(filteredPurchaseOrder.DocumentRows.results);
 							that.detailModel.refresh(true);
 							var detailModelData = that.getView().getModel("detailModel").getData();
-							for(var i = 0; i < detailModelData.length; i++){
-								if(detailModelData[i].DeliveredQty === "0"){
+							for (var i = 0; i < detailModelData.length; i++) {
+								if (detailModelData[i].DeliveredQty === "0") {
 									detailModelData[i].ConfirmStatus = "Open";
-								}else if(detailModelData[i].DeliveredQty === detailModelData[i].PoQty){
+								} else if (detailModelData[i].DeliveredQty === detailModelData[i].PoQty) {
 									detailModelData[i].ConfirmStatus = "Closed";
-								}else if((detailModelData[i].DeliveredQty > "0") && (detailModelData[i].DeliveredQty < detailModelData[i].PoQty)){
+								} else if ((detailModelData[i].DeliveredQty > "0") && (detailModelData[i].DeliveredQty < detailModelData[i].PoQty)) {
 									detailModelData[i].ConfirmStatus = "Partially";
 								}
 							}
@@ -92,7 +94,16 @@ sap.ui.define([
 						MessageBox.error(value.error.message.value);
 					}
 				});
+
+				this.getInvoiceList();
 			}
+		},
+
+		getInvoiceList: function () {
+			this.byId("invList").bindAggregation("items", {
+				path: "/InvHeaderList",
+				template: this.tblTemp
+			});
 		},
 
 		onMaterialPress: function (oEvent) {
@@ -196,7 +207,7 @@ sap.ui.define([
 			});
 
 		},
-		
+
 	});
 
 });

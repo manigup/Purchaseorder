@@ -77,7 +77,7 @@
                 />
                 <Label
                     id="_IDGenLabel1"
-                    text=" Invoice Number"
+                    text="Invoice Number"
                     required="true"
                 />
                 <Input
@@ -233,6 +233,7 @@
                     width="20rem"
                 >
                     <core:Item
+                        id="_IDGenItem1"
                         key="{transport>TransCode}"
                         text="{transport>TransCode}"
                     />
@@ -320,7 +321,7 @@
                 <Label
                     id="_IDGenLabel30"
                     text="Manf. Month"
-                     visible="false"
+                    visible="false"
                 />
                 <DatePicker
                     id="_IDGenDatePicker3"
@@ -329,7 +330,7 @@
                     valueFormat="yyyyMMdd"
                     displayFormat="long"
                     enabled="true"
-                     visible="false"
+                    visible="false"
                 />
                 <!-- <Label
                     id="_IDGenLabel313"
@@ -352,7 +353,6 @@
                         horizontal="true"
                         vertical="true"
                     >
-                        
                         <Table
                             id="AsnCreateTable"
                             items="{asnModel>/DocumentRows/results}"
@@ -488,6 +488,34 @@
                                         id="_IDGenLabel311"
                                         design="Bold"
                                         text="PO Qty"
+                                        wrapping="true"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn290"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                    width="5rem"
+                                    hAlign="Center"
+                                >
+                                    <Label
+                                        id="_IDGenLabel41"
+                                        design="Bold"
+                                        text="Invoice Qty."
+                                        wrapping="true"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn227"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                    width="7rem"
+                                    hAlign="Center"
+                                >
+                                    <Label
+                                        id="_IDGenLabel42"
+                                        design="Bold"
+                                        text="Balance Qty."
                                         wrapping="true"
                                     />
                                 </Column>
@@ -763,6 +791,16 @@
                                         <Text
                                             id="_IDGenText21"
                                             text="{asnModel>PoQty}"
+                                        />
+                                        <Text
+                                            id="_IDGenext21"
+                                            text="{asnModel>InvQty}"
+                                        />
+                                        <StepInput
+                                            id="_IDGenext22"
+                                            value="{asnModel>InvBalQty}"
+                                            min="0"
+                                            max="{= ${asnModel>InvBalQty} + 1}"
                                         />
                                         <Text
                                             id="pkgamtId"

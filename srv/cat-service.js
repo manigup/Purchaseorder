@@ -3,13 +3,36 @@ const cds = require('@sap/cds');
 
 module.exports = (srv) => {
 
-    const { PurchaseOrders, ASNListHeader, DocumentRowItems } = srv.entities;
+    const { PurchaseOrders, ASNListHeader, DocumentRowItems, InvHeaderList } = srv.entities;
 
     srv.on("stageDocumentRows", async function (req) {
 
         const parseData = JSON.parse(req.data.data);
-        let sInsertQuery = INSERT.into(DocumentRowItems).entries(parseData);
-        await cds.tx(req).run(sInsertQuery).catch((err) => console.log(err.message));
+        let sInsertQuery = UPSERT.into(DocumentRowItems).entries(parseData);
+        await cds.tx(req).run(sInsertQuery).catch((err) => {
+            req.reject(500, err.message);
+            console.log(err.message);
+        });
+    });
+
+    srv.on("stageInvHeaderList", async function (req) {
+
+        const parseData = JSON.parse(req.data.data);
+        let sInsertQuery = INSERT.into(InvHeaderList).entries(parseData);
+        await cds.tx(req).run(sInsertQuery).catch((err) => {
+            req.reject(500, err.message);
+            console.log(err.message)
+        });
+    });
+
+    srv.before('CREATE', 'ASNListHeader', async (req) => {
+
+        const records = await cds.run(cds.parse.cql("Select BillNumber from my.purchaseorder.ASNListHeader")),
+            duplicate = records.filter(item => item.BillNumber === req.data.BillNumber);
+
+        if (duplicate.length > 0) {
+            req.reject(400, 'Duplicate invoice number');
+        }
     });
 
     srv.on('READ', PurchaseOrders, async (req) => {
@@ -109,14 +132,28 @@ async function getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRow
                 },
             });
 
-        const responseASN = await SELECT.from(ASNListHeader).columns('PNum_PoNum');
+        // const responseASN = await SELECT.from(ASNListHeader).columns('PNum_PoNum');
+        const items = await SELECT.from(DocumentRowItems).columns('PNum_PoNum', 'InvBalQty', 'ItemCode');
 
         if (response.d) {
             const dataArray = JSON.parse(response.d);
-            const asnSet = new Set(responseASN.map(asn => asn.PNum_PoNum));
-
+            // const asnSet = new Set(responseASN.map(asn => asn.PNum_PoNum));
+            let dbItems, findErpItemInDb, check = [], status = "Invoice Submission Pending";
             const purchaseOrders = dataArray.map(data => {
-                const hasMatchingASN = asnSet.has(data.PoNum.replace(/\//g, '-'));
+                // const hasMatchingASN = asnSet.has(data.PoNum.replace(/\//g, '-'));
+                dbItems = items.filter(item => item.PNum_PoNum === data.PoNum.replace(/\//g, '-'));
+                if (dbItems.length > 0) {
+                    // erp items
+                    data.DocumentRows.filter(item => item.PoNum === data.PoNum.replace(/\//g, '-')).forEach(erpItem => {
+                        findErpItemInDb = dbItems.find(dbItem => dbItem.ItemCode === erpItem.ItemCode)
+                        if (findErpItemInDb && findErpItemInDb.InvBalQty === 0) {
+                            check.push(true);
+                        } else {
+                            check.push(false);
+                        }
+                    });
+                    if (check.length > 0 && check.every(item => item === true)) status = "Invoice Submitted";
+                }
                 return {
                     PoNum: data.PoNum,
                     PoDate: data.PoDate,
@@ -126,7 +163,7 @@ async function getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRow
                     PlantName: data.PlantName,
                     ValidFrom: data.ValidFrom,
                     ValidTo: data.ValidTo,
-                    HasAttachments: hasMatchingASN ? "Invoice Submitted" : "Invoice Submission Pending",
+                    HasAttachments: status,
                 };
             });
 
@@ -152,7 +189,7 @@ async function getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRow
 
                     if (Po_Num) {
                         poQty = parseInt(row.PoQty);
-                        invQty = parseInt(row.InvQty) || 0;
+                        invQty = parseInt(filter[0].InvQty) || 0;
                         invBalQty = poQty - invQty;
                     }
                     return {
