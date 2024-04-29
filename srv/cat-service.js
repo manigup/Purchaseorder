@@ -136,12 +136,13 @@ async function getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRow
         if (response.d) {
             const dataArray = JSON.parse(response.d);
             // const asnSet = new Set(responseASN.map(asn => asn.PNum_PoNum));
-            let dbItems, findErpItemInDb, check = [], status = "Invoice Submission Pending";
+            let dbItems, findErpItemInDb, check, status = "Invoice Submission Pending";
             const purchaseOrders = dataArray.map(data => {
                 // const hasMatchingASN = asnSet.has(data.PoNum.replace(/\//g, '-'));
                 dbItems = items.filter(item => item.PNum_PoNum === data.PoNum);
                 if (dbItems.length > 0) {
                     // erp items
+                    check = [];
                     data.DocumentRows.forEach(erpItem => {
                         findErpItemInDb = dbItems.find(dbItem => dbItem.ItemCode === erpItem.ItemCode)
                         if (findErpItemInDb && findErpItemInDb.InvBalQty === 0) {
