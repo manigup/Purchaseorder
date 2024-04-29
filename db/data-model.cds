@@ -144,6 +144,7 @@ entity InvHeaderList : managed {
 
 entity Files : managed {
     key PNum      : Association to PurchaseOrders;
+    key Ref_Inv  : String;
 
         @Core.MediaType                  : mediaType
         content   : LargeBinary;
