@@ -578,7 +578,7 @@
                                         text="Status"
                                     />
                                 </Column>
-                                <!-- <Column
+                                <Column
                                     id="_IDGenColumn145"
                                     minScreenWidth="Tablet"
                                     demandPopin="true"
@@ -589,7 +589,7 @@
                                         id="_IDGenText134"
                                         text="Action"
                                     />
-                                </Column> -->
+                                </Column>
                             </columns>
                             <items>
                                 <ColumnListItem id="invListTmp">
@@ -636,16 +636,16 @@
                                         />
                                         <ObjectStatus
                                             id="_IDGenObjectStatus4"
-                                            text="Submitted"
-                                            state="Success"
+                                            text="{= ${INV_DELETE} ? 'Deleted' : 'Submitted'}"
+                                            state="{= ${INV_DELETE} ? 'Error' : 'Success'}"
                                         />
-                                        <!-- {= ${INV_DELETE} ? 'Deleted' : ''} -->
-                                        <!-- <Button
+                                        <Button
                                             id="_IDGenButton2"
+                                            type="Reject"
                                             icon="sap-icon://decline"
                                             visible="{= ${INV_DELETE} === false}"
                                             press="onDeletePress"
-                                        /> -->
+                                        />
                                     </cells>
                                 </ColumnListItem>
                             </items>

@@ -36,11 +36,12 @@ sap.ui.define([
 			this.byId("uploadSet").attachEvent("openPressed", this.onOpenPressed, this);
 		},
 		handleRouteMatched: function (event) {
-			var oModel = this.getView().getModel();
-			var oUploadSet = this.byId("uploadSet");
-			oUploadSet.removeAllItems();
 
 			if (event.getParameter("name") === "PoAsnCreate") {
+
+				var oModel = this.getView().getModel();
+				var oUploadSet = this.byId("uploadSet");
+				oUploadSet.removeAllIncompleteItems();
 
 				//this.byId("rateOk").setSelected(true);
 
@@ -343,6 +344,13 @@ sap.ui.define([
 								};
 								$.ajax(settings)
 									.done(() => {
+										this._createEntity(this.uploadItem, this.data.PoNum.replace(/\//g, '-'), this.data.BillNumber)
+											.then(() => {
+												this._uploadContent(this.uploadItem, this.data.PoNum.replace(/\//g, '-'), this.data.BillNumber);
+											})
+											.catch((err) => {
+												console.log("Error: " + err);
+											})
 										MessageBox.success("Invoice submitted successfully.", {
 											onClose: () => sp.fiori.purchaseorder.controller.formatter.onNavBack()
 										});
@@ -370,30 +378,30 @@ sap.ui.define([
 		},
 
 		//	********************************************Upload File start Code ***********************************
-		onAfterItemAdded: function (oEvent) {
-			let item = oEvent.getParameter("item");
-			let poNum = this.Po_Num.replace(/\//g, '-');
-
-			this._createEntity(item, poNum)
-				.then(() => {
-					this._uploadContent(item, poNum);
-				})
-				.catch((err) => {
-					console.log("Error: " + err);
-				})
+		onAfterItemAdded: function (evt) {
+			this.uploadItem = evt.getParameter("item");
+			evt.getParameter("item").setVisibleEdit(false).setVisibleRemove(false);
+			// let poNum = this.Po_Num.replace(/\//g, '-');
+			// this._createEntity(item, poNum)
+			// 	.then(() => {
+			// 		this._uploadContent(item, poNum);
+			// 	})
+			// 	.catch((err) => {
+			// 		console.log("Error: " + err);
+			// 	})
 		},
 
-		onUploadCompleted: function (oEvent) {
-			// var oUploadSet = this.byId("uploadSet");
-			var oUploadedItem = oEvent.getParameter("item");
-			var sUploadUrl = oUploadedItem.getUploadUrl();
+		// onUploadCompleted: function (oEvent) {
+		// 	// var oUploadSet = this.byId("uploadSet");
+		// 	var oUploadedItem = oEvent.getParameter("item");
+		// 	var sUploadUrl = oUploadedItem.getUploadUrl();
 
-			var sDownloadUrl = sUploadUrl
-			oUploadedItem.setUrl(sDownloadUrl);
-			// oUploadSet.getBinding("items").refresh();
-			// oUploadSet.invalidate();
-		},
-		_createEntity: function (item, poNum) {
+		// 	var sDownloadUrl = sUploadUrl
+		// 	oUploadedItem.setUrl(sDownloadUrl);
+		// 	// oUploadSet.getBinding("items").refresh();
+		// 	// oUploadSet.invalidate();
+		// },
+		_createEntity: function (item, poNum, invNum) {
 			var oModel = this.getView().getModel();
 			this.hardcodedURL = "";
 			if (window.location.href.includes("site")) {
@@ -401,12 +409,11 @@ sap.ui.define([
 			}
 			var oData = {
 				PNum_PoNum: poNum,
+				Ref_Inv: invNum,
 				mediaType: item.getMediaType(),
 				fileName: item.getFileName(),
 				size: item.getFileObject().size,
-				url: this.hardcodedURL + `/po/odata/v4/catalog/Files(PNum_PoNum='${poNum}')/content`
-				//url: this.getView().getModel().sServiceUrl + `/Files(PNum_PoNum='${poNum}')/content`
-
+				url: this.hardcodedURL + `/po/odata/v4/catalog/Files(PNum_PoNum='${poNum}',Ref_Inv='${invNum}')/content`
 			};
 
 			return new Promise((resolve, reject) => {
@@ -423,13 +430,13 @@ sap.ui.define([
 		},
 
 
-		_uploadContent: function (item, poNum) {
+		_uploadContent: function (item, poNum, invNum) {
 			//var encodedPoNum = encodeURIComponent(poNum);
 			this.hardcodedURL = "";
 			if (window.location.href.includes("site")) {
 				this.hardcodedURL = jQuery.sap.getModulePath("sp.fiori.purchaseorder");
 			}
-			var url = this.hardcodedURL + `/po/odata/v4/catalog/Files(PNum_PoNum='${poNum}')/content`
+			var url = this.hardcodedURL + `/po/odata/v4/catalog/Files(PNum_PoNum='${poNum}',Ref_Inv='${invNum}')/content`
 			item.setUploadUrl(url);
 			var oUploadSet = this.byId("uploadSet");
 			oUploadSet.setHttpRequestMethod("PUT")

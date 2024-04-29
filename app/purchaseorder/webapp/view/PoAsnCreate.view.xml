@@ -10,7 +10,7 @@
 >
     <Page
         id="_IDGenPage1"
-        title="Submit Invoice"
+        title="{=${asnModel>/HasAttachments} === 'Invoice Submitted' ? 'Display Invoice' : 'Submit Invoice'}"
         titleAlignment="Center"
         showNavButton="true"
         navButtonPress="onNavBack"
@@ -86,6 +86,7 @@
                     value="{asnModel>/BillNumber}"
                     width="20rem"
                     maxLength="16"
+                    enabled="{=${asnModel>/HasAttachments} !== 'Invoice Submitted'}"
                 />
                 <Label
                     id="_IDGenLabel2"
@@ -98,6 +99,7 @@
                     width="20rem"
                     valueFormat="yyyyMMdd"
                     displayFormat="long"
+                    enabled="{=${asnModel>/HasAttachments} !== 'Invoice Submitted'}"
                 />
                 <Label
                     id="_IDGenLabel26"
@@ -108,6 +110,7 @@
                     id="ewayBillNumberId"
                     value="{path:'asnModel>/EwayBillNumber',type:'sap.ui.model.type.String',constraints:{minLength:12,maxLength:12}}"
                     width="20rem"
+                    enabled="{=${asnModel>/HasAttachments} !== 'Invoice Submitted'}"
                 />
                 <Label
                     id="_IDGenLabel27"
@@ -119,7 +122,7 @@
                     width="20rem"
                     valueFormat="yyyyMMdd"
                     displayFormat="long"
-                    enabled="true"
+                    enabled="{=${asnModel>/HasAttachments} !== 'Invoice Submitted'}"
                 />
                 <Label
                     id="_IDGenLabel221"
@@ -867,6 +870,7 @@
                                             id="_IDGenDatePicker4"
                                             value="{asnModel>MatExpDate}"
                                             valueFormat="yyyyMMdd"
+                                            enabled="{=${asnModel>/HasAttachments} !== 'Invoice Submitted'}"
                                         />
                                     </cells>
                                 </ColumnListItem>
@@ -882,19 +886,20 @@
                         id="uploadSet"
                         instantUpload="false"
                         uploadEnabled="{=${asnModel>/HasAttachments} === 'Invoice Submitted' ? false : true }"
+                        multiple="false"
                         afterItemAdded="onAfterItemAdded"
-                        uploadCompleted="onUploadCompleted"
+                        mode="None"
                     >
-                        <upload:toolbar />
+                        <!-- uploadCompleted="onUploadCompleted" -->
                         <upload:items>
                             <upload:UploadSetItem
                                 id="_IDGenUploadSetItem1"
                                 fileName="{fileName}"
                                 mediaType="{mediaType}"
                                 url="{url}"
+                                openPressed="onOpenPressed"
                                 visibleEdit="false"
                                 visibleRemove="false"
-                                openPressed="onOpenPressed"
                             >
                                 <upload:attributes>
                                     <ObjectAttribute
@@ -909,12 +914,12 @@
                                         text="{createdAt}"
                                         active="false"
                                     />
-                                    <ObjectAttribute
+                                    <!-- <ObjectAttribute
                                         id="_IDGenObjectAttribute4"
                                         title="File Size"
                                         text="{size}"
                                         active="false"
-                                    />
+                                    /> -->
                                 </upload:attributes>
                             </upload:UploadSetItem>
                         </upload:items>

@@ -37,4 +37,5 @@ service CatalogService {
     // action   PostASN(asnData : String)                                                                                     returns String;
     action   stageDocumentRows(data : String)                                                                              returns String;
     action   stageInvHeaderList(data : String)                                                                             returns String;
+    action   reverseInvList(data : String)                                                                                 returns String;
 }

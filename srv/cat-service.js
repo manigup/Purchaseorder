@@ -23,6 +23,24 @@ module.exports = (srv) => {
         });
     });
 
+    srv.on("reverseInvList", async function (req) {
+
+        const parseData = JSON.parse(req.data.data);
+
+        let entries = { INV_DELETE: true, REF_INV: parseData.REF_INV, Item_Code: parseData.Item_Code, Po_Num: parseData.Po_Num },
+            updateQuery = UPSERT.into(InvHeaderList).entries(entries);
+        await cds.tx(req).run(updateQuery).catch((err) => {
+            req.reject(500, err.message);
+        });
+
+        entries = { ItemCode: parseData.Item_Code, PNum_PoNum: parseData.Po_Num, InvBalQty: parseData.Inv_Qty, InvQty: 0 },
+            updateQuery = UPSERT.into(DocumentRowItems).entries(entries);
+        await cds.tx(req).run(updateQuery).catch((err) => {
+            req.reject(500, err.message);
+        });
+
+    });
+
     srv.before('CREATE', 'ASNListHeader', async (req) => {
 
         const records = await cds.run(cds.parse.cql("Select BillNumber from my.purchaseorder.ASNListHeader")),
@@ -145,7 +163,7 @@ async function getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRow
                     // erp items
                     check = [];
                     data.DocumentRows.forEach(erpItem => {
-                        findErpItemInDb = dbItems.find(dbItem => dbItem.ItemCode === erpItem.ItemCode)
+                        findErpItemInDb = dbItems.findLast(dbItem => dbItem.ItemCode === erpItem.ItemCode)
                         if (findErpItemInDb && findErpItemInDb.InvBalQty === 0) {
                             check.push(true);
                         } else {

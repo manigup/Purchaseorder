@@ -2,9 +2,8 @@ sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/m/MessageBox",
 	"sap/ui/model/json/JSONModel",
-	"sap/ui/model/Filter",
-	"sap/ui/model/FilterOperator",
-], function (Controller, MessageBox, JSONModel, Filter, FilterOperator) {
+	"sap/ui/model/Filter"
+], function (Controller, MessageBox, JSONModel, Filter) {
 	"use strict";
 
 	return Controller.extend("sp.fiori.purchaseorder.controller.PoDetail", {
@@ -102,7 +101,7 @@ sap.ui.define([
 		getInvoiceList: function () {
 			this.byId("invList").bindAggregation("items", {
 				path: "/InvHeaderList",
-				filters: new sap.ui.model.Filter('Po_Num', "EQ", this.Po_Num),
+				filters: new Filter('Po_Num', "EQ", this.Po_Num),
 				template: this.tblTemp
 			});
 		},
@@ -203,12 +202,39 @@ sap.ui.define([
 			this.router.navTo("POItemDetails", {
 				"Po_No": Po_No,
 				"Item_No": Data.ItemCode,
-				"Line_Num": Data.LineNum,
-
+				"Line_Num": Data.LineNum
 			});
-
 		},
 
+		onDeletePress: function (evt) {
+			const obj = evt.getSource().getBindingContext().getObject();
+			MessageBox.confirm("Are you sure ?", {
+				title: "Confirm",
+				onClose: (action) => {
+					if (action === "YES") {
+						const settings = {
+							async: true,
+							url: "/po/odata/v4/catalog/reverseInvList",
+							method: "POST",
+							headers: {
+								"content-type": "application/json"
+							},
+							processData: false,
+							data: JSON.stringify({ data: JSON.stringify({ Po_Num: obj.Po_Num, Item_Code: obj.Item_Code, Inv_Qty: obj.Inv_Qty, REF_INV: obj.REF_INV }) })
+						};
+						$.ajax(settings)
+							.done(() => {
+								MessageBox.success("Invoice " + obj.REF_INV + " revered successfully", {
+									onClose: () => this.getInvoiceList()
+								})
+							}).error((error) => {
+								MessageBox.error(error.responseText)
+							});
+					}
+				},
+				actions: ["YES", "NO"]
+			});
+		}
 	});
 
 });
