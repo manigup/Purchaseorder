@@ -136,9 +136,10 @@ async function getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRow
         if (response.d) {
             const dataArray = JSON.parse(response.d);
             // const asnSet = new Set(responseASN.map(asn => asn.PNum_PoNum));
-            let dbItems, findErpItemInDb, check, status = "Invoice Submission Pending";
+            let dbItems, findErpItemInDb, check, status;
             const purchaseOrders = dataArray.map(data => {
                 // const hasMatchingASN = asnSet.has(data.PoNum.replace(/\//g, '-'));
+                status = "Invoice Submission Pending";
                 dbItems = items.filter(item => item.PNum_PoNum === data.PoNum);
                 if (dbItems.length > 0) {
                     // erp items
@@ -151,7 +152,9 @@ async function getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRow
                             check.push(false);
                         }
                     });
-                    if (check.length > 0 && check.every(item => item === true)) status = "Invoice Submitted";
+                    if (check.length > 0 && check.every(item => item === true)) {
+                        status = "Invoice Submitted";
+                    }
                 }
                 return {
                     PoNum: data.PoNum,
