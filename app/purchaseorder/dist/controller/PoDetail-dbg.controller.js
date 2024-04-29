@@ -102,12 +102,13 @@ sap.ui.define([
 		getInvoiceList: function () {
 			this.byId("invList").bindAggregation("items", {
 				path: "/InvHeaderList",
+				filters: new sap.ui.model.Filter('Po_Num', "EQ", this.Po_Num),
 				template: this.tblTemp
 			});
 		},
 
 		onMaterialPress: function (oEvent) {
-			var that = this;
+			// var that = this;
 			var LineItemData = oEvent.getSource().getParent().getBindingContext("detailModel").getObject();
 			var materialData = [];
 			materialData.push(LineItemData);

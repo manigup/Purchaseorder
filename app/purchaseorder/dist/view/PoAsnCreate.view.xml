@@ -356,7 +356,7 @@
                         <Table
                             id="AsnCreateTable"
                             items="{asnModel>/DocumentRows/results}"
-                            mode="MultiSelect"
+                            mode="{=${asnModel>/HasAttachments} === 'Invoice Submitted' ? 'None' : 'MultiSelect' }"
                             rememberSelections="true"
                             selectionChange="onRowSelect"
                         >
@@ -800,7 +800,8 @@
                                             id="_IDGenext22"
                                             value="{asnModel>InvBalQty}"
                                             min="0"
-                                            max="{= ${asnModel>InvBalQty} + 1}"
+                                            max="{= ${asnModel>PoQty} - ${asnModel>InvQty} }"
+                                            enabled="{= ${asnModel>InvQty} !== ${asnModel>PoQty} }"
                                         />
                                         <Text
                                             id="pkgamtId"

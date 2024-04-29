@@ -31,7 +31,7 @@ sp.fiori.purchaseorder.controller.formatter = {
 				"groupingEnabled": true,
 				"groupingSeparator": ',',
 				"groupingSize": 3,
-				"decimalSeparator": "." 
+				"decimalSeparator": "."
 			});
 			return oFormat.format(oAmount);
 		}
@@ -52,20 +52,21 @@ sp.fiori.purchaseorder.controller.formatter = {
 		return "";
 	},
 	formatDate1: function (oDate) {
-		if (oDate.includes("Week")) {
-			return oDate;
+		// if (oDate.includes("Week")) {
+		// 	return oDate;
+		// } else {
+		if (oDate !== "" && oDate !== null && oDate !== undefined) {
+			var date = oDate.substring(4, 6) + "/" + oDate.substring(6, 8) + "/" + oDate.substring(0, 4);
+
+			var DateInstance = new Date(date);
+			var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
+				pattern: "MMM dd, yyyy"
+			});
+			return dateFormat.format(DateInstance);
 		} else {
-			if (oDate !== "" && oDate !== null && oDate !== undefined) {
-
-				var date = oDate.substring(4, 6) + "/" + oDate.substring(6, 8) + "/" + oDate.substring(0, 4);
-
-				var DateInstance = new Date(date);
-				var dateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-					pattern: "MMM dd, yyyy"
-				});
-				return dateFormat.format(DateInstance);
-			}
+			return "";
 		}
+		// }
 		// return "";
 	},
 
@@ -95,7 +96,7 @@ sp.fiori.purchaseorder.controller.formatter = {
 		}
 		else if (oStatus === "Confirmation Required") {
 			return "Error";
-		}  
+		}
 		else {
 			return "None";
 		}
@@ -107,7 +108,7 @@ sp.fiori.purchaseorder.controller.formatter = {
 			return "Warning";
 		} else if (oStatus === "Open") {
 			return "Error";
-		} 
+		}
 		else {
 			return "None";
 		}
@@ -126,13 +127,13 @@ sp.fiori.purchaseorder.controller.formatter = {
 		return false;
 	},
 	addStatColor: function (status) {
-        if(status === "Invoice Submitted") {
+		if (status === "Invoice Submitted") {
 			this.addStyleClass("statSuccess");
 			this.removeStyleClass("statWarning");
-		}else{
+		} else {
 			this.addStyleClass("statWarning");
 			this.removeStyleClass("statSuccess");
 		}
-        return status;
-    },
+		return status;
+	},
 };

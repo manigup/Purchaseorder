@@ -307,7 +307,6 @@ sap.ui.define([
 									IGST_AMT: this.data.TotalInvNetAmnt,
 									CGST_AMT: this.data.TotalCGstAmnt,
 									SGST_AMT: this.data.TotalSGstAmnt,
-									INV_DELETE: true,
 									Po_Qty: poQty,
 									Inv_Qty: invQty,
 									InvBal_Qty: invBalQty,

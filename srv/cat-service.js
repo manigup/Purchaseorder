@@ -186,11 +186,11 @@ async function getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRow
                         supplierRate = "";
                     }
 
-                    if (Po_Num) {
-                        poQty = parseInt(row.PoQty);
-                        invQty = parseInt(filter[0]?.InvQty) || 0;
-                        invBalQty = poQty - invQty;
-                    }
+                    // if (Po_Num) {
+                    poQty = parseInt(row.PoQty);
+                    invQty = parseInt(filter[0]?.InvQty) || 0;
+                    invBalQty = poQty - invQty;
+                    // }
                     return {
                         LineNum: row.LineNum,
                         ItemCode: row.ItemCode,

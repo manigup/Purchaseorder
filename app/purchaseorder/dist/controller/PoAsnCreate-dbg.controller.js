@@ -273,6 +273,17 @@ sap.ui.define([
 					return;
 				}
 
+				let obj, result;
+				result = contexts.some(item => {
+					obj = item.getBindingContext("asnModel").getObject();
+					return parseInt(obj.InvBalQty) === 0;
+				});
+
+				if (result) {
+					MessageBox.error("Please unselect item with balanced qty 0 to proceed");
+					return;
+				}
+
 				oModel.create("/ASNListHeader", ASNHeaderData, {
 					success: () => {
 						// const payload = JSON.stringify(this.data.DocumentRows.results.map(item => {
@@ -283,27 +294,30 @@ sap.ui.define([
 						let obj, poQty, invQty, invBalQty, invListPayload = [];
 						const payload = JSON.stringify(contexts.map(item => {
 							obj = item.getBindingContext("asnModel").getObject();
-							poQty = parseInt(obj.PoQty);
-							invQty = parseInt(obj.InvBalQty);
-							invBalQty = poQty - invQty;
-							invListPayload.push({
-								REF_INV: this.data.BillNumber,
-								Item_Code: obj.ItemCode,
-								Po_Num: obj.PNum_PoNum,
-								INVOICE_DATE: this.data.BillDate,
-								INVOICE_AMT: this.data.TotalAmnt,
-								IGST_AMT: this.data.TotalInvNetAmnt,
-								CGST_AMT: this.data.TotalCGstAmnt,
-								SGST_AMT: this.data.TotalSGstAmnt,
-								INV_DELETE: true,
-								Po_Qty: poQty,
-								Inv_Qty: invQty,
-								InvBal_Qty: invBalQty
-							});
-							delete obj.__metadata;
-							obj.InvQty = invQty;
-							obj.InvBalQty = invBalQty;
-							return obj;
+							if (parseInt(obj.InvBalQty) > 0) {
+								poQty = parseInt(obj.PoQty);
+								invQty = parseInt(obj.InvBalQty) === 0 ? poQty : parseInt(obj.InvBalQty) + parseInt(obj.InvQty);
+								invBalQty = poQty - invQty;
+								invListPayload.push({
+									REF_INV: this.data.BillNumber,
+									Item_Code: obj.ItemCode,
+									Po_Num: obj.PNum_PoNum,
+									INVOICE_DATE: this.data.BillDate,
+									INVOICE_AMT: this.data.TotalAmnt,
+									IGST_AMT: this.data.TotalInvNetAmnt,
+									CGST_AMT: this.data.TotalCGstAmnt,
+									SGST_AMT: this.data.TotalSGstAmnt,
+									Po_Qty: poQty,
+									Inv_Qty: invQty,
+									InvBal_Qty: invBalQty,
+									INV_DELETE: false
+								});
+								delete obj.__metadata;
+								delete obj.PNum;
+								obj.InvQty = invQty;
+								obj.InvBalQty = invBalQty;
+								return obj;
+							}
 						}));
 						let settings = {
 							async: true,
@@ -334,6 +348,14 @@ sap.ui.define([
 										});
 									});
 							});
+					},
+					error: (error) => {
+						const errBody = error.response.body;
+						if (errBody.indexOf("<?xml") !== -1) {
+							MessageBox.error($($.parseXML(errBody)).find("message").text());
+						} else {
+							MessageBox.error(JSON.parse(errBody).error.message.value);
+						}
 					}
 				});
 			} else {
@@ -362,14 +384,14 @@ sap.ui.define([
 		},
 
 		onUploadCompleted: function (oEvent) {
-			var oUploadSet = this.byId("uploadSet");
+			// var oUploadSet = this.byId("uploadSet");
 			var oUploadedItem = oEvent.getParameter("item");
 			var sUploadUrl = oUploadedItem.getUploadUrl();
 
 			var sDownloadUrl = sUploadUrl
 			oUploadedItem.setUrl(sDownloadUrl);
-			oUploadSet.getBinding("items").refresh();
-			oUploadSet.invalidate();
+			// oUploadSet.getBinding("items").refresh();
+			// oUploadSet.invalidate();
 		},
 		_createEntity: function (item, poNum) {
 			var oModel = this.getView().getModel();

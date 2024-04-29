@@ -448,19 +448,21 @@
                             <columns>
                                 <Column
                                     id="_IDGenColumn12"
-                                    minScreenWidth="Tablet"
-                                    demandPopin="true"
+                                    mergeDuplicates="true"
+                                    width="5rem"
+                                    hAlign="Center"
                                 >
                                     <Text
                                         id="_IDGenText24"
                                         text="Invocie Number"
                                     />
                                 </Column>
-
                                 <Column
                                     id="_IDGenColumn13"
                                     minScreenWidth="Tablet"
                                     demandPopin="true"
+                                    width="6rem"
+                                    hAlign="Center"
                                 >
                                     <Text
                                         id="_IDGenText13"
@@ -469,8 +471,8 @@
                                 </Column>
                                 <Column
                                     id="_IDGenColumn10"
-                                    minScreenWidth="Tablet"
-                                    demandPopin="true"
+                                    width="6rem"
+                                    hAlign="Center"
                                 >
                                     <Text
                                         id="_IDGenText110"
@@ -481,6 +483,8 @@
                                     id="_IDGenColumn11"
                                     minScreenWidth="Tablet"
                                     demandPopin="true"
+                                    width="4rem"
+                                    hAlign="Center"
                                 >
                                     <Text
                                         id="_IDGenText120"
@@ -492,7 +496,7 @@
                                     id="_IDGenColumn290"
                                     minScreenWidth="Tablet"
                                     demandPopin="true"
-                                    width="5rem"
+                                    width="4rem"
                                     hAlign="Center"
                                 >
                                     <Label
@@ -506,6 +510,8 @@
                                     id="_IDGenColumn60"
                                     minScreenWidth="Tablet"
                                     demandPopin="true"
+                                    width="5rem"
+                                    hAlign="Center"
                                 >
                                     <Text
                                         id="_IDGenText61"
@@ -516,6 +522,8 @@
                                     id="_IDGenColumn14"
                                     minScreenWidth="Tablet"
                                     demandPopin="true"
+                                    width="5rem"
+                                    hAlign="Center"
                                 >
                                     <Text
                                         id="_IDGenText"
@@ -526,6 +534,8 @@
                                     id="_IDGenColumn15"
                                     minScreenWidth="Tablet"
                                     demandPopin="true"
+                                    width="4rem"
+                                    hAlign="Center"
                                 >
                                     <Text
                                         id="_IDGenText23"
@@ -536,6 +546,8 @@
                                     id="_IDGenColumn16"
                                     minScreenWidth="Tablet"
                                     demandPopin="true"
+                                    width="4rem"
+                                    hAlign="Center"
                                 >
                                     <Text
                                         id="_IDGenText16"
@@ -545,8 +557,9 @@
                                 <Column
                                     id="_IDGenColumn17"
                                     minScreenWidth="Tablet"
-                                    width="6rem"
                                     demandPopin="true"
+                                    width="4rem"
+                                    hAlign="Center"
                                 >
                                     <Text
                                         id="_IDGenText17"
@@ -557,22 +570,26 @@
                                     id="_IDGenColumn19"
                                     minScreenWidth="Tablet"
                                     demandPopin="true"
+                                    width="6rem"
+                                    hAlign="Center"
                                 >
                                     <Text
                                         id="_IDGenText19"
                                         text="Status"
                                     />
                                 </Column>
-                                <Column
+                                <!-- <Column
                                     id="_IDGenColumn145"
                                     minScreenWidth="Tablet"
                                     demandPopin="true"
+                                    width="5rem"
+                                    hAlign="Center"
                                 >
                                     <Text
                                         id="_IDGenText134"
                                         text="Action"
                                     />
-                                </Column>
+                                </Column> -->
                             </columns>
                             <items>
                                 <ColumnListItem id="invListTmp">
@@ -583,7 +600,7 @@
                                         />
                                         <Text
                                             id="_IDGenText121"
-                                            text="{path:'INVOICE_DATE', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate'}"
+                                            text="{path:'INVOICE_DATE', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate1'}"
                                         />
                                         <Text
                                             id="_IDGenText101"
@@ -619,15 +636,16 @@
                                         />
                                         <ObjectStatus
                                             id="_IDGenObjectStatus4"
-                                            text="{= ${INV_DELETE} ? 'Deleted' : ''}"
-                                            state="Error"
+                                            text="Submitted"
+                                            state="Success"
                                         />
-                                        <Button
+                                        <!-- {= ${INV_DELETE} ? 'Deleted' : ''} -->
+                                        <!-- <Button
                                             id="_IDGenButton2"
                                             icon="sap-icon://decline"
-                                            visible="{= ${INV_DELETE}}"
+                                            visible="{= ${INV_DELETE} === false}"
                                             press="onDeletePress"
-                                        />
+                                        /> -->
                                     </cells>
                                 </ColumnListItem>
                             </items>
