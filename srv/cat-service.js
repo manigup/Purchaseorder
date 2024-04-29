@@ -11,17 +11,15 @@ module.exports = (srv) => {
         let sInsertQuery = UPSERT.into(DocumentRowItems).entries(parseData);
         await cds.tx(req).run(sInsertQuery).catch((err) => {
             req.reject(500, err.message);
-            console.log(err.message);
         });
     });
 
     srv.on("stageInvHeaderList", async function (req) {
 
         const parseData = JSON.parse(req.data.data);
-        let sInsertQuery = INSERT.into(InvHeaderList).entries(parseData);
+        let sInsertQuery = UPSERT.into(InvHeaderList).entries(parseData);
         await cds.tx(req).run(sInsertQuery).catch((err) => {
             req.reject(500, err.message);
-            console.log(err.message)
         });
     });
 
@@ -141,10 +139,10 @@ async function getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRow
             let dbItems, findErpItemInDb, check = [], status = "Invoice Submission Pending";
             const purchaseOrders = dataArray.map(data => {
                 // const hasMatchingASN = asnSet.has(data.PoNum.replace(/\//g, '-'));
-                dbItems = items.filter(item => item.PNum_PoNum === data.PoNum.replace(/\//g, '-'));
+                dbItems = items.filter(item => item.PNum_PoNum === data.PoNum);
                 if (dbItems.length > 0) {
                     // erp items
-                    data.DocumentRows.filter(item => item.PoNum === data.PoNum.replace(/\//g, '-')).forEach(erpItem => {
+                    data.DocumentRows.forEach(erpItem => {
                         findErpItemInDb = dbItems.find(dbItem => dbItem.ItemCode === erpItem.ItemCode)
                         if (findErpItemInDb && findErpItemInDb.InvBalQty === 0) {
                             check.push(true);
@@ -189,7 +187,7 @@ async function getPurchaseOrders(AddressCode, Po_Num, ASNListHeader, DocumentRow
 
                     if (Po_Num) {
                         poQty = parseInt(row.PoQty);
-                        invQty = parseInt(filter[0].InvQty) || 0;
+                        invQty = parseInt(filter[0]?.InvQty) || 0;
                         invBalQty = poQty - invQty;
                     }
                     return {

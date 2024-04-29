@@ -2,7 +2,7 @@ namespace my.purchaseorder;
 
 using {managed} from '@sap/cds/common';
 
-entity PurchaseOrders {
+entity PurchaseOrders : managed {
     key PoNum          : String;
         PoDate         : Date;
         VendorCode     : String;
@@ -22,7 +22,7 @@ entity PurchaseOrders {
                              on Files.PNum = $self;
 }
 
-entity DocumentRowItems {
+entity DocumentRowItems : managed {
         LineNum      : String;
     key ItemCode     : String;
         ItemDesc     : String;
@@ -56,7 +56,7 @@ entity DocumentRowItems {
         SupplierRate : Integer;
 }
 
-entity ASNList {
+entity ASNList : managed {
     key UUID          : UUID;
         PNum          : Association to PurchaseOrders;
         ItemCode      : String;
@@ -97,7 +97,7 @@ entity ASNList {
         MatExpDate    : String;
 }
 
-entity ASNListHeader {
+entity ASNListHeader : managed {
     key PNum               : Association to PurchaseOrders;
         AsnNum             : String;
     key BillNumber         : String;
@@ -127,7 +127,7 @@ entity ASNListHeader {
         TotalWeight        : String;
 }
 
-entity InvHeaderList {
+entity InvHeaderList : managed {
     key REF_INV      : String;
     key Item_Code    : String;
     key Po_Num       : String;
@@ -144,6 +144,7 @@ entity InvHeaderList {
 
 entity Files : managed {
     key PNum      : Association to PurchaseOrders;
+    key REF_INV   : String;
 
         @Core.MediaType                  : mediaType
         content   : LargeBinary;
