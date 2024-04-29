@@ -479,7 +479,7 @@
                                         text="Item Code"
                                     />
                                 </Column>
-                                <Column
+                                <!-- <Column
                                     id="_IDGenColumn11"
                                     minScreenWidth="Tablet"
                                     demandPopin="true"
@@ -491,7 +491,7 @@
                                         text="PO Qty."
                                         wrapping="false"
                                     />
-                                </Column>
+                                </Column> -->
                                 <Column
                                     id="_IDGenColumn290"
                                     minScreenWidth="Tablet"
@@ -506,7 +506,7 @@
                                         wrapping="true"
                                     />
                                 </Column>
-                                <Column
+                                <!-- <Column
                                     id="_IDGenColumn60"
                                     minScreenWidth="Tablet"
                                     demandPopin="true"
@@ -517,7 +517,7 @@
                                         id="_IDGenText61"
                                         text="Balance Qty."
                                     />
-                                </Column>
+                                </Column> -->
                                 <Column
                                     id="_IDGenColumn14"
                                     minScreenWidth="Tablet"
@@ -606,18 +606,18 @@
                                             id="_IDGenText101"
                                             text="{Item_Code}"
                                         />
-                                        <Text
+                                        <!-- <Text
                                             id="_IDGenText102"
                                             text="{Po_Qty}"
-                                        />
+                                        /> -->
                                         <Text
                                             id="_IDGenText103"
                                             text="{Inv_Qty}"
                                         />
-                                        <Text
+                                        <!-- <Text
                                             id="_IDGenText104"
                                             text="{InvBal_Qty}"
-                                        />
+                                        /> -->
                                         <ObjectNumber
                                             id="_IDGenText131"
                                             number="{INVOICE_AMT}"
