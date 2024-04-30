@@ -168,7 +168,7 @@ sap.ui.define([
 						asnModelData.TotalAmnt = filteredPurchaseOrder.TotalAmnt;
 						asnModelData.TransporterID = filteredPurchaseOrder.TransporterID;
 						that.asnModel.refresh(true);
-						that._fetchFilesForPoNum(poNum);
+						that._fetchFilesForPoNum(poNum, asnModelData.BillNumber);
 						/*
 						var attachments = [];
 						attachments.push(filteredPurchaseOrder);
@@ -186,13 +186,14 @@ sap.ui.define([
 				}.bind(this)
 			});
 		},
-		_fetchFilesForPoNum: function (poNum) {
+		_fetchFilesForPoNum: function (poNum, invNum) {
 			var oModel = this.getView().getModel();
 			var oUploadSet = this.byId("uploadSet");
 			oUploadSet.removeAllItems();
 
 			oModel.read("/Files", {
-				filters: [new sap.ui.model.Filter("PNum_PoNum", sap.ui.model.FilterOperator.EQ, poNum)],
+				filters: [new sap.ui.model.Filter("PNum_PoNum", sap.ui.model.FilterOperator.EQ, poNum),
+						  new sap.ui.model.Filter("Ref_Inv", sap.ui.model.FilterOperator.EQ, invNum)],
 				success: function (oData) {
 					oData.results.forEach(function (fileData) {
 						var oItem = new sap.m.upload.UploadSetItem({
