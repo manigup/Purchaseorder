@@ -220,7 +220,7 @@ sap.ui.define([
 								"content-type": "application/json"
 							},
 							processData: false,
-							data: JSON.stringify({ data: JSON.stringify({ Po_Num: obj.Po_Num, Item_Code: obj.Item_Code, Inv_Qty: obj.Inv_Qty, REF_INV: obj.REF_INV }) })
+							data: JSON.stringify({ data: JSON.stringify({ Po_Num: obj.Po_Num, Item_Code: obj.Item_Code, Inv_Qty: obj.Inv_Qty, Po_Qty: obj.Po_Qty, REF_INV: obj.REF_INV }) })
 						};
 						$.ajax(settings)
 							.done(() => {

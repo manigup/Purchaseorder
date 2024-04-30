@@ -33,7 +33,7 @@ module.exports = (srv) => {
             req.reject(500, err.message);
         });
 
-        entries = { ItemCode: parseData.Item_Code, PNum_PoNum: parseData.Po_Num, InvBalQty: parseData.Inv_Qty, InvQty: 0 },
+        entries = { ItemCode: parseData.Item_Code, PNum_PoNum: parseData.Po_Num, InvBalQty: parseData.Inv_Qty, InvQty: parseData.Po_Qty - parseData.Inv_Qty },
             updateQuery = UPSERT.into(DocumentRowItems).entries(entries);
         await cds.tx(req).run(updateQuery).catch((err) => {
             req.reject(500, err.message);
