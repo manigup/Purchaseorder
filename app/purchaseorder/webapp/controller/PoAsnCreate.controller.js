@@ -56,13 +56,13 @@ sap.ui.define([
 				this.byId("ewayBillNumberId").setValueState("None");
 
 				var that = this;
-				var datePicker = this.getView().byId("DP1");
+				// var datePicker = this.getView().byId("DP1");
 
-				datePicker.addDelegate({
-					onAfterRendering: function () {
-						datePicker.$().find('INPUT').attr('disab1qled', true).css('color', '#000000');
-					}
-				}, datePicker);
+				// datePicker.addDelegate({
+				// 	onAfterRendering: function () {
+				// 		datePicker.$().find('INPUT').attr('disab1qled', true).css('color', '#000000');
+				// 	}
+				// }, datePicker);
 
 				// code for date Restriction
 				// var fdate = new Date();
@@ -81,8 +81,8 @@ sap.ui.define([
 				//this.Po_Num = "19/01P/03/00001";
 				this.Amount = event.getParameter("arguments").Amount;
 				this.Vendor_No = event.getParameter("arguments").Vendor_No;
-				var unitCode = event.getParameter("arguments").UnitCode || "P01";
-				this.AddressCodePO = sessionStorage.getItem("AddressCodePO") || 'JSE-01-01'
+				var unitCode = event.getParameter("arguments").UnitCode || "P49";
+				this.AddressCodePO = sessionStorage.getItem("AddressCodePO") || 'GPL-01-01';
 				//var unitCode = "P01";
 				var oModel = this.getOwnerComponent().getModel();
 
@@ -193,7 +193,7 @@ sap.ui.define([
 
 			oModel.read("/Files", {
 				filters: [new sap.ui.model.Filter("PNum_PoNum", sap.ui.model.FilterOperator.EQ, poNum),
-						  new sap.ui.model.Filter("Ref_Inv", sap.ui.model.FilterOperator.EQ, invNum)],
+				new sap.ui.model.Filter("Ref_Inv", sap.ui.model.FilterOperator.EQ, invNum)],
 				success: function (oData) {
 					oData.results.forEach(function (fileData) {
 						var oItem = new sap.m.upload.UploadSetItem({
@@ -231,6 +231,8 @@ sap.ui.define([
 					"AsnNum": this.data.AsnNum,
 					"BillDate": this.data.BillDate,
 					"BillNumber": this.data.BillNumber,
+					"DeliveryNumber": this.data.DeliveryNumber,
+					"DeliveryDate": this.data.DeliveryDate,
 					"DocketNumber": this.data.DocketNumber,
 					"GRDate": this.data.GRDate,
 					"TransportName": this.data.TransportName,
@@ -259,11 +261,23 @@ sap.ui.define([
 				var oTable = this.getView().byId("AsnCreateTable");
 				var contexts = oTable.getSelectedItems();
 
-				if (!ASNHeaderData.BillNumber) {
-					MessageBox.error("Please fill the Invoice Number");
+				// if (!ASNHeaderData.BillNumber) {
+				// 	MessageBox.error("Please fill the Invoice Number");
+				// 	return;
+				// } else if (!ASNHeaderData.BillDate) {
+				// 	MessageBox.error("Please fill the Invoice Date");
+				// 	return;
+				// }
+				if (!ASNHeaderData.BillNumber && !ASNHeaderData.DeliveryNumber) {
+					MessageBox.error("Please fill Invoice Number or Delivery Number");
 					return;
-				} else if (!ASNHeaderData.BillDate) {
-					MessageBox.error("Please fill the Invoice Date");
+				}
+				if (ASNHeaderData.BillNumber && !ASNHeaderData.BillDate) {
+					MessageBox.error("Please fill Invoice Date");
+					return;
+				}
+				if (ASNHeaderData.DeliveryNumber && !ASNHeaderData.DeliveryDate) {
+					MessageBox.error("Please fill Delivery Date");
 					return;
 				}
 				if (this.getView().byId("uploadSet").getIncompleteItems().length <= 0) {
@@ -302,9 +316,11 @@ sap.ui.define([
 								invBalQty = poQty - invQty;
 								invListPayload.push({
 									REF_INV: this.data.BillNumber,
+									DEL_NUM: this.data.DeliveryNumber,
 									Item_Code: obj.ItemCode,
 									Po_Num: obj.PNum_PoNum,
 									INVOICE_DATE: this.data.BillDate,
+									DEL_DATE: this.data.DeliveryDate,
 									INVOICE_AMT: this.data.TotalAmnt,
 									IGST_AMT: this.data.TotalInvNetAmnt,
 									CGST_AMT: this.data.TotalCGstAmnt,
@@ -345,9 +361,10 @@ sap.ui.define([
 								};
 								$.ajax(settings)
 									.done(() => {
-										this._createEntity(this.uploadItem, this.data.PoNum.replace(/\//g, '-'), this.data.BillNumber)
+										const no = this.data.BillNumber || this.data.DeliveryNumber;
+										this._createEntity(this.uploadItem, this.data.PoNum.replace(/\//g, '-'), no)
 											.then(() => {
-												this._uploadContent(this.uploadItem, this.data.PoNum.replace(/\//g, '-'), this.data.BillNumber);
+												this._uploadContent(this.uploadItem, this.data.PoNum.replace(/\//g, '-'), no);
 											})
 											.catch((err) => {
 												console.log("Error: " + err);
@@ -586,6 +603,10 @@ sap.ui.define([
 			}
 			return "0.00";
 		},
+
+		onInvNoChange: function (evt, dateControl) {
+			this.byId(dateControl).setValue("");
+		}
 	});
 
 });

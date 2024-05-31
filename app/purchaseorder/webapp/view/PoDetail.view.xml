@@ -37,7 +37,11 @@
                     />
                    </statuses>
             </ObjectHeader> -->
-            <IconTabBar id="_IDGenIconTabBar1">
+            <IconTabBar
+                id="_IDGenIconTabBar1"
+                class="sapUiNoContentPadding"
+                expandable="false"
+            >
                 <items>
                     <IconTabFilter
                         id="_IDGenIconTabFilter1"
@@ -470,8 +474,31 @@
                                     />
                                 </Column>
                                 <Column
+                                    id="_IDGenColumn11"
+                                    mergeDuplicates="true"
+                                    width="5rem"
+                                    hAlign="Center"
+                                >
+                                    <Text
+                                        id="_IDGenText150"
+                                        text="Delivery Number"
+                                    />
+                                </Column>
+                                <Column
+                                    id="_IDGenColumn120"
+                                    minScreenWidth="Tablet"
+                                    demandPopin="true"
+                                    width="7rem"
+                                    hAlign="Center"
+                                >
+                                    <Text
+                                        id="_IDGenText154"
+                                        text="Delivery Date"
+                                    />
+                                </Column>
+                                <Column
                                     id="_IDGenColumn10"
-                                    width="6rem"
+                                    width="5rem"
                                     hAlign="Center"
                                 >
                                     <Text
@@ -522,7 +549,7 @@
                                     id="_IDGenColumn14"
                                     minScreenWidth="Tablet"
                                     demandPopin="true"
-                                    width="5rem"
+                                    width="4rem"
                                     hAlign="Center"
                                 >
                                     <Text
@@ -601,6 +628,14 @@
                                         <Text
                                             id="_IDGenText121"
                                             text="{path:'INVOICE_DATE', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate1'}"
+                                        />
+                                        <Text
+                                            id="_IDGenText119"
+                                            text="{DEL_NUM}"
+                                        />
+                                        <Text
+                                            id="_IDGenText120"
+                                            text="{path:'DEL_DATE', formatter:'sp.fiori.purchaseorder.controller.formatter.formatDate1'}"
                                         />
                                         <Text
                                             id="_IDGenText101"

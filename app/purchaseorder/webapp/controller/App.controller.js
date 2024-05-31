@@ -58,7 +58,7 @@ sap.ui.define([
         });
       } else {
         sap.ui.getCore().getModel("oDataModel").setHeaders({
-          "loginId": "JSE-01-01",
+          "loginId": "GPL-01-01",
           "LoginType": "P"
         });
         this.doRoute();

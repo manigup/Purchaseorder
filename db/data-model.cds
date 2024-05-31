@@ -98,10 +98,13 @@ entity ASNList : managed {
 }
 
 entity ASNListHeader : managed {
+    key UUID               : UUID;
     key PNum               : Association to PurchaseOrders;
         AsnNum             : String;
-    key BillNumber         : String;
+        BillNumber         : String;
+        DeliveryNumber     : String;
         BillDate           : String;
+        DeliveryDate       : String;
         DocketNumber       : String;
         GRDate             : String;
         TransportName      : String;
@@ -128,10 +131,13 @@ entity ASNListHeader : managed {
 }
 
 entity InvHeaderList : managed {
-    key REF_INV      : String;
+    key UUID         : UUID;
     key Item_Code    : String;
     key Po_Num       : String;
+        REF_INV      : String;
+        DEL_NUM      : String;
         INVOICE_DATE : String;
+        DEL_DATE     : String;
         INVOICE_AMT  : Integer;
         IGST_AMT     : Integer;
         CGST_AMT     : Integer;
@@ -144,7 +150,7 @@ entity InvHeaderList : managed {
 
 entity Files : managed {
     key PNum      : Association to PurchaseOrders;
-    key Ref_Inv  : String;
+    key Ref_Inv   : String;
 
         @Core.MediaType                  : mediaType
         content   : LargeBinary;

@@ -26,8 +26,8 @@ sap.ui.define([
 				return;
 			}
 			var that = this;
-			var unitCode = sessionStorage.getItem("unitCode") || "P01";
-			this.AddressCodePO = sessionStorage.getItem("AddressCodePO") || "JSE-01-01";
+			var unitCode = sessionStorage.getItem("unitCode") || "P39";
+			this.AddressCodePO = sessionStorage.getItem("AddressCodePO") || "GPL-01-01";
 			if (that.flagModel.getData().confirmPressFlag) {
 				var selectedList = this.getView().byId("masterListId").getSelectedItem();
 				this.getView().byId("searchFieldId").setValue("");
@@ -66,7 +66,7 @@ sap.ui.define([
 
 				if (selectedItem) {
 					list.setSelectedItem(selectedItem, true);
-					var unitCode = sessionStorage.getItem("unitCode") || "P01";
+					var unitCode = sessionStorage.getItem("unitCode") || "P39";
 					var PoNo = selectedItem.getBindingContext().getProperty("PoNum");
 					var Po_No = PoNo.replace(/\//g, '-');
 					// var path = selectedItem.getBindingContext().getPath();
@@ -230,15 +230,15 @@ sap.ui.define([
 		// },
 		onFilterSubmit: function () {
 			var data = this.filterModel.getData();
-			
+
 			this.AddressCodePO = sessionStorage.getItem("AddressCodePO") || 'JSE-01-01';
 			var Status = data.Status;
 			var unitCode = data.Werks;
-			
+
 			if (!unitCode) {
 				unitCode = sessionStorage.getItem("unitCode") || "P01";
 			}
-			
+
 			if (!Status) {
 				this.getView().byId("masterListId").bindItems({
 					path: "/PurchaseOrders",
@@ -263,9 +263,9 @@ sap.ui.define([
 					template: this._listTemp
 				});
 			}
-			if(data.Werks){
-			this.PlantFilter = unitCode + "(" + this.desc + ")";
-			this.getView().byId("plantFilterId").setText(this.PlantFilter);
+			if (data.Werks) {
+				this.PlantFilter = unitCode + "(" + this.desc + ")";
+				this.getView().byId("plantFilterId").setText(this.PlantFilter);
 			}
 			this.getView().byId("clearFilterId").setVisible(true);
 			// this.filterModel.setData({});

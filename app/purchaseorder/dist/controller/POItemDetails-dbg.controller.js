@@ -32,7 +32,7 @@ sap.ui.define([
 				return;
 			}
 
-			var unitCode = sessionStorage.getItem("unitCode") || "P01";
+			var unitCode = sessionStorage.getItem("unitCode") || "P39";
 			this.Po_Num = evt.getParameter("arguments").Po_No;
 			this.Schedule_No = this.Po_Num .replace(/-/g,'/');
 			this.Item_No = evt.getParameter("arguments").Item_No;

@@ -75,7 +75,7 @@
                     text="{asnModel>/VendorCode}{asnModel>/VendorName}"
                     width="20rem"
                 />
-                <Label
+                <!-- <Label
                     id="_IDGenLabel1"
                     text="Invoice/Delivery Number"
                     required="true"
@@ -100,6 +100,58 @@
                     valueFormat="yyyyMMdd"
                     displayFormat="long"
                     enabled="{=${asnModel>/HasAttachments} !== 'Invoice Submitted'}"
+                /> -->
+                <Label
+                    id="_IDGenLabel1"
+                    text=" Invoice Number"
+                    required="{= ${asnModel>/DeliveryNumber} === undefined || ${asnModel>/DeliveryNumber} === ''}"
+                />
+                <Input
+                    id="invoiceNumId"
+                    value="{asnModel>/BillNumber}"
+                    maxLength="16"
+                    width="20rem"
+                    change="onInvNoChange($event, 'DP2')"
+                    enabled="{= ${asnModel>/DeliveryNumber} === undefined ? true : ${asnModel>/DeliveryNumber} === '' ? true : false}"
+                />
+                <Label
+                    id="_IDGenLabel2"
+                    text="Invoice Date"
+                    required="{= ${asnModel>/DeliveryNumber} === undefined || ${asnModel>/DeliveryNumber} === ''}"
+                />
+                <DatePicker
+                    id="DP1"
+                    value="{asnModel>/BillDate}"
+                    valueFormat="yyyyMMdd"
+                    displayFormat="long"
+                    width="20rem"
+                    enabled="{= ${asnModel>/DeliveryNumber} === undefined ? true : ${asnModel>/DeliveryNumber} === '' ? true : false}"
+                />
+                <Label
+                    id="_IDGenLabel410"
+                    text="Delivery Number"
+                    required="{= ${asnModel>/BillNumber} === undefined || ${asnModel>/BillNumber} === ''}"
+                />
+                <Input
+                    id="_IDGenInput110"
+                    value="{asnModel>/DeliveryNumber}"
+                    maxLength="16"
+                    width="20rem"
+                    change="onInvNoChange($event, 'DP1')"
+                    enabled="{= ${asnModel>/BillNumber} === undefined || ${asnModel>/BillNumber} === ''}"
+                />
+                <Label
+                    id="_IDGenLabel420"
+                    text="Delivery Date"
+                    required="{= ${asnModel>/BillNumber} === undefined || ${asnModel>/BillNumber} === ''}"
+                />
+                <DatePicker
+                    id="DP2"
+                    value="{asnModel>/DeliveryDate}"
+                    valueFormat="yyyyMMdd"
+                    displayFormat="long"
+                    width="20rem"
+                    enabled="{= ${asnModel>/BillNumber} === undefined || ${asnModel>/BillNumber} === ''}"
                 />
                 <Label
                     id="_IDGenLabel26"
@@ -350,6 +402,7 @@
                 <IconTabFilter
                     id="_IDGenIconTabFilter1"
                     icon="sap-icon://hint"
+                    text="Items"
                 >
                     <ScrollContainer
                         id="_IDGenScrollContainer1"
@@ -881,6 +934,7 @@
                 <IconTabFilter
                     id="_IDGenIconTabFilter2"
                     icon="sap-icon://attachment"
+                    text="Attachments"
                 >
                     <upload:UploadSet
                         id="uploadSet"

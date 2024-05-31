@@ -16,7 +16,8 @@ module.exports = (srv) => {
 
     srv.on("stageInvHeaderList", async function (req) {
 
-        const parseData = JSON.parse(req.data.data);
+        let parseData = JSON.parse(req.data.data);
+        parseData.forEach(item => item.UUID = cds.utils.uuid());
         let sInsertQuery = UPSERT.into(InvHeaderList).entries(parseData);
         await cds.tx(req).run(sInsertQuery).catch((err) => {
             req.reject(500, err.message);
@@ -43,11 +44,16 @@ module.exports = (srv) => {
 
     srv.before('CREATE', 'ASNListHeader', async (req) => {
 
-        const records = await cds.run(cds.parse.cql("Select BillNumber from my.purchaseorder.ASNListHeader")),
-            duplicate = records.filter(item => item.BillNumber === req.data.BillNumber);
+        const records = await cds.run(cds.parse.cql("Select BillNumber,DeliveryNumber from my.purchaseorder.ASNListHeader")),
+            duplicateBill = records.filter(item => item.BillNumber === req.data.BillNumber),
+            duplicateDelivery = records.filter(item => item.DeliveryNumber === req.data.DeliveryNumber);
 
-        if (duplicate.length > 0) {
+        if (duplicateBill.length > 0) {
             req.reject(400, 'Duplicate invoice number');
+        }
+
+        if (duplicateDelivery.length > 0) {
+            req.reject(400, 'Duplicate delivery number');
         }
     });
 
